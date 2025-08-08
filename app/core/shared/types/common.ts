@@ -31,10 +31,13 @@ export enum StatusStyleEnum {
   DEFAULT = 'default'
 }
 
-
-
 export enum UserGroup {
   ORGANIZER,
   EXHIBITOR
 }
 
+export enum OrganizerSettingsPages {
+  PROFILE,
+  CHANGE_PASSWORD,
+  COMPANY
+}

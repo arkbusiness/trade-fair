@@ -1,28 +1,28 @@
 'use client';
-
-import Image from 'next/image';
-import Link from 'next/link';
 import type * as React from 'react';
 import { useUser } from '../../hooks/api';
 import {
-  Separator,
+  // Separator,
   Sidebar,
-  SidebarContent,
-  SidebarFooter,
-  SidebarHeader,
-  SidebarMenu,
-  SidebarMenuItem
+  SidebarContent
+  // SidebarFooter,
+  // SidebarHeader,
+  // SidebarMenu,
+  // SidebarMenuItem
 } from '../atoms';
-import { OrganizerSidebarItems, SidebarUser } from '../molecules';
+import { OrganizerSidebarItems } from '../molecules';
 
-export function OrganizerSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+export function OrganizerSidebar({
+  ...props
+}: React.ComponentProps<typeof Sidebar>) {
   const { user } = useUser();
+  console.log(user);
 
   return (
     <Sidebar
       collapsible="offcanvas"
       {...props}
-      className="pt-[calc(var(--organizer-header-height))] px-[1.12rem] bg-sidebar"
+      className="top-[calc(var(--organizer-header-height)+1.75rem)] pb-[calc(var(--organizer-header-height)+1.75rem)] px-[1.12rem] bg-sidebar"
     >
       <SidebarContent className="mt-[2.86rem]">
         <OrganizerSidebarItems />
