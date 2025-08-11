@@ -28,7 +28,6 @@ export default async function OrganizerLayout({
         />
         <OrganizerSidebar />
         <main className="w-full overflow-x-hidden">
-          {/* <AppSidebarTrigger /> */}
           <div className=" px-[1.13rem] pb-[6.25rem] overflow-x-hidden relative top-[var(--organizer-header-height)]">
             <div className="mt-7" />
             {children}

@@ -1,7 +1,7 @@
 'use client';
 
 import { useAuthStore } from '@/module/auth/store';
-import { LogOut, MoreVerticalIcon } from 'lucide-react';
+import { LogOut, MoreVerticalIcon, Settings, UserCircle } from 'lucide-react';
 import { useUser } from '../../hooks/api';
 import { useIsMobile } from '../../hooks/use-mobile';
 import {
@@ -9,21 +9,33 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuLabel,
+  DropdownMenuSeparator,
   DropdownMenuTrigger,
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem
 } from '../atoms';
+import { useRouter } from 'nextjs-toploader/app';
+import { ORGANIZER_APP_ROUTES } from '../../constants';
 
 interface SidebarUserProps {
   name: string;
-  role: string;
+  email: string;
 }
 
-export function SidebarUser({ name, role }: SidebarUserProps) {
+export function SidebarUser({ name, email }: SidebarUserProps) {
   const { user } = useUser();
   const isMobile = useIsMobile();
   const { handleLogOut } = useAuthStore();
+  const router = useRouter();
+
+  const handleNavigateToProfile = () => {
+    router.push(ORGANIZER_APP_ROUTES.settings());
+  };
+
+  const handleNavigateToSettings = () => {
+    router.push(ORGANIZER_APP_ROUTES.settings());
+  };
 
   return (
     <SidebarMenu>
@@ -39,7 +51,7 @@ export function SidebarUser({ name, role }: SidebarUserProps) {
                   {name}
                 </span>
                 <span className="truncate font-normal text-[0.63rem] text-foreground/70">
-                  {role}
+                  {email}
                 </span>
               </div>
               <MoreVerticalIcon className="ml-auto size-4" />
@@ -65,11 +77,27 @@ export function SidebarUser({ name, role }: SidebarUserProps) {
               </div>
             </DropdownMenuLabel>
             <DropdownMenuItem
-              onClick={handleLogOut}
-              className="cursor-pointer text-xs text-tertiary stroke-tertiary"
+              className="cursor-pointer text-xs hover:bg-highlight! hover:border-tertiary! hover:border-1!"
+              onClick={handleNavigateToProfile}
             >
-              <LogOut className="rotate-180" color="inherit" />
-              Sign out
+              <UserCircle className="text-inherit" />
+              Profile
+            </DropdownMenuItem>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem
+              className="cursor-pointer text-xs hover:bg-highlight! hover:border-tertiary! hover:border-1!"
+              onClick={handleNavigateToSettings}
+            >
+              <Settings className="text-inherit" />
+              Settings
+            </DropdownMenuItem>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem
+              className="cursor-pointer text-xs text-tertiary hover:text-tertiary!"
+              onClick={handleLogOut}
+            >
+              <LogOut className="text-inherit" />
+              Logout
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

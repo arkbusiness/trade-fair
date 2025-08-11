@@ -13,10 +13,11 @@ import {
   SidebarMenuButton
 } from '../atoms';
 interface AvatarMenuProps {
-  name: string;
+  firstName: string;
+  lastName: string;
 }
 
-export function AvatarMenu({ name }: AvatarMenuProps) {
+export function AvatarMenu({ firstName, lastName }: AvatarMenuProps) {
   const { handleLogOut } = useAuthStore();
   const router = useRouter();
 
@@ -30,7 +31,7 @@ export function AvatarMenu({ name }: AvatarMenuProps) {
 
   return (
     <>
-      <div className="w-42">
+      <div className="w-34 sm:w-42">
         <DropdownMenu modal={false}>
           <DropdownMenuTrigger asChild>
             <SidebarMenuButton
@@ -41,8 +42,11 @@ export function AvatarMenu({ name }: AvatarMenuProps) {
                 <div className="flex items-center justify-center w-[26px] h-[26px] rounded-full bg-sidebar-accent">
                   <User size={18} />
                 </div>
-                <span className="line-clamp-1 font-semibold text-[0.7rem] flex-[0.9]">
-                  {name}
+                <span className="line-clamp-1 font-semibold text-[0.7rem] flex-[0.9] hidden sm:inline-block">
+                  {lastName} {firstName}
+                </span>
+                <span className="line-clamp-1 font-semibold text-[0.7rem] flex-[0.9] sm:hidden">
+                  {firstName}
                 </span>
               </div>
               <div className="w-4 h-4 flex justify-center items-center">
@@ -52,7 +56,7 @@ export function AvatarMenu({ name }: AvatarMenuProps) {
           </DropdownMenuTrigger>
 
           <DropdownMenuContent
-            className="min-w-auto w-42 pt-[1rem] pb-[0.5rem] rounded-[0.5rem] text-foreground"
+            className="min-w-auto w-34 sm:w-42 pt-[1rem] pb-[0.5rem] rounded-[0.5rem] text-foreground"
             side="bottom"
             align="end"
             sideOffset={4}

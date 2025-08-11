@@ -1,16 +1,8 @@
 'use client';
 import type * as React from 'react';
 import { useUser } from '../../hooks/api';
-import {
-  // Separator,
-  Sidebar,
-  SidebarContent
-  // SidebarFooter,
-  // SidebarHeader,
-  // SidebarMenu,
-  // SidebarMenuItem
-} from '../atoms';
-import { OrganizerSidebarItems } from '../molecules';
+import { Sidebar, SidebarContent, SidebarFooter } from '../atoms';
+import { OrganizerSidebarItems, SidebarUser } from '../molecules';
 
 export function OrganizerSidebar({
   ...props
@@ -27,16 +19,9 @@ export function OrganizerSidebar({
       <SidebarContent className="mt-[2.86rem]">
         <OrganizerSidebarItems />
       </SidebarContent>
-      {/* <SidebarFooter>
-        <span className="text-[0.75rem] uppercase text-[#3C3CFF] font-semibold mb-[10px]">
-          {user?.AdminRole?.[0]?.name ?? ''}
-        </span>
-        <Separator />
-        <SidebarUser
-          name={user?.firstName ?? ''}
-          role={user?.department ?? ''}
-        />
-      </SidebarFooter> */}
+      <SidebarFooter>
+        <SidebarUser name="Ade Johnson" email="example@example.com" />
+      </SidebarFooter>
     </Sidebar>
   );
 }
