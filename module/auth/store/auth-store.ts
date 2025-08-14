@@ -21,11 +21,13 @@ interface IAuthState {
   accessToken: string;
   inviteToken: string;
   hasCheckedToken: boolean;
-  handleSaveToken({ accessToken, inviteToken }:
-    {
-      accessToken?: string,
-      inviteToken?: string,
-    }): void;
+  handleSaveToken({
+    accessToken,
+    inviteToken
+  }: {
+    accessToken?: string;
+    inviteToken?: string;
+  }): void;
   handleLoadToken(): void;
   handleLogOut(): void;
   handleRemoveToken(key: string): void;
@@ -41,8 +43,8 @@ export const useAuthStore = create<IAuthState>()((set) => ({
   hasCheckedToken: false,
   handleLoadToken: async () => {
     try {
-      let accessToken = await getCookie(COOKIE_KEYS.auth.token) || '';
-      let inviteToken = await getCookie(COOKIE_KEYS.auth.inviteToken) || '';
+      const accessToken = (await getCookie(COOKIE_KEYS.auth.token)) || '';
+      const inviteToken = (await getCookie(COOKIE_KEYS.auth.inviteToken)) || '';
 
       if (!accessToken && !inviteToken) {
         useAuthStore.getState().handleLogOut();
@@ -50,15 +52,11 @@ export const useAuthStore = create<IAuthState>()((set) => ({
       }
 
       if (accessToken) {
-        useAuthStore
-          .getState()
-          .handleSaveToken({ accessToken});
+        useAuthStore.getState().handleSaveToken({ accessToken });
       }
 
       if (inviteToken) {
-        useAuthStore
-          .getState()
-          .handleSaveToken({ inviteToken });
+        useAuthStore.getState().handleSaveToken({ inviteToken });
       }
 
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -86,11 +84,11 @@ export const useAuthStore = create<IAuthState>()((set) => ({
     await deleteCookie(key);
   },
   handleSaveToken({ accessToken, inviteToken }) {
-    const options = isDev() ? COOKIE_OPTIONS.dev(4) : COOKIE_OPTIONS.prod(6);
+    const options = isDev() ? COOKIE_OPTIONS.dev(4) : COOKIE_OPTIONS.prod(24);
 
     if (accessToken) {
       setCookie(COOKIE_KEYS.auth.token, accessToken, options);
- 
+
       set((state) => {
         return {
           accessToken: accessToken ?? state.accessToken

@@ -1,15 +1,11 @@
 'use client';
 import type * as React from 'react';
-import { useUser } from '../../hooks/api';
 import { Sidebar, SidebarContent, SidebarFooter } from '../atoms';
 import { OrganizerSidebarItems, SidebarUser } from '../molecules';
 
 export function OrganizerSidebar({
   ...props
 }: React.ComponentProps<typeof Sidebar>) {
-  const { user } = useUser();
-  console.log(user);
-
   return (
     <Sidebar
       collapsible="offcanvas"
