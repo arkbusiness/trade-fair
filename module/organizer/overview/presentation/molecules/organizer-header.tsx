@@ -18,9 +18,9 @@ const targetDate = new Date('2025-11-14T16:32:00');
 
 const CountdownBox = ({ value, label }: { value: string; label: string }) => {
   return (
-    <div className="flex items-center flex-col gap-1 justify-center h-[78px] w-[84px] rounded bg-tertiary/85 py-3 px-5 text-background">
-      <strong className="font-bold text-2xl">{value}</strong>
-      <span className="font-medium text-sm">{label}</span>
+    <div className="flex items-center flex-col gap-1 justify-center h-[78px] w-[64px] sm:w-[84px] rounded bg-tertiary/85 py-3 px-5 text-background">
+      <strong className="font-bold text-lg sm:text-2xl">{value}</strong>
+      <span className="font-medium text-xs sm:text-sm">{label}</span>
     </div>
   );
 };
@@ -72,7 +72,7 @@ export const OrganizerHeader = ({
 
       <div className="flex justify-between w-full gap-5">
         <div className="flex flex-col gap-4.5">
-          <h1 className="font-medium text-3xl text-black">{name}</h1>
+          <h1 className="font-medium text-lg sm:text-3xl text-black">{name}</h1>
           <div className="flex items-center gap-1.5">
             <div>
               <svg
@@ -96,7 +96,7 @@ export const OrganizerHeader = ({
               </svg>
             </div>
 
-            <p className="font-medium">{location}</p>
+            <p className="font-medium text-sm sm:text-base">{location}</p>
           </div>
           <div className="flex items-center gap-1.5">
             <svg
@@ -112,7 +112,7 @@ export const OrganizerHeader = ({
                 fill="white"
               />
             </svg>
-            <p className="font-medium">{`${startDate ? formatDate(startDate) : ''} ${endDate ? ` - ${formatDate(endDate)}` : ''}`}</p>
+            <p className="font-medium text-sm sm:text-base">{`${startDate ? formatDate(startDate) : ''} ${endDate ? ` - ${formatDate(endDate)}` : ''}`}</p>
           </div>
         </div>
 
