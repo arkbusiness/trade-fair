@@ -27,6 +27,6 @@ export * from './table-skeleton';
 export * from './time-range';
 export * from './organizer-sidebar-items';
 export * from './sidebar-user';
-export * from './global-header';
+export * from './organizer-global-header';
 export * from './dashboard-toolbar';
 export * from './table-tabs';

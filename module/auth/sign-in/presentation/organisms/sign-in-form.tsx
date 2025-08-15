@@ -8,16 +8,17 @@ import { useForm } from 'react-hook-form';
 import * as yup from 'yup';
 
 const validationSchema = yup.object().shape({
-  email: yup
-    .string()
-    .trim()
-    .email('Invalid email address')
-    .required('Email is required'),
+  // email: yup
+  //   .string()
+  //   .trim()
+  //   .email('Invalid email address')
+  //   .required('Email is required'),
+  username: yup.string().required('Username is required'),
   password: yup.string().required('Password is required.')
 });
 
 export interface ISigninFormValues {
-  email: string;
+  username: string;
   password: string;
 }
 
@@ -35,7 +36,7 @@ export const SigninForm = ({
     register
   } = useForm<ISigninFormValues>({
     defaultValues: {
-      email: '',
+      username: '',
       password: ''
     },
     resolver: yupResolver(validationSchema)
@@ -45,21 +46,21 @@ export const SigninForm = ({
     handleSubmitForm(values);
   };
 
-  const { email, password } = errors;
+  const { username: usernameError, password: passwordError } = errors;
 
   return (
     <form className="w-full" onSubmit={handleSubmit(onSubmit)}>
       <fieldset disabled={isLoading} className="flex flex-col gap-[1.86rem]">
-        {/* Email */}
+        {/*  Username */}
         <div>
           <Input
-            type="email"
-            label="Email"
+            type="text"
+            label="Username"
             placeholder="example@gmail.com"
-            hasError={!!email?.message?.length}
-            {...register('email')}
+            hasError={!!usernameError?.message?.length}
+            {...register('username')}
           />
-          <ErrorText message={email?.message} />
+          <ErrorText message={usernameError?.message} />
         </div>
 
         {/* Password */}
@@ -67,9 +68,9 @@ export const SigninForm = ({
           <PasswordInput
             {...register('password')}
             showInfo={false}
-            hasError={!!password?.message?.length}
+            hasError={!!passwordError?.message?.length}
           />
-          <ErrorText message={password?.message} />
+          <ErrorText message={passwordError?.message} />
         </div>
 
         <LoadingButton

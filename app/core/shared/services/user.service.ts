@@ -2,8 +2,8 @@ import { AxiosRequestConfig } from 'axios';
 
 export const organizerUserService = {
   getUser: () => ({
-    url: '/organizer/me',
-    queryKey: ['organizer-me']
+    url: '/organizer/profile',
+    queryKey: ['organizer-profile']
   }),
   changePassword: (data: {
     currentPassword: string;

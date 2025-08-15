@@ -8,33 +8,17 @@ import { formatDate } from '../../lib';
 import { AvatarMenu } from './avatar-menu';
 import { useSidebar } from '../atoms';
 import { AlignLeft } from 'lucide-react';
-
-interface GlobalHeaderProps {
-  name: string;
-  startDate: string;
-  endDate: string;
-}
+import { useOrganizerAuthStore } from '@/module/auth/store';
 
 export enum GlobalHeaderModalType {
   NONE,
   CONTACT_US
 }
 
-export const GlobalHeader = ({
-  name,
-  startDate,
-  endDate
-}: GlobalHeaderProps) => {
+export const OrganizerGlobalHeader = () => {
   const { toggleSidebar } = useSidebar();
+  const { handleLogOut } = useOrganizerAuthStore();
   const { user } = useOrganizerUser();
-
-  // const { firstName, lastName } = user ?? {};
-
-  // const fullName = getFullname({
-  //   firstName: firstName ?? '',
-  //   lastName: lastName ?? ''
-  // });
-  console.log(user);
 
   return (
     <header className="flex flex-col h-[var(--organizer-header-height)] fixed top-0 w-full z-20">
@@ -69,15 +53,20 @@ export const GlobalHeader = ({
             </div>
             <div className="flex flex-col text-background gap-2 max-w-[350px]">
               <h3 className="text-sm font-semibold line-clamp-1 hidden xs:block">
-                {name}
+                {user?.companyName}
               </h3>
-              <h4 className="text-xs font-medium hidden sm:block">{`${startDate ? formatDate(startDate) : ''} ${endDate ? ` - ${formatDate(endDate)}` : ''}`}</h4>
+              <h4 className="text-xs font-medium hidden sm:block">{`${user?.eventStartDate ? formatDate(user.eventStartDate) : ''} ${user?.eventEndDate ? ` - ${formatDate(user.eventEndDate)}` : ''}`}</h4>
             </div>
           </div>
         </div>
 
         <div className="flex items-center gap-x-2">
-          <AvatarMenu lastName="Ade" firstName="Johnson" />
+          <AvatarMenu
+            userName={user?.username ?? ''}
+            handleLogout={handleLogOut}
+            profilePageHref={ORGANIZER_APP_ROUTES.settings()}
+            settingPageHref={ORGANIZER_APP_ROUTES.settings()}
+          />
         </div>
       </div>
     </header>

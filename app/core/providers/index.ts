@@ -1,2 +1,2 @@
 export { ReactQueryClientProvider } from './query-provider';
-export * from './auth-provider';
+export * from './organizer-auth-provider';

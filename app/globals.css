@@ -57,6 +57,8 @@ body {
   --light-gray-2: #fefcfc;
   --dark-brown: #662b00;
   --light-blue: #3b82f6;
+  --light-blue-2: #0088ff;
+  --dark-blue: #4f46e5;
   --dark-blue: #4f46e5;
   --gray-light: #e1e1e1;
   --gray-light-2: #eeeeee;
@@ -115,6 +117,7 @@ body {
   --hr: #ede7e7;
   --sidebar-highlight: #1d0202;
   --light-blue: #3b82f6;
+  --light-blue-2: #0088ff;
   --dark-blue: #4f46e5;
   --gray-light: #e1e1e1;
   --gray-light-2: #eeeeee;
@@ -187,6 +190,7 @@ body {
   --color-lavender-light: var(--lavender-light);
   --color-purple-primary: var(--purple-primary);
   --color-blue-light: var(--blue-light);
+  --color-light-blue-2: var(--light-blue-2);
   --color-yellow-light: var(--yellow-light);
   --color-yellow-dark: var(--yellow-dark);
   --color-gray-light-2: var(--gray-light-2);

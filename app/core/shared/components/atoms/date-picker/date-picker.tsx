@@ -49,7 +49,7 @@ export const DatePicker = <T extends FieldValues>({
           {label}
         </label>
       )}
-      <div className="flex items-center h-10 w-full rounded-md border  bg-background  text-sm ring-offset-background disabled:cursor-not-allowed disabled:opacity-50 relative">
+      <div className="flex items-center h-10 w-full rounded-md border  bg-background  text-sm ring-offset-background disabled:cursor-not-allowed disabled:opacity-50">
         <div className="flex-1 h-full text-left">
           <ReactDatePicker
             name={name}

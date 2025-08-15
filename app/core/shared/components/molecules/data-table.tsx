@@ -97,7 +97,7 @@ export function DataTable<TData>({
           )}
         >
           <Table className="w-full">
-            <TableHeader className="bg-transparent">
+            <TableHeader className="bg-light-gray-2">
               {table.getHeaderGroups().map((headerGroup) => (
                 <TableRow key={headerGroup.id}>
                   {headerGroup.headers.map((header) => {

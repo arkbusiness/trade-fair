@@ -1,9 +1,13 @@
+import { BoothsHeader } from '../atoms/booths-header';
+import { BoothsTable } from '../organisms';
+
 export const BoothsPage = () => {
   return (
-    <div className="flex flex-col">
-      Lorem ipsum dolor, sit amet consectetur adipisicing elit. Repellat neque
-      ex deserunt inventore eos sit, nisi architecto sed iusto quis non sapiente
-      saepe assumenda deleniti odio tempora illum. Facilis, culpa?
+    <div className="w-full flex flex-col gap-5">
+      <BoothsHeader />
+      <div>
+        <BoothsTable />
+      </div>
     </div>
   );
 };

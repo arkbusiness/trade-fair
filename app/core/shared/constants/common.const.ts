@@ -3,7 +3,7 @@ export const ORGANIZER_APP_ROUTES = {
   settings: () => '/organizer/settings',
   auth: {
     login: () => '/organizer/sign-in',
-    signup: () => '/organizer/sign-up',
+    signup: (token: string) => `/organizer/sign-up/${token}`,
     onboarding: () => '/organizer/onboarding'
   },
   exhibitors: {

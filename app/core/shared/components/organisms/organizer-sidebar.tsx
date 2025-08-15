@@ -2,10 +2,15 @@
 import type * as React from 'react';
 import { Sidebar, SidebarContent, SidebarFooter } from '../atoms';
 import { OrganizerSidebarItems, SidebarUser } from '../molecules';
+import { useOrganizerUser } from '../../hooks/api';
+import { useOrganizerAuthStore } from '@/module/auth/store';
+import { ORGANIZER_APP_ROUTES } from '../../constants';
 
 export function OrganizerSidebar({
   ...props
 }: React.ComponentProps<typeof Sidebar>) {
+  const { handleLogOut } = useOrganizerAuthStore();
+  const { user } = useOrganizerUser();
   return (
     <Sidebar
       collapsible="offcanvas"
@@ -16,7 +21,14 @@ export function OrganizerSidebar({
         <OrganizerSidebarItems />
       </SidebarContent>
       <SidebarFooter>
-        <SidebarUser name="Ade Johnson" email="example@example.com" />
+        <SidebarUser
+          companyName={user?.companyName ?? ''}
+          username={user?.username ?? ''}
+          email={user?.officialEmail ?? ''}
+          profilePageHref={ORGANIZER_APP_ROUTES.settings()}
+          settingPageHref={ORGANIZER_APP_ROUTES.settings()}
+          handleLogOut={handleLogOut}
+        />
       </SidebarFooter>
     </Sidebar>
   );

@@ -7,15 +7,21 @@ import { isDev } from '@/app/core/shared/utils';
 import { deleteCookie, getCookie, setCookie } from 'cookies-next';
 import { create } from 'zustand';
 
-export interface IAuthUser {
+export interface IOrganizerAuthUser {
   id: string;
-  email: string;
-  firstName: string;
-  lastName: string;
-  isActive: boolean;
+  companyName: string;
+  contactName: string;
+  contactPhone: string;
+  username: string;
+  officialEmail: string;
   createdAt: string;
   updatedAt: string;
-  phone: string;
+  country: string;
+  eventName: string;
+  eventStartDate: string;
+  eventEndDate: string;
+  venueName: string;
+  invitedId: string;
 }
 interface IAuthState {
   accessToken: string;
@@ -38,7 +44,7 @@ const INITIAL_STATE = {
   inviteToken: ''
 };
 
-export const useAuthStore = create<IAuthState>()((set) => ({
+export const useOrganizerAuthStore = create<IAuthState>()((set) => ({
   ...INITIAL_STATE,
   hasCheckedToken: false,
   handleLoadToken: async () => {
@@ -47,21 +53,21 @@ export const useAuthStore = create<IAuthState>()((set) => ({
       const inviteToken = (await getCookie(COOKIE_KEYS.auth.inviteToken)) || '';
 
       if (!accessToken && !inviteToken) {
-        useAuthStore.getState().handleLogOut();
+        useOrganizerAuthStore.getState().handleLogOut();
         return;
       }
 
       if (accessToken) {
-        useAuthStore.getState().handleSaveToken({ accessToken });
+        useOrganizerAuthStore.getState().handleSaveToken({ accessToken });
       }
 
       if (inviteToken) {
-        useAuthStore.getState().handleSaveToken({ inviteToken });
+        useOrganizerAuthStore.getState().handleSaveToken({ inviteToken });
       }
 
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (_error) {
-      useAuthStore.getState().handleLogOut();
+      useOrganizerAuthStore.getState().handleLogOut();
     } finally {
       set((state) => ({
         ...state,

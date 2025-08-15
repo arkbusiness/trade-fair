@@ -1,21 +1,21 @@
-import { IAuthUser, useAuthStore } from '@/module/auth/store';
 import { useQuery } from '@tanstack/react-query';
 import { AxiosError } from 'axios';
 import { clientAxios } from '../../lib';
 import { organizerUserService } from '../../services';
+import { IOrganizerAuthUser, useOrganizerAuthStore } from '@/module/auth/store';
 
 export const useOrganizerUser = () => {
-  const { accessToken, handleLogOut } = useAuthStore();
+  const { accessToken, handleLogOut } = useOrganizerAuthStore();
 
   const fetchUser = async (
     errorCallback?: () => void
-  ): Promise<IAuthUser | null> => {
+  ): Promise<IOrganizerAuthUser | null> => {
     try {
       const response = await clientAxios({
         method: 'get',
         url: organizerUserService.getUser().url
       });
-      const responseData = response.data as IAuthUser;
+      const responseData = response.data as IOrganizerAuthUser;
 
       return responseData;
     } catch (error: unknown) {
@@ -35,7 +35,7 @@ export const useOrganizerUser = () => {
     isLoading: isLoadingUser,
     refetch: refetchUser,
     ...queryMeta
-  } = useQuery<IAuthUser | null>({
+  } = useQuery<IOrganizerAuthUser | null>({
     queryKey: organizerUserService.getUser().queryKey,
     queryFn: () =>
       fetchUser(() => {

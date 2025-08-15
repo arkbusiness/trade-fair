@@ -1,8 +1,7 @@
 'use client';
 
-import { useAuthStore } from '@/module/auth/store';
 import { LogOut, MoreVerticalIcon, Settings, UserCircle } from 'lucide-react';
-import { useOrganizerUser } from '../../hooks/api';
+import { useRouter } from 'nextjs-toploader/app';
 import { useIsMobile } from '../../hooks/use-mobile';
 import {
   DropdownMenu,
@@ -15,26 +14,33 @@ import {
   SidebarMenuButton,
   SidebarMenuItem
 } from '../atoms';
-import { useRouter } from 'nextjs-toploader/app';
-import { ORGANIZER_APP_ROUTES } from '../../constants';
 
 interface SidebarUserProps {
-  name: string;
+  companyName: string;
+  username: string;
   email: string;
+  profilePageHref: string;
+  settingPageHref: string;
+  handleLogOut: () => void;
 }
 
-export function SidebarUser({ name, email }: SidebarUserProps) {
-  const { user } = useOrganizerUser();
+export function SidebarUser({
+  companyName,
+  username,
+  email,
+  profilePageHref,
+  settingPageHref,
+  handleLogOut
+}: SidebarUserProps) {
   const isMobile = useIsMobile();
-  const { handleLogOut } = useAuthStore();
   const router = useRouter();
 
   const handleNavigateToProfile = () => {
-    router.push(ORGANIZER_APP_ROUTES.settings());
+    router.push(profilePageHref);
   };
 
   const handleNavigateToSettings = () => {
-    router.push(ORGANIZER_APP_ROUTES.settings());
+    router.push(settingPageHref);
   };
 
   return (
@@ -48,7 +54,7 @@ export function SidebarUser({ name, email }: SidebarUserProps) {
             >
               <div className="grid flex-1 text-left text-sm leading-tight gap-y-1">
                 <span className="truncate font-semibold text-[0.75rem] text-text-secondary">
-                  {name}
+                  {companyName}
                 </span>
                 <span className="truncate font-normal text-[0.63rem] text-foreground/70">
                   {email}
@@ -68,10 +74,10 @@ export function SidebarUser({ name, email }: SidebarUserProps) {
               <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
                 <div className="grid flex-1 text-left text-sm leading-tight gap-y-1">
                   <span className="line-clamp-1 truncate inline-block font-semibold text-[0.75rem] text-text-secondary">
-                    {user?.firstName} {user?.lastName}
+                    {username}
                   </span>
                   <span className="truncate inline-block line-clamp-1 font-normal text-[0.63rem] text-foreground/70">
-                    {user?.email}
+                    {email}
                   </span>
                 </div>
               </div>

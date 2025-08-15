@@ -5,17 +5,16 @@ import { cookies } from 'next/headers';
 import Image from 'next/image';
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
-import { ReactNode } from 'react';
 
-interface AuthLayoutProps {
-  children: ReactNode;
-}
-
-export default async function AuthLayout({ children }: AuthLayoutProps) {
+export default async function OrganizerOnboardingLayout({
+  children
+}: {
+  children: React.ReactNode;
+}) {
   const accessToken = (await cookies()).get(COOKIE_KEYS.auth.token)?.value;
 
-  if (accessToken) {
-    return redirect(ORGANIZER_APP_ROUTES.root());
+  if (!accessToken) {
+    return redirect(ORGANIZER_APP_ROUTES.auth.login());
   }
 
   return (

@@ -5,18 +5,17 @@ import { useCustomMutation } from '@/app/core/shared/hooks/use-mutate';
 import { errorHandler } from '@/app/core/shared/utils';
 import { AuthCard, AuthContainer } from '@/module/auth/components';
 import { organizerAuthService } from '@/module/auth/services';
-import { useAuthStore } from '@/module/auth/store';
+import { useOrganizerAuthStore } from '@/module/auth/store';
 import { useRouter } from 'nextjs-toploader/app';
 import toast from 'react-hot-toast';
-import { SignupPrompt } from '../atoms';
 import { SigninForm } from '../organisms';
 import { ISigninFormValues } from '../organisms/sign-in-form';
 
 export const OrganizerSigninPage = () => {
   const router = useRouter();
-  const { handleSaveToken, handleLogOut } = useAuthStore();
+  const { handleSaveToken, handleLogOut } = useOrganizerAuthStore();
   const mutation = useCustomMutation<{
-    access_token: string;
+    accessToken: string;
   }>();
 
   const handleSubmit = (values: ISigninFormValues) => {
@@ -27,7 +26,7 @@ export const OrganizerSigninPage = () => {
         toast.error(errorMessage);
       },
       onSuccess(data) {
-        const token = data?.access_token;
+        const token = data?.accessToken;
         if (token) {
           handleSaveToken({ accessToken: token });
           router.push(ORGANIZER_APP_ROUTES.root());
@@ -40,9 +39,9 @@ export const OrganizerSigninPage = () => {
 
   return (
     <AuthContainer>
-      <div className="mb-4.5">
+      {/* <div className="mb-4.5">
         <SignupPrompt href={ORGANIZER_APP_ROUTES.auth.signup()} />
-      </div>
+      </div> */}
       <AuthCard>
         <div className="mb-[1.61rem]">
           <header className="flex flex-col gap-[0.66rem] text-center">

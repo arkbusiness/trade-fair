@@ -8,10 +8,11 @@ import {
   PhoneNumberInput
 } from '@/app/core/shared/components/molecules';
 import { ORGANIZER_APP_ROUTES } from '@/app/core/shared/constants';
-import { useSetParams } from '@/app/core/shared/hooks';
 import { useCustomMutation } from '@/app/core/shared/hooks/use-mutate';
 import { errorHandler } from '@/app/core/shared/utils';
+import { useOrganizerAuthStore } from '@/module/auth/store';
 import { yupResolver } from '@hookform/resolvers/yup';
+import { useParams } from 'next/navigation';
 import { useRouter } from 'nextjs-toploader/app';
 import { useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
@@ -23,12 +24,9 @@ import * as yup from 'yup';
 import { organizerAuthService } from '../../../services';
 
 const validationSchema = yup.object().shape({
+  adminUsername: yup.string().trim().required('Username is required'),
+  companyName: yup.string().trim().required('Company name is required'),
   firstName: yup.string().trim().required('First name is required'),
-  email: yup
-    .string()
-    .trim()
-    .email('Invalid email address')
-    .required('Email is required'),
   lastName: yup.string().trim().required('Last name is required'),
   country: yup.string().trim().required('Country is required'),
   phoneNumber: yup
@@ -64,9 +62,10 @@ const validationSchema = yup.object().shape({
     .required('Confirm your password.')
 });
 export interface ISignupFormValues {
+  adminUsername: string;
   firstName: string;
   lastName: string;
-  email: string;
+  companyName: string;
   country: string;
   phoneNumber: string;
   password: string;
@@ -75,13 +74,13 @@ export interface ISignupFormValues {
 
 interface ISignupFormResponse {
   message: string;
-  token: string;
+  accessToken: string;
 }
 
 export const OrganizerSignupForm = () => {
-  const { searchParamsObject } = useSetParams();
-  const token = searchParamsObject['token'];
-  // const { handleSaveToken } = useAuthStore();
+  const param = useParams();
+  const token = (param?.token ?? '') as string;
+  const { handleSaveToken } = useOrganizerAuthStore();
   const mutation = useCustomMutation<ISignupFormResponse>();
   const router = useRouter();
   const {
@@ -92,9 +91,10 @@ export const OrganizerSignupForm = () => {
     register
   } = useForm<ISignupFormValues>({
     defaultValues: {
+      adminUsername: '',
       firstName: '',
       lastName: '',
-      email: '',
+      companyName: '',
       country: 'Nigeria',
       phoneNumber: '',
       confirmPassword: '',
@@ -104,16 +104,23 @@ export const OrganizerSignupForm = () => {
   });
 
   const onSubmit = (values: ISignupFormValues) => {
-    const { password, firstName, lastName, email, phoneNumber, country } =
-      values;
+    const {
+      password,
+      firstName,
+      lastName,
+      companyName,
+      phoneNumber,
+      country,
+      adminUsername
+    } = values;
 
     const formValues = {
       token,
-      firstName,
-      lastName,
-      email,
+      contactPhone: parsePhoneNumber(phoneNumber)?.number as string,
+      companyName,
+      contactName: firstName + ' ' + lastName,
       country,
-      phoneNumber: parsePhoneNumber(phoneNumber)?.number as string,
+      adminUsername,
       password
     };
 
@@ -123,12 +130,10 @@ export const OrganizerSignupForm = () => {
         toast.error(errorMessage);
       },
       onSuccess(data) {
-        const successMessage =
-          data?.message ??
-          'User registered successfully. Please verify your email.';
-        // const token = data?.token ?? '';
+        const successMessage = data?.message ?? 'User registered successfully.';
+        const token = data?.accessToken ?? '';
         toast.success(successMessage);
-        // handleSaveToken({ signupToken: token });
+        handleSaveToken({ accessToken: token });
         router.push(ORGANIZER_APP_ROUTES.auth.onboarding());
       }
     });
@@ -137,13 +142,14 @@ export const OrganizerSignupForm = () => {
   const watchedPhoneNo = watch('phoneNumber');
   const watchedCountry = watch('country');
   const {
-    email: emailError,
     firstName: firstNameError,
     lastName: lastNameError,
     phoneNumber: phoneNumberError,
     password: passwordError,
     confirmPassword: confirmPasswordError,
-    country: countryError
+    companyName: companyNameError,
+    country: countryError,
+    adminUsername: adminUsernameError
   } = errors;
 
   return (
@@ -155,6 +161,30 @@ export const OrganizerSignupForm = () => {
         className="flex flex-col gap-[1.86rem] w-full"
         disabled={mutation.isPending}
       >
+        <div className="grid lg:grid-cols-2 gap-[1.86rem]">
+          {/* Company Name */}
+          <div>
+            <Input
+              label="Company Name"
+              placeholder="Tech Innovations"
+              hasError={!!companyNameError?.message?.length}
+              {...register('companyName')}
+            />
+            <ErrorText message={companyNameError?.message} />
+          </div>
+
+          {/* Username */}
+          <div>
+            <Input
+              label="Username"
+              placeholder="Enter your username"
+              hasError={!!adminUsernameError?.message?.length}
+              {...register('adminUsername')}
+            />
+            <ErrorText message={adminUsernameError?.message} />
+          </div>
+        </div>
+
         <div className="grid lg:grid-cols-2 gap-[1.86rem]">
           {/* First Name */}
           <div>
@@ -179,16 +209,23 @@ export const OrganizerSignupForm = () => {
           </div>
         </div>
         <div className="grid lg:grid-cols-2 gap-[1.86rem]">
-          {/* Email */}
+          {/* Country */}
           <div>
-            <Input
-              type="email"
-              label="Email Address"
-              placeholder="example@gmail.com"
-              hasError={!!emailError?.message?.length}
-              {...register('email')}
+            <CountrySelector
+              name="country"
+              value={watchedCountry}
+              onChange={(value) => {
+                if (value) {
+                  setValue('country', value, {
+                    shouldValidate: true
+                  });
+                }
+              }}
+              hasError={!!countryError?.message?.length}
+              label="Country"
             />
-            <ErrorText message={emailError?.message} />
+
+            <ErrorText message={countryError?.message} />
           </div>
 
           {/* Phone Number */}
@@ -206,25 +243,6 @@ export const OrganizerSignupForm = () => {
           />
         </div>
 
-        {/* Country */}
-        <div>
-          <CountrySelector
-            name="country"
-            value={watchedCountry}
-            onChange={(value) => {
-              if (value) {
-                setValue('country', value, {
-                  shouldValidate: true
-                });
-              }
-            }}
-            hasError={!!countryError?.message?.length}
-            label="Country"
-          />
-
-          <ErrorText message={countryError?.message} />
-        </div>
-
         {/* Password */}
         <div>
           <PasswordInput
@@ -237,6 +255,7 @@ export const OrganizerSignupForm = () => {
         {/* Confirm Password */}
         <div>
           <PasswordInput
+            label="Confirm Password"
             hasError={!!confirmPasswordError?.message?.length}
             {...register('confirmPassword')}
           />

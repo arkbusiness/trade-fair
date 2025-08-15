@@ -1,9 +1,7 @@
 'use client';
 
-import { useAuthStore } from '@/module/auth/store';
 import { ChevronDown, LogOut, Settings, User, UserCircle } from 'lucide-react';
 import { useRouter } from 'nextjs-toploader/app';
-import { ORGANIZER_APP_ROUTES } from '../../constants';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -13,20 +11,26 @@ import {
   SidebarMenuButton
 } from '../atoms';
 interface AvatarMenuProps {
-  firstName: string;
-  lastName: string;
+  userName: string;
+  handleLogout(): void;
+  profilePageHref: string;
+  settingPageHref: string;
 }
 
-export function AvatarMenu({ firstName, lastName }: AvatarMenuProps) {
-  const { handleLogOut } = useAuthStore();
+export function AvatarMenu({
+  userName,
+  handleLogout,
+  profilePageHref,
+  settingPageHref
+}: AvatarMenuProps) {
   const router = useRouter();
 
   const handleNavigateToProfile = () => {
-    router.push(ORGANIZER_APP_ROUTES.settings());
+    router.push(profilePageHref);
   };
 
   const handleNavigateToSettings = () => {
-    router.push(ORGANIZER_APP_ROUTES.settings());
+    router.push(settingPageHref);
   };
 
   return (
@@ -43,10 +47,10 @@ export function AvatarMenu({ firstName, lastName }: AvatarMenuProps) {
                   <User size={18} />
                 </div>
                 <span className="line-clamp-1 font-semibold text-[0.7rem] flex-[0.9] hidden sm:inline-block">
-                  {lastName} {firstName}
+                  {userName}
                 </span>
                 <span className="line-clamp-1 font-semibold text-[0.7rem] flex-[0.9] sm:hidden">
-                  {firstName}
+                  {userName}
                 </span>
               </div>
               <div className="w-4 h-4 flex justify-center items-center">
@@ -79,7 +83,7 @@ export function AvatarMenu({ firstName, lastName }: AvatarMenuProps) {
             <DropdownMenuSeparator />
             <DropdownMenuItem
               className="cursor-pointer text-xs text-tertiary hover:text-tertiary!"
-              onClick={handleLogOut}
+              onClick={handleLogout}
             >
               <LogOut className="text-inherit" />
               Logout
