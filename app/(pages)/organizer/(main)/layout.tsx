@@ -27,11 +27,9 @@ export default async function OrganizerLayout({
           endDate="2025-08-10"
         />
         <OrganizerSidebar />
-        <main className="w-full overflow-x-hidden">
-          <div className=" px-[1.13rem] pb-[6.25rem] overflow-x-hidden relative top-[var(--organizer-header-height)]">
-            <div className="mt-7" />
-            {children}
-          </div>
+        <main className="w-full pb-[6.25rem] overflow-x-hidden relative top-[var(--organizer-header-height)] px-[1.13rem]">
+          <div className="mt-7" />
+          {children}
         </main>
       </SidebarProvider>
     </AuthProvider>

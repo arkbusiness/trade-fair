@@ -147,7 +147,7 @@ body {
   --color-tertiary-foreground: var(--tertiary-foreground);
   --color-highlight: var(--highlight);
   --color-gold: var(--gold);
-  --color-secondary: var(--secondary);
+  --color-secondary: var(--text-secondary);
   --color-secondary-foreground: var(--secondary-foreground);
   --color-muted: var(--muted);
   --color-muted-foreground: var(--muted-foreground);
