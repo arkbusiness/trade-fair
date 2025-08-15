@@ -47,7 +47,7 @@ const TABLE_TABS = [
     value: 'assigned'
   },
   {
-    label: 'Available',
+    label: 'Unassigned',
     value: 'available'
   }
 ];
@@ -278,11 +278,11 @@ export const BoothsTable = () => {
   const handleTabChange = (value: string) => {
     if (value === TABLE_TABS[0].value) {
       setFilterParams({
-        status: ''
+        filter: ''
       });
     } else {
       setFilterParams({
-        status: value
+        filter: value
       });
     }
   };
