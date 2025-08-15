@@ -41,7 +41,7 @@ export const OrganizerSigninPage = () => {
   return (
     <AuthContainer>
       <div className="mb-4.5">
-        <SignupPrompt />
+        <SignupPrompt href={ORGANIZER_APP_ROUTES.auth.signup()} />
       </div>
       <AuthCard>
         <div className="mb-[1.61rem]">

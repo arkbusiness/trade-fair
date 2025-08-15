@@ -1,9 +1,15 @@
+import { cn } from '@/app/core/shared/utils';
 import { ReactNode } from 'react';
 
 interface AuthContainerProps {
   children: ReactNode;
+  className?: string;
 }
 
-export const AuthContainer = ({ children }: AuthContainerProps) => {
-  return <div className="max-w-[33.94rem] w-full mx-auto">{children}</div>;
+export const AuthContainer = ({ children, className }: AuthContainerProps) => {
+  return (
+    <div className={cn('max-w-[34.75rem] w-full mx-auto relative', className)}>
+      {children}
+    </div>
+  );
 };

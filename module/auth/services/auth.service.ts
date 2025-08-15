@@ -6,6 +6,18 @@ export const organizerAuthService = {
     url: '/organizer/login',
     method: 'POST',
     data
+  }),
+  register: (data: {
+    token: string;
+    firstName: string;
+    lastName: string;
+    email: string;
+    phoneNumber: string;
+    password: string;
+  }): AxiosRequestConfig => ({
+    url: `/organizer/register/${data.token}`,
+    method: 'POST',
+    data
   })
   // resendOTP: (): AxiosRequestConfig => ({
   //   url: '/organizer/send-verification-code',

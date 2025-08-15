@@ -38,10 +38,7 @@ export const TimePicker = <T extends FieldValues>({
           {label}
         </label>
       )}
-      <div className="flex items-center h-10 w-full rounded-md border  bg-background  text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground disabled:cursor-not-allowed disabled:opacity-50 relative">
-        <div className="w-10 flex h-full  justify-center items-center border-r border-border">
-          <Clock size={16} />
-        </div>
+      <div className="flex items-center h-10 w-full rounded-md border  bg-background  text-sm ring-offset-background  file:bg-transparent disabled:cursor-not-allowed disabled:opacity-50 relative">
         <div className="flex-1 h-full text-left">
           <ReactDatePicker
             name={name}
@@ -55,6 +52,9 @@ export const TimePicker = <T extends FieldValues>({
             dateFormat="h:mm aa"
             className="h-full"
           />
+        </div>
+        <div className="w-10 flex h-full  justify-center items-center border-l border-border">
+          <Clock size={16} />
         </div>
       </div>
     </div>
