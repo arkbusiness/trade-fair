@@ -1,6 +1,5 @@
 import { MainContainer } from '@/app/core/shared/components/atoms';
 import { COOKIE_KEYS, ORGANIZER_APP_ROUTES } from '@/app/core/shared/constants';
-import { SigninPrompt } from '@/module/auth/sign-in/presentation/atoms';
 import { cookies } from 'next/headers';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -33,7 +32,6 @@ export default async function AuthLayout({ children }: AuthLayoutProps) {
             className="object-contain w-[5rem] sm:w-[6.35rem]"
           />
         </Link>
-        <SigninPrompt href={ORGANIZER_APP_ROUTES.auth.login()} />
       </div>
       <div className="w-full mt-[4.61rem]">{children}</div>
     </MainContainer>

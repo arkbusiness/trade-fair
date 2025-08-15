@@ -1,15 +1,31 @@
 import { useCustomQuery } from '@/app/core/shared/hooks';
 import { organizerOverviewService } from '../services';
 
+interface IOrganizerMetrics {
+  engagement: {
+    loggedInAttendees: number;
+    invitedAttendees: number;
+    loggedInExhibitors: number;
+    invitedExhibitors: number;
+    exhibitorCompletionRate: number;
+  };
+  counts: {
+    registeredExhibitors: number;
+    invitedExhibitors: number;
+    registeredAttendees: number;
+    invitedAttendees: number;
+    totalProducts: number;
+    productsUploadedInRange: number;
+  };
+}
+
 export const useOrganizerOverview = () => {
   const {
     data: overviewStats,
     isLoading: isLoadingOverviewStats,
     isRefetching: isRefetchingOverviewStats,
     refetch
-    // TODO: Remove any type
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  } = useCustomQuery<any>({
+  } = useCustomQuery<IOrganizerMetrics>({
     ...organizerOverviewService.getMetrics(),
     options: {
       staleTime: Infinity

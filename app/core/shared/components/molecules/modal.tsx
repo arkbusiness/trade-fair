@@ -18,6 +18,8 @@ interface ModalProps {
   onClose: () => void;
   isModal?: boolean;
   contentClassName?: string;
+  closeClassName?: string;
+  headerClassName?: string;
   loading?: boolean;
 }
 
@@ -27,6 +29,8 @@ export const Modal = ({
   description,
   children,
   contentClassName,
+  closeClassName,
+  headerClassName,
   isModal = true,
   visuallyHiddenTitle = false,
   onClose
@@ -54,8 +58,9 @@ export const Modal = ({
           'w-full max-w-[596px] sm:max-w-[596px]',
           contentClassName
         )}
+        closeClassName={closeClassName}
       >
-        <DialogHeader>
+        <DialogHeader className={headerClassName}>
           {title && !visuallyHiddenTitle && (
             <DialogTitle className="text-[1.25rem] font-bold">
               {title}

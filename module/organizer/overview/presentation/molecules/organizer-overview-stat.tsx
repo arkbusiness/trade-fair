@@ -1,3 +1,5 @@
+'use client';
+
 import {
   MetricCard,
   MetricCardSkeleton
@@ -11,50 +13,56 @@ import {
   User,
   Users
 } from 'lucide-react';
-
-const stats = {
-  engagement: {
-    loggedInAttendees: 1000,
-    invitedAttendees: 2000, // Used
-    loggedInExhibitors: 100,
-    invitedExhibitors: 200, // Used
-    exhibitorCompletionRate: +(200).toFixed(2)
-  },
-  counts: {
-    registeredExhibitors: 400, // Used
-    invitedExhibitors: 2500, // Used
-    registeredAttendees: 1000, // Used
-    invitedAttendees: 3000, // Used
-    totalProducts: 500, // Used
-    productsUploadedInRange: 100 // Used
-  }
-};
+import { useOrganizerOverview } from '../../hooks';
 
 export const OrganizerOverviewStat = () => {
-  const isLoading = false;
+  const { overviewStats, isLoadingOverviewStats, isRefetchingOverviewStats } =
+    useOrganizerOverview();
+  const isLoading = isLoadingOverviewStats || isRefetchingOverviewStats;
+
+  const { engagement, counts } = overviewStats ?? {
+    engagement: {
+      loggedInAttendees: 0,
+      invitedAttendees: 0,
+      loggedInExhibitors: 0,
+      invitedExhibitors: 0,
+      exhibitorCompletionRate: 0
+    },
+    counts: {
+      registeredExhibitors: 0,
+      invitedExhibitors: 0,
+      registeredAttendees: 0,
+      invitedAttendees: 0,
+      totalProducts: 0,
+      productsUploadedInRange: 0
+    }
+  };
+
+  // TODO: REMOVE
+  console.log(engagement);
 
   const PERFORMANCE_STATS = [
     {
       title: 'Registered Exhibitors/Invited',
-      value: `${stats.counts.registeredExhibitors?.toLocaleString()}/${stats.counts.invitedExhibitors?.toLocaleString()}`,
+      value: `${counts.registeredExhibitors?.toLocaleString()}/${counts.invitedExhibitors?.toLocaleString()}`,
       icon: <User className="text-tertiary" />,
       info: ''
     },
     {
       title: 'Registered Attendees/Invited',
-      value: `${stats.counts.registeredAttendees?.toLocaleString()}/${stats.counts.invitedAttendees?.toLocaleString()}`,
+      value: `${counts.registeredAttendees?.toLocaleString()}/${counts.invitedAttendees?.toLocaleString()}`,
       icon: <Users className="text-tertiary" />,
       info: ''
     },
     {
       title: 'Total Products',
-      value: `${stats.counts.totalProducts?.toLocaleString()}`,
+      value: `${counts.totalProducts?.toLocaleString()}`,
       icon: <Box className="text-tertiary" />,
       info: ''
     },
     {
       title: 'Products Uploaded',
-      value: `${stats.counts.productsUploadedInRange?.toLocaleString()}`,
+      value: `${counts.productsUploadedInRange?.toLocaleString()}`,
       icon: <Upload className="text-tertiary" />,
       info: ''
     }

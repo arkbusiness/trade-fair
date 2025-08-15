@@ -29,7 +29,8 @@ export function buildQueryParams<T extends Record<string, any>>({
   }
 
   if (appendDefaultLimit && !('limit' in params)) {
-    searchParams.append('limit', '8');
+    // TODO: UNCOMMENT AFTER IFEANYIN FIXES THE BUG
+    // searchParams.append('limit', '8');
   }
 
   return searchParams.toString();

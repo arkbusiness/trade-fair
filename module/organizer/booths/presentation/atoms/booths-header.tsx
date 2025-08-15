@@ -8,6 +8,9 @@ import {
 import { CsvIcon } from '@/app/core/shared/icons';
 import { CloudDownload, Plus } from 'lucide-react';
 import { useState } from 'react';
+import { BoothForm } from '../molecules';
+import { getQueryClient } from '@/app/core/shared/lib';
+import { boothsService } from '../../services';
 
 enum ModalType {
   NONE = 'NONE',
@@ -15,29 +18,23 @@ enum ModalType {
 }
 
 export const BoothsHeader = () => {
+  const queryClient = getQueryClient();
   const [activeModal, setActiveModal] = useState<ModalType>(ModalType.NONE);
 
-  console.log(activeModal);
-
-  // const closeModal = () => {
-  //   setActiveModal(ModalType.NONE);
-  // };
+  const closeModal = () => {
+    queryClient.invalidateQueries({
+      queryKey: [...boothsService.getBooths().queryKey]
+    });
+    setActiveModal(ModalType.NONE);
+  };
 
   return (
     <>
-      {/* {isRefetchingInventory && <OverlaySpinner />}
-      <Suspense>
-        <InventoryFormModal
-          isOpen={ModalType.CREATE_INVENTORY === activeModal}
-          onClose={closeModal}
-        />
-      </Suspense>
-      <Suspense>
-        <CategoryManagement
-          isOpen={ModalType.MANAGE_CATEGORIES === activeModal}
-          onClose={closeModal}
-        />
-      </Suspense> */}
+      <BoothForm
+        isOpen={activeModal === ModalType.ADD_BOOTH}
+        onClose={closeModal}
+        selectedBooth={null}
+      />
       <DashboardToolbar title="Manage Booths" description="">
         <div className="flex items-center gap-x-[7px]">
           <IconButton variant="outline">

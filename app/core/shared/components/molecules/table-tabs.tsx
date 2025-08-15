@@ -64,13 +64,13 @@ export const TableTabs = ({
           </Select>
         </div>
         <div className="hidden md:flex">
-          <TabsList className="flex bg-highlight h-[2.7rem] px-[1rem] rounded-[6px] gap-x-4">
+          <TabsList className="flex bg-transparent h-[2.7rem] px-[1rem] rounded-[6px] gap-x-4">
             {tabs.map((tab) => {
               return (
                 <TabsTrigger
                   value={tab.value}
                   key={tab.label}
-                  className="px-[10px] cursor-pointer"
+                  className="px-[10px] cursor-pointer data-[state=active]:bg-highlight data-[state=active]:text-tertiary rounded-[6px] data-[state=active]:shadow-none"
                   onClick={() => handleSelectedTab(tab)}
                 >
                   {tab.label}
