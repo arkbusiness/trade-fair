@@ -332,7 +332,7 @@ export const BoothsTable = () => {
           {/* Search */}
           <div className="xs:max-w-[300px] w-full">
             <TableSearchInput
-              placeholder="Search inventory, Item or category..."
+              placeholder="Search..."
               handleSearch={handleSearch}
             />
           </div>
