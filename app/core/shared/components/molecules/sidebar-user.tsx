@@ -2,7 +2,7 @@
 
 import { useAuthStore } from '@/module/auth/store';
 import { LogOut, MoreVerticalIcon, Settings, UserCircle } from 'lucide-react';
-import { useUser } from '../../hooks/api';
+import { useOrganizerUser } from '../../hooks/api';
 import { useIsMobile } from '../../hooks/use-mobile';
 import {
   DropdownMenu,
@@ -24,7 +24,7 @@ interface SidebarUserProps {
 }
 
 export function SidebarUser({ name, email }: SidebarUserProps) {
-  const { user } = useUser();
+  const { user } = useOrganizerUser();
   const isMobile = useIsMobile();
   const { handleLogOut } = useAuthStore();
   const router = useRouter();

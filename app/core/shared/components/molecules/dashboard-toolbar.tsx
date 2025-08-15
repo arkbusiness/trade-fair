@@ -2,7 +2,7 @@
 
 import { ReactNode } from 'react';
 import { Skeleton } from '../atoms';
-import { useUser } from '../../hooks/api';
+import { useOrganizerUser } from '../../hooks/api';
 
 interface DashboardToolbarProps {
   description: string | ReactNode;
@@ -15,7 +15,7 @@ export const DashboardToolbar = ({
   title,
   children
 }: DashboardToolbarProps) => {
-  const { user } = useUser();
+  const { user } = useOrganizerUser();
 
   return (
     <header className="flex flex-wrap items-center justify-between w-full mt-4 gap-3">

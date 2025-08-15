@@ -2,9 +2,9 @@ import { IAuthUser, useAuthStore } from '@/module/auth/store';
 import { useQuery } from '@tanstack/react-query';
 import { AxiosError } from 'axios';
 import { clientAxios } from '../../lib';
-import { userService } from '../../services';
+import { organizerUserService } from '../../services';
 
-export const useUser = () => {
+export const useOrganizerUser = () => {
   const { accessToken, handleLogOut } = useAuthStore();
 
   const fetchUser = async (
@@ -13,7 +13,7 @@ export const useUser = () => {
     try {
       const response = await clientAxios({
         method: 'get',
-        url: userService.getUser().url
+        url: organizerUserService.getUser().url
       });
       const responseData = response.data as IAuthUser;
 
@@ -36,7 +36,7 @@ export const useUser = () => {
     refetch: refetchUser,
     ...queryMeta
   } = useQuery<IAuthUser | null>({
-    queryKey: userService.getUser().queryKey,
+    queryKey: organizerUserService.getUser().queryKey,
     queryFn: () =>
       fetchUser(() => {
         handleLogOut();

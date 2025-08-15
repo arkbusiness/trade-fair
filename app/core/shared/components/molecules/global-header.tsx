@@ -3,7 +3,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { ORGANIZER_APP_ROUTES } from '../../constants';
-import { useUser } from '../../hooks/api';
+import { useOrganizerUser } from '../../hooks/api';
 import { formatDate } from '../../lib';
 import { AvatarMenu } from './avatar-menu';
 import { useSidebar } from '../atoms';
@@ -26,7 +26,7 @@ export const GlobalHeader = ({
   endDate
 }: GlobalHeaderProps) => {
   const { toggleSidebar } = useSidebar();
-  const { user } = useUser();
+  const { user } = useOrganizerUser();
 
   // const { firstName, lastName } = user ?? {};
 
