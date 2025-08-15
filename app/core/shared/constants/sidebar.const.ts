@@ -15,38 +15,25 @@ export const ORGANIZER_SIDEBAR_ITEMS = [
     icon: BoothIcon,
     routes: [
       {
-        title: 'Booth categories',
-        url: ORGANIZER_APP_ROUTES.exhibitors.booths.categories.root()
-      },
-      {
         title: 'Manage booths',
         url: ORGANIZER_APP_ROUTES.exhibitors.booths.root()
       },
       {
-        title: 'exhibitors',
+        title: 'Exhibitors',
         url: ORGANIZER_APP_ROUTES.exhibitors.root()
       }
     ]
   },
   {
     title: 'Attendees',
-    url: undefined,
+    url: ORGANIZER_APP_ROUTES.attendees.root(),
     icon: AltUserIcon,
-    routes: [
-      {
-        title: 'Manage attendees',
-        url: ORGANIZER_APP_ROUTES.attendees.root()
-      },
-      {
-        title: 'Attendees overview',
-        url: ORGANIZER_APP_ROUTES.attendees.overview()
-      }
-    ]
+    routes: []
   },
   {
     title: 'Settings',
     url: ORGANIZER_APP_ROUTES.settings(),
     icon: SettingsIcon,
     routes: []
-  },
+  }
 ];

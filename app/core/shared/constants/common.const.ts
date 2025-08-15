@@ -7,17 +7,13 @@ export const ORGANIZER_APP_ROUTES = {
     onboarding: () => '/organizer/onboarding'
   },
   exhibitors: {
-    root: () => '/organizer/exhibitors',
+    root: () => '/organizer/exhibitors/manage',
     booths: {
-      root: () => '/organizer/exhibitors/booths',
-      categories: {
-        root: () => '/organizer/exhibitors/booths/categories'
-      }
+      root: () => '/organizer/exhibitors/booths'
     }
   },
   attendees: {
-    root: () => '/organizer/attendees',
-    overview: () => '/organizer/attendees/overview'
+    root: () => '/organizer/attendees'
   }
 };
 
