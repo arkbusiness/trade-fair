@@ -10,6 +10,7 @@ import {
   Text
 } from '@/app/core/shared/components/atoms';
 import {
+  ConfirmationModal,
   DataTable,
   TableSearchInput,
   TableTabs
@@ -20,13 +21,16 @@ import {
   useTablePagination
 } from '@/app/core/shared/hooks';
 import { formatDate } from '@/app/core/shared/lib';
-import { cn } from '@/app/core/shared/utils';
+import { cn, errorHandler } from '@/app/core/shared/utils';
 import { ColumnDef } from '@tanstack/react-table';
 import { CirclePlus, MoreHorizontal } from 'lucide-react';
 import Image from 'next/image';
 import { useState } from 'react';
 import { IBooth, useBooths } from '../../hooks';
-import { BoothDetails, BoothForm } from '../molecules';
+import { AssignExhibitorForm, BoothDetails, BoothForm } from '../molecules';
+import { useCustomMutation } from '@/app/core/shared/hooks/use-mutate';
+import { boothsService } from '../../services';
+import toast from 'react-hot-toast';
 
 enum ModalType {
   NONE = 'NONE',
@@ -53,6 +57,7 @@ const TABLE_TABS = [
 ];
 
 export const BoothsTable = () => {
+  const mutation = useCustomMutation();
   const { setFilterParams, filter } = useQueryFilters([
     'filter',
     'search',
@@ -297,6 +302,21 @@ export const BoothsTable = () => {
     });
   };
 
+  const handleConfirmDelete = () => {
+    if (!selectedBooth) return;
+
+    mutation.mutate(boothsService.deleteBooth(selectedBooth?.id), {
+      onError(error) {
+        const errorMessage = errorHandler(error);
+        toast.error(errorMessage);
+      },
+      onSuccess() {
+        toast.success('Booth deleted successfully.');
+        handleCloseModal();
+      }
+    });
+  };
+
   const { table } = useTable({
     columns: columns,
     data: booths,
@@ -326,6 +346,21 @@ export const BoothsTable = () => {
         handleClose={handleCloseModal}
         handleEdit={handleEditBooth}
         selectedBooth={selectedBooth}
+      />
+
+      <AssignExhibitorForm
+        isOpen={activeModal === ModalType.ASSIGN_EXHIBITOR}
+        onClose={handleCloseModal}
+        selectedBooth={selectedBooth}
+      />
+
+      <ConfirmationModal
+        title="Delete Booth"
+        description="Are you sure you want to delete this booth?"
+        isOpen={activeModal === ModalType.DELETE_BOOTH}
+        onClose={handleCloseModal}
+        onConfirm={handleConfirmDelete}
+        isLoading={mutation.isPending}
       />
 
       <div className="flex flex-col gap-y-4">

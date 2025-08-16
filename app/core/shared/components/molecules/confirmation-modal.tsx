@@ -32,10 +32,11 @@ export const ConfirmationModal = ({
       isModal={isModal}
       title={title}
       description={description}
-      contentClassName="z-50"
+      contentClassName="px-0 pb-6 overflow-hidden z-50"
+      headerClassName="px-6"
       onClose={onClose}
     >
-      <div className="flex w-full items-center justify-end space-x-2 pt-6">
+      <div className="flex w-full items-center justify-end space-x-2 pt-6 px-6">
         <LoadingButton
           disabled={isLoading}
           variant="tertiary"

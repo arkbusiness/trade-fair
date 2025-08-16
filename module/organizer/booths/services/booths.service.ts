@@ -24,9 +24,13 @@ export const boothsService = {
     url: `/organizer/booths/${id}`,
     method: 'DELETE'
   }),
-  assignExhibitor: (id: string): AxiosRequestConfig => ({
+  assignExhibitor: (
+    id: string,
+    data: { exhibitorId: string }
+  ): AxiosRequestConfig => ({
     url: `/organizer/booths/${id}/assign`,
-    method: 'PUT'
+    method: 'PUT',
+    data
   }),
   /**
    * Updates a booth with the given ID.
