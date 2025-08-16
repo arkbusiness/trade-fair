@@ -8,7 +8,7 @@ import { formatDate } from '../../lib';
 import { AvatarMenu } from './avatar-menu';
 import { useSidebar } from '../atoms';
 import { AlignLeft } from 'lucide-react';
-import { useOrganizerAuthStore } from '@/module/auth/store';
+import { useOrganizerAuthStore } from '@/app/module/auth/store';
 
 export enum GlobalHeaderModalType {
   NONE,

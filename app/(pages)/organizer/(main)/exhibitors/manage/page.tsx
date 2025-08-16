@@ -1,6 +1,6 @@
 import { ARK_META } from '@/app/core/shared/constants/common.const';
 import { createMetaTitle } from '@/app/core/shared/utils';
-import { ExhibitorsPage } from '@/module/organizer/exhibitors/presentation/pages';
+import { ExhibitorsPage } from '@/app/module/organizer/exhibitors/presentation/pages';
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {

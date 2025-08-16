@@ -1,6 +1,6 @@
 import { MainContainer } from '@/app/core/shared/components/atoms';
 import { COOKIE_KEYS, ORGANIZER_APP_ROUTES } from '@/app/core/shared/constants';
-import { SigninPrompt } from '@/module/auth/sign-in/presentation/atoms';
+import { SigninPrompt } from '@/app/module/auth/sign-in/presentation/atoms';
 import { cookies } from 'next/headers';
 import Image from 'next/image';
 import Link from 'next/link';

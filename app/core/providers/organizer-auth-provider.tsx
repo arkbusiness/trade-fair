@@ -4,7 +4,7 @@ import { useRouter } from 'next/navigation';
 import { ReactNode, useEffect } from 'react';
 import { SplashScreen } from '../shared/components/atoms';
 import { useOrganizerUser } from '../shared/hooks/api';
-import { useOrganizerAuthStore } from '@/module/auth/store';
+import { useOrganizerAuthStore } from '@/app/module/auth/store';
 import { ORGANIZER_APP_ROUTES } from '../shared/constants';
 
 export const OrganizerAuthProvider = ({

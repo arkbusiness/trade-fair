@@ -2,7 +2,10 @@ import { useQuery } from '@tanstack/react-query';
 import { AxiosError } from 'axios';
 import { clientAxios } from '../../lib';
 import { organizerUserService } from '../../services';
-import { IOrganizerAuthUser, useOrganizerAuthStore } from '@/module/auth/store';
+import {
+  IOrganizerAuthUser,
+  useOrganizerAuthStore
+} from '@/app/module/auth/store';
 
 export const useOrganizerUser = () => {
   const { accessToken, handleLogOut } = useOrganizerAuthStore();

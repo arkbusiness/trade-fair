@@ -1,5 +1,5 @@
 import { createMetaTitle } from '@/app/core/shared/utils';
-import { OrganizerSignupPage } from '@/module/auth/organizer-signup/presentation/pages';
+import { OrganizerSignupPage } from '@/app/module/auth/organizer-signup/presentation/pages';
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {

@@ -3,7 +3,7 @@ import type * as React from 'react';
 import { Sidebar, SidebarContent, SidebarFooter } from '../atoms';
 import { OrganizerSidebarItems, SidebarUser } from '../molecules';
 import { useOrganizerUser } from '../../hooks/api';
-import { useOrganizerAuthStore } from '@/module/auth/store';
+import { useOrganizerAuthStore } from '@/app/module/auth/store';
 import { ORGANIZER_APP_ROUTES } from '../../constants';
 
 export function OrganizerSidebar({

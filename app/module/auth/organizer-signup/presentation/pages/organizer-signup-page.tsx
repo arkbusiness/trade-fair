@@ -1,5 +1,5 @@
-import { AuthCard } from '@/module/auth/components/auth-card';
-import { AuthContainer } from '@/module/auth/components/auth-container';
+import { AuthCard } from '@/app/module/auth/components/auth-card';
+import { AuthContainer } from '@/app/module/auth/components/auth-container';
 import { OrganizerSignupForm } from '../organisms';
 
 export const OrganizerSignupPage = () => {

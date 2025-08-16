@@ -9,7 +9,7 @@ import { LoadingButton } from '@/app/core/shared/components/molecules';
 import { ORGANIZER_APP_ROUTES } from '@/app/core/shared/constants';
 import { useCustomMutation } from '@/app/core/shared/hooks/use-mutate';
 import { errorHandler } from '@/app/core/shared/utils';
-import { organizerAuthService } from '@/module/auth/services';
+import { organizerAuthService } from '@/app/module/auth/services';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { formatISO } from 'date-fns';
 import { useRouter } from 'next/navigation';

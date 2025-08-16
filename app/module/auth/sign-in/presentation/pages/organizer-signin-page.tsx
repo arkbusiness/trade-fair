@@ -3,9 +3,9 @@
 import { ORGANIZER_APP_ROUTES } from '@/app/core/shared/constants';
 import { useCustomMutation } from '@/app/core/shared/hooks/use-mutate';
 import { errorHandler } from '@/app/core/shared/utils';
-import { AuthCard, AuthContainer } from '@/module/auth/components';
-import { organizerAuthService } from '@/module/auth/services';
-import { useOrganizerAuthStore } from '@/module/auth/store';
+import { AuthCard, AuthContainer } from '@/app/module/auth/components';
+import { organizerAuthService } from '@/app/module/auth/services';
+import { useOrganizerAuthStore } from '@/app/module/auth/store';
 import { useRouter } from 'nextjs-toploader/app';
 import toast from 'react-hot-toast';
 import { SigninForm } from '../organisms';
