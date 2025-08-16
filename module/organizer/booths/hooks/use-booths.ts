@@ -7,7 +7,7 @@ import { EMPTY_ARRAY } from '@/app/core/shared/constants';
 export interface IBooth {
   id: string;
   number: string;
-  assigned: boolean;
+  status: string;
   assignedAt?: string;
   categoryName: string;
   categoryId: string;
@@ -19,6 +19,10 @@ export interface IBooth {
     contactName: string;
     contactPhone?: string;
   };
+  exhibitorName?: string | null;
+  exhibitorEmail?: string | null;
+  exhibitorId?: string | null;
+  productsCount: number;
   exhibitor?: {
     companyName: string;
     companyEmail: string;
@@ -26,7 +30,7 @@ export interface IBooth {
     contactPhone: string;
     logoUrl?: string;
   } | null;
-  exhibitorId?: string;
+  createdAt?: string;
 }
 
 export const useBooths = (filter: Record<string, string> = {}) => {

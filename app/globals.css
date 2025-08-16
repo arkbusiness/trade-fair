@@ -204,6 +204,10 @@ body {
     @apply border-border outline-ring/50;
   }
 
+  button {
+    cursor: pointer;
+  }
+
   .PhoneInput {
     @apply rounded-[4px] placeholder:text-muted-foreground border border-input text-sm h-[2.5rem];
     padding: 10px;

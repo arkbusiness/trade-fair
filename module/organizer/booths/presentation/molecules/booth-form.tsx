@@ -117,7 +117,6 @@ export const BoothForm = ({
       description={selectedBooth ? 'Edit booth details' : 'Create a new booth'}
       contentClassName="px-0 pb-0 overflow-hidden"
       headerClassName="px-6"
-      closeClassName="text-tertiary"
     >
       <form
         className="flex flex-col gap-[1.86rem] w-full text-left relative"

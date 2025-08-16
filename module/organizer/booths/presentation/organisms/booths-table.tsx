@@ -26,7 +26,7 @@ import { CirclePlus, MoreHorizontal } from 'lucide-react';
 import Image from 'next/image';
 import { useState } from 'react';
 import { IBooth, useBooths } from '../../hooks';
-import { BoothForm } from '../molecules';
+import { BoothDetails, BoothForm } from '../molecules';
 
 enum ModalType {
   NONE = 'NONE',
@@ -54,7 +54,7 @@ const TABLE_TABS = [
 
 export const BoothsTable = () => {
   const { setFilterParams, filter } = useQueryFilters([
-    'status',
+    'filter',
     'search',
     'page'
   ]);
@@ -166,7 +166,7 @@ export const BoothsTable = () => {
       accessorKey: 'assigned',
       header: 'Status',
       cell: ({ row }) => {
-        const isAssigned = row.original.assigned;
+        const isAssigned = row.original?.status?.toLowerCase() === 'assigned';
         const assignedLabel = isAssigned ? 'assigned' : 'unassigned';
 
         const mapStatus = {
@@ -269,10 +269,14 @@ export const BoothsTable = () => {
     }
   ];
 
-  const closeModal = () => {
-    console.log('closed booth');
+  const handleCloseModal = () => {
     refetchBooths();
     setActiveModal(ModalType.NONE);
+  };
+
+  const handleEditBooth = (booth: IBooth) => {
+    setSelectedBooth(booth);
+    setActiveModal(ModalType.EDIT_BOOTH);
   };
 
   const handleTabChange = (value: string) => {
@@ -313,7 +317,14 @@ export const BoothsTable = () => {
           activeModal === ModalType.ADD_BOOTH ||
           activeModal === ModalType.EDIT_BOOTH
         }
-        onClose={closeModal}
+        onClose={handleCloseModal}
+        selectedBooth={selectedBooth}
+      />
+
+      <BoothDetails
+        isOpen={activeModal === ModalType.VIEW_BOOTH}
+        handleClose={handleCloseModal}
+        handleEdit={handleEditBooth}
         selectedBooth={selectedBooth}
       />
 
