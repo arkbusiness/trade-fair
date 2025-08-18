@@ -38,6 +38,7 @@ enum ModalType {
   EDIT_BOOTH = 'EDIT_BOOTH',
   DELETE_BOOTH = 'DELETE_BOOTH',
   ASSIGN_EXHIBITOR = 'ASSIGN_EXHIBITOR',
+  UNASSIGN_EXHIBITOR = 'UNASSIGN_EXHIBITOR',
   VIEW_BOOTH = 'VIEW_BOOTH'
 }
 
@@ -168,7 +169,7 @@ export const BoothsTable = () => {
       }
     },
     {
-      accessorKey: 'assigned',
+      accessorKey: 'status',
       header: 'Status',
       cell: ({ row }) => {
         const isAssigned = row.original?.status?.toLowerCase() === 'assigned';
@@ -220,6 +221,8 @@ export const BoothsTable = () => {
       id: 'actions',
       enableHiding: false,
       cell: ({ row }) => {
+        const isAssigned = row.original?.status?.toLowerCase() === 'assigned';
+
         return (
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
@@ -252,10 +255,16 @@ export const BoothsTable = () => {
               <DropdownMenuItem
                 className="cursor-pointer text-xs"
                 onClick={() => {
-                  setActiveModal(ModalType.ASSIGN_EXHIBITOR);
+                  if (isAssigned) {
+                    setActiveModal(ModalType.UNASSIGN_EXHIBITOR);
+                  } else {
+                    setActiveModal(ModalType.ASSIGN_EXHIBITOR);
+                  }
+
+                  setSelectedBooth(row.original);
                 }}
               >
-                Assign exhibitor
+                {isAssigned ? 'Unassign exhibitor' : 'Assign exhibitor'}
               </DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuItem
@@ -317,6 +326,32 @@ export const BoothsTable = () => {
     });
   };
 
+  const handleConfirmUnassign = () => {
+    if (!selectedBooth) return;
+
+    mutation.mutate(boothsService.unassignExhibitor(selectedBooth?.id), {
+      onError(error) {
+        const errorMessage = errorHandler(error);
+        toast.error(errorMessage);
+      },
+      onSuccess() {
+        toast.success('Booth unassigned successfully.');
+        handleCloseModal();
+      }
+    });
+  };
+
+  const handleConfirm = () => {
+    switch (activeModal) {
+      case ModalType.DELETE_BOOTH:
+        handleConfirmDelete();
+        break;
+      case ModalType.UNASSIGN_EXHIBITOR:
+        handleConfirmUnassign();
+        break;
+    }
+  };
+
   const { table } = useTable({
     columns: columns,
     data: booths,
@@ -329,6 +364,25 @@ export const BoothsTable = () => {
     handleGoToNextPage,
     handleGoToLastPage
   } = useTablePagination({ table });
+
+  const confirmModal = {
+    [ModalType.DELETE_BOOTH]: {
+      title: 'Delete Booth',
+      description: 'Are you sure you want to delete this booth?'
+    },
+    [ModalType.UNASSIGN_EXHIBITOR]: {
+      title: 'Unassign Booth',
+      description:
+        'Are you sure you want to unassign exhibitor from this booth?'
+    },
+    [ModalType.NONE]: {
+      title: '',
+      description: ''
+    }
+  } as Record<
+    ModalType,
+    { title: string; description: string; onConfirm: () => void }
+  >;
 
   return (
     <>
@@ -355,11 +409,14 @@ export const BoothsTable = () => {
       />
 
       <ConfirmationModal
-        title="Delete Booth"
-        description="Are you sure you want to delete this booth?"
-        isOpen={activeModal === ModalType.DELETE_BOOTH}
+        title={confirmModal[activeModal]?.title}
+        description={confirmModal[activeModal]?.description}
+        isOpen={
+          activeModal === ModalType.DELETE_BOOTH ||
+          activeModal === ModalType.UNASSIGN_EXHIBITOR
+        }
         onClose={handleCloseModal}
-        onConfirm={handleConfirmDelete}
+        onConfirm={handleConfirm}
         isLoading={mutation.isPending}
       />
 

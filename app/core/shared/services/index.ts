@@ -1,2 +1,2 @@
 export * from './user.service';
-export * from './categories.service';
+export * from './booth-categories.service';

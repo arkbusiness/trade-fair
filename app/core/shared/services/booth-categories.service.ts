@@ -1,6 +1,6 @@
 import { buildQueryParams } from '@/app/core/shared/utils';
 
-export const categoriesService = {
+export const boothCategoriesService = {
   getAll: (filter: Record<string, string> = {}) => {
     const queryParams = buildQueryParams({
       params: filter

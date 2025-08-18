@@ -32,6 +32,10 @@ export const boothsService = {
     method: 'PUT',
     data
   }),
+  unassignExhibitor: (id: string): AxiosRequestConfig => ({
+    url: `/organizer/booths/${id}/unassign`,
+    method: 'PUT'
+  }),
   /**
    * Updates a booth with the given ID.
    *

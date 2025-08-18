@@ -16,12 +16,11 @@ import {
   SelectValue,
   Spinner
 } from '@/app/core/shared/components/atoms';
-import { formatDate } from '@/app/core/shared/lib';
 import { formatCurrency } from '@/app/core/shared/utils';
-import { format } from 'date-fns';
 
 import { useState } from 'react';
 import { Bar, BarChart, XAxis, YAxis } from 'recharts';
+import { useOrganizerOverview } from '../../hooks';
 
 enum TIME_RANGE_ENUM {
   DAILY = 'DAILY',
@@ -60,28 +59,36 @@ const chartConfig = {
   }
 } satisfies ChartConfig;
 
-const data = [
-  { date: '2025-08-14', amount: 3000000 },
-  { date: '2025-08-15', amount: 1500000 },
-  { date: '2025-08-16', amount: 3500000 },
-  { date: '2025-08-17', amount: 1800000 },
-  { date: '2025-08-18', amount: 3400000 },
-  { date: '2025-08-19', amount: 1700000 },
-  { date: '2025-08-20', amount: 4000000 }
-];
-
 const CurrencyFormatter = (value: number) => {
   return formatCurrency({ amount: value, currency: 'NGN' });
 };
 
 export const OrganizerRevenueChart = () => {
+  const { overviewStats, isLoadingOverviewStats, isRefetchingOverviewStats } =
+    useOrganizerOverview();
+  const isLoading = isLoadingOverviewStats || isRefetchingOverviewStats;
+
+  const { charts } = overviewStats ?? {};
+  const orders = charts?.dailyOrderAmounts ?? {
+    Sun: 0,
+    Mon: 0,
+    Tue: 0,
+    Wed: 0,
+    Thu: 0,
+    Fri: 0,
+    Sat: 0
+  };
+
+  const orderArray = Object.entries(orders).map(([name, amount]) => ({
+    name,
+    amount
+  }));
+
   const [range, setRange] = useState(TIME_RANGE_ENUM.DAILY);
 
   const handleRangeSelection = (value: TIME_RANGE_ENUM) => {
     setRange(value);
   };
-
-  const isLoading = false;
 
   return (
     <Card className="w-full justify-between">
@@ -124,19 +131,14 @@ export const OrganizerRevenueChart = () => {
                 config={chartConfig}
                 className="h-[245px] min-h-[200px] w-full"
               >
-                <BarChart data={data}>
+                <BarChart data={orderArray}>
                   <XAxis
-                    dataKey="date"
+                    dataKey="name"
                     tickLine={true}
                     tickMargin={10}
                     axisLine={true}
-                    tickFormatter={(value) => {
-                      if (range === TIME_RANGE_ENUM.DAILY) {
-                        return format(new Date(value), 'eee');
-                      }
-                      return formatDate(value, false, 'MMM d, yyyy');
-                    }}
                   />
+
                   <YAxis
                     tickFormatter={CurrencyFormatter}
                     tick={{ fontSize: 12 }}
@@ -147,6 +149,7 @@ export const OrganizerRevenueChart = () => {
                       return `Amount: ${formatCurrency({ amount: (value as number) ?? 0, currency: 'NGN', compactThreshold: 0 })}`;
                     }}
                   />
+
                   <Bar dataKey="amount" fill="#0088FF" radius={[8, 8, 0, 0]} />
                 </BarChart>
               </ChartContainer>

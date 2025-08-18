@@ -14,8 +14,31 @@ interface IOrganizerMetrics {
     invitedExhibitors: number;
     registeredAttendees: number;
     invitedAttendees: number;
-    totalProducts: number;
-    productsUploadedInRange: number;
+    totalOrders: number;
+    ordersCompleted: number;
+    cancelledAppointments: number;
+    successfulAppointments: number;
+    allAppointments: number;
+    diffs: {
+      orders: number;
+      ordersCompleted: number;
+      invitedExhibitors: number;
+      invitedAttendees: number;
+      allAppointments: number;
+      successfulAppointments: number;
+      cancelledAppointments: number;
+    };
+  };
+  charts: {
+    dailyOrderAmounts: {
+      Sun: number;
+      Mon: number;
+      Tue: number;
+      Wed: number;
+      Thu: number;
+      Fri: number;
+      Sat: number;
+    };
   };
 }
 

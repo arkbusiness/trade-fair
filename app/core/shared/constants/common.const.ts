@@ -2,7 +2,7 @@ export const ORGANIZER_APP_ROUTES = {
   root: () => '/organizer',
   settings: () => '/organizer/settings',
   auth: {
-    login: () => '/organizer/sign-in',
+    login: () => '/?tab=organizer',
     signup: (token: string) => `/organizer/sign-up/${token}`,
     onboarding: () => '/organizer/onboarding'
   },

@@ -1,51 +1,39 @@
 'use client';
 import { Button, ErrorText, Input } from '@/app/core/shared/components/atoms';
 import { LoadingButton, Modal } from '@/app/core/shared/components/molecules';
-import { BoothCategorySelect } from '@/app/core/shared/components/organisms';
+import { BoothsSelect } from '@/app/core/shared/components/organisms';
 import { useCustomMutation } from '@/app/core/shared/hooks/use-mutate';
 import { errorHandler } from '@/app/core/shared/utils';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import * as yup from 'yup';
-import { IBooth } from '../../hooks';
-import { boothsService } from '../../services';
+import { IBooth } from '../../../booths/hooks';
+import { exhibitorsService } from '../../services';
 
-interface BoothFormProps {
+interface InviteExhibitorFormProps {
   isOpen: boolean;
-  selectedBooth: IBooth | null;
   onClose: () => void;
 }
 
 const validationSchema = yup.object().shape({
-  number: yup.string().required('Booth number is required'),
-  categoryId: yup
-    .mixed<{
-      id: string;
-      name: string;
-    }>()
-    .required('Category is required')
+  boothNumber: yup.mixed<IBooth>().required('Booth number is required'),
+  email: yup.string().required('Email is required').email('Invalid email')
 });
 
-type BoothFormType = yup.InferType<typeof validationSchema>;
+type InviteExhibitorFormType = yup.InferType<typeof validationSchema>;
 
-export const BoothForm = ({
+export const InviteExhibitorForm = ({
   isOpen,
-  selectedBooth,
   onClose
-}: BoothFormProps) => {
+}: InviteExhibitorFormProps) => {
   const mutation = useCustomMutation();
 
-  const form = useForm<BoothFormType>({
+  const form = useForm<InviteExhibitorFormType>({
     resolver: yupResolver(validationSchema),
     values: {
-      number: selectedBooth?.number || '',
-      categoryId: selectedBooth
-        ? {
-            id: selectedBooth?.categoryId,
-            name: selectedBooth?.categoryName
-          }
-        : (null as never)
+      boothNumber: null as never,
+      email: ''
     },
     mode: 'onChange'
   });
@@ -63,57 +51,31 @@ export const BoothForm = ({
     onClose();
   };
 
-  const handleCreateBooth = (data: BoothFormType) => {
+  const onSubmit = (data: InviteExhibitorFormType) => {
     const formValues = {
       ...data,
-      categoryId: data.categoryId?.id as string
+      boothNumber: data.boothNumber?.number as string
     };
-    mutation.mutate(boothsService.createBooth(formValues), {
+    mutation.mutate(exhibitorsService.inviteExhibitor(formValues), {
       onError(error) {
         const errorMessage = errorHandler(error);
         toast.error(errorMessage);
       },
       onSuccess() {
-        toast.success('Booth created successfully.');
+        toast.success('Invite sent.');
         handleCloseModal();
       }
     });
   };
 
-  const handleUpdateBooth = (data: BoothFormType) => {
-    if (!selectedBooth?.id) return;
-    const formValues = {
-      ...data,
-      categoryId: data.categoryId?.id as string
-    };
-    mutation.mutate(boothsService.updateBooth(selectedBooth?.id, formValues), {
-      onError(error) {
-        const errorMessage = errorHandler(error);
-        toast.error(errorMessage);
-      },
-      onSuccess() {
-        toast.success('Booth created successfully.');
-        handleCloseModal();
-      }
-    });
-  };
-
-  const onSubmit = (data: BoothFormType) => {
-    if (selectedBooth) {
-      handleUpdateBooth(data);
-    } else {
-      handleCreateBooth(data);
-    }
-  };
-
-  const { number: boothNumberError, categoryId: categoryError } = errors;
+  const { boothNumber: boothNumberError, email: emailError } = errors;
 
   return (
     <Modal
       isOpen={isOpen}
       onClose={handleCloseModal}
-      title={selectedBooth ? 'Edit Booth' : 'Add Booth'}
-      description={selectedBooth ? 'Edit booth details' : 'Create a new booth'}
+      title="Invite Exhibitor"
+      description="Invite exhibitor to the event"
       contentClassName="px-0 pb-0 overflow-hidden"
       headerClassName="px-6"
     >
@@ -123,32 +85,32 @@ export const BoothForm = ({
       >
         <fieldset className="w-full px-4" disabled={mutation.isPending}>
           <div className="grid lg:grid-cols-2 gap-[1.86rem]">
-            {/* Company Name */}
+            {/* Booth */}
             <div>
-              <Input
-                label="Booth Number"
-                placeholder="e.g. B0003"
-                hasError={!!boothNumberError?.message?.length}
-                {...register('number')}
-              />
-              <ErrorText message={boothNumberError?.message} />
-            </div>
-
-            {/* Category */}
-            <div className="w-full">
-              <BoothCategorySelect
+              <BoothsSelect
                 form={form}
-                name="categoryId"
-                categoryError={categoryError?.message}
+                name="boothNumber"
                 onSelectChange={(value) => {
-                  form.setValue('categoryId', value, {
+                  form.setValue('boothNumber', value, {
                     shouldValidate: true,
                     shouldDirty: true,
                     shouldTouch: true
                   });
                 }}
+                boothsError={boothNumberError?.message}
               />
-              <ErrorText message={categoryError?.message} />
+              <ErrorText message={boothNumberError?.message} />
+            </div>
+
+            {/* Email */}
+            <div>
+              <Input
+                label="Email"
+                placeholder="e.g. example@example.com"
+                hasError={!!emailError?.message?.length}
+                {...register('email')}
+              />
+              <ErrorText message={emailError?.message} />
             </div>
           </div>
         </fieldset>
@@ -170,7 +132,7 @@ export const BoothForm = ({
             isLoading={mutation.isPending}
             disabled={mutation.isPending}
           >
-            <span>{selectedBooth ? 'Update' : 'Add'}</span>
+            Send Invite
           </LoadingButton>
         </div>
       </form>

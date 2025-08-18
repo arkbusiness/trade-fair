@@ -17,10 +17,14 @@ export interface IOrganizerAuthUser {
   createdAt: string;
   updatedAt: string;
   country: string;
+  timeZone: null | string;
+  logo: string | null;
   eventName: string;
   eventStartDate: string;
   eventEndDate: string;
   venueName: string;
+  eventLogoUrl: null | string;
+  eventTimeZone: string | null;
   invitedId: string;
 }
 interface IAuthState {

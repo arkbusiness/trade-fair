@@ -9,7 +9,6 @@ import {
   Calendar,
   CircleCheckBig,
   CircleX,
-  Upload,
   User,
   Users
 } from 'lucide-react';
@@ -20,72 +19,110 @@ export const OrganizerOverviewStat = () => {
     useOrganizerOverview();
   const isLoading = isLoadingOverviewStats || isRefetchingOverviewStats;
 
-  const { engagement, counts } = overviewStats ?? {
-    engagement: {
-      loggedInAttendees: 0,
-      invitedAttendees: 0,
-      loggedInExhibitors: 0,
-      invitedExhibitors: 0,
-      exhibitorCompletionRate: 0
-    },
-    counts: {
-      registeredExhibitors: 0,
-      invitedExhibitors: 0,
-      registeredAttendees: 0,
-      invitedAttendees: 0,
-      totalProducts: 0,
-      productsUploadedInRange: 0
-    }
+  const { counts } = overviewStats ?? {};
+  const diffs = counts?.diffs ?? {
+    orders: 0,
+    ordersCompleted: 0,
+    invitedExhibitors: 0,
+    invitedAttendees: 0,
+    allAppointments: 0,
+    successfulAppointments: 0,
+    cancelledAppointments: 0
   };
-
-  // TODO: REMOVE
-  console.log(engagement);
 
   const PERFORMANCE_STATS = [
     {
       title: 'Registered Exhibitors/Invited',
-      value: `${counts.registeredExhibitors?.toLocaleString()}/${counts.invitedExhibitors?.toLocaleString()}`,
+      value: `${counts?.registeredExhibitors?.toLocaleString()}/${counts?.invitedExhibitors?.toLocaleString()}`,
       icon: <User className="text-tertiary" />,
-      info: ''
+      info: (
+        <>
+          <span className="font-semibold text-[0.81rem] flex items-center">
+            <span className="text-green-600 inline-block mr-1">
+              +{diffs.invitedExhibitors?.toLocaleString()}
+            </span>
+            <span>more than yesterday</span>
+          </span>
+        </>
+      )
     },
     {
       title: 'Registered Attendees/Invited',
-      value: `${counts.registeredAttendees?.toLocaleString()}/${counts.invitedAttendees?.toLocaleString()}`,
+      value: `${counts?.registeredAttendees?.toLocaleString()}/${counts?.invitedAttendees?.toLocaleString()}`,
       icon: <Users className="text-tertiary" />,
-      info: ''
+      info: (
+        <>
+          <span className="font-semibold text-[0.81rem] flex items-center">
+            <span className="text-green-600 inline-block mr-1">
+              +{diffs.invitedAttendees?.toLocaleString()}
+            </span>
+            <span>more than yesterday</span>
+          </span>
+        </>
+      )
     },
     {
-      title: 'Total Products',
-      value: `${counts.totalProducts?.toLocaleString()}`,
+      title: 'Order Made/Product Sold',
+      value: `${counts?.totalOrders?.toLocaleString()}/${counts?.ordersCompleted?.toLocaleString()}`,
       icon: <Box className="text-tertiary" />,
-      info: ''
-    },
-    {
-      title: 'Products Uploaded',
-      value: `${counts.productsUploadedInRange?.toLocaleString()}`,
-      icon: <Upload className="text-tertiary" />,
-      info: ''
+      info: (
+        <>
+          <span className="font-semibold text-[0.81rem] flex items-center">
+            <span className="text-green-600 inline-block mr-1">
+              +{(diffs.orders + diffs.ordersCompleted)?.toLocaleString()}
+            </span>
+            <span>more than yesterday</span>
+          </span>
+        </>
+      )
     }
   ];
 
   const APPOINTMENT_STATS = [
     {
       title: 'Scheduled Appointments',
-      value: (2500)?.toLocaleString(),
+      value: counts?.allAppointments?.toLocaleString(),
       icon: <Calendar className="text-light-blue" />,
-      info: ''
+      info: (
+        <>
+          <span className="font-semibold text-[0.81rem] flex items-center">
+            <span className="text-green-600 inline-block mr-1">
+              +{diffs.allAppointments?.toLocaleString()}
+            </span>
+            <span>more than yesterday</span>
+          </span>
+        </>
+      )
     },
     {
       title: 'Successful Appointments',
-      value: `${(2800)?.toLocaleString()}/${(3000)?.toLocaleString()}`,
+      value: `${counts?.successfulAppointments?.toLocaleString()}/${counts?.allAppointments?.toLocaleString()}`,
       icon: <CircleCheckBig className="text-green-600" />,
-      info: ''
+      info: (
+        <>
+          <span className="font-semibold text-[0.81rem] flex items-center">
+            <span className="text-green-600 inline-block mr-1">
+              +{diffs.successfulAppointments?.toLocaleString()}
+            </span>
+            <span>more than yesterday</span>
+          </span>
+        </>
+      )
     },
     {
       title: 'Cancelled Appointments',
-      value: `${(33)?.toLocaleString()}`,
+      value: `${counts?.cancelledAppointments?.toLocaleString()}`,
       icon: <CircleX className="text-red-600" />,
-      info: ''
+      info: (
+        <>
+          <span className="font-semibold text-[0.81rem] flex items-center">
+            <span className="text-green-600 inline-block mr-1">
+              +{diffs.cancelledAppointments?.toLocaleString()}
+            </span>
+            <span>more than yesterday</span>
+          </span>
+        </>
+      )
     }
   ];
 
@@ -95,7 +132,7 @@ export const OrganizerOverviewStat = () => {
         <OrganizerOverviewStatSkeleton />
       ) : (
         <div className="flex flex-col gap-7">
-          <div className="grid grid-cols-[repeat(auto-fill,_minmax(290px,_1fr))] items-stretch  gap-x-[0.75rem] gap-y-2">
+          <div className="grid grid-cols-[repeat(auto-fit,_minmax(290px,_1fr))] items-stretch  gap-x-[0.75rem] gap-y-2">
             {PERFORMANCE_STATS.map((stat) => {
               return (
                 <MetricCard

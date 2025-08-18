@@ -8,17 +8,16 @@ import { useForm } from 'react-hook-form';
 import * as yup from 'yup';
 
 const validationSchema = yup.object().shape({
-  // email: yup
-  //   .string()
-  //   .trim()
-  //   .email('Invalid email address')
-  //   .required('Email is required'),
-  username: yup.string().required('Username is required'),
+  email: yup
+    .string()
+    .trim()
+    .email('Invalid email address')
+    .required('Email is required'),
   password: yup.string().required('Password is required.')
 });
 
 export interface ISigninFormValues {
-  username: string;
+  email: string;
   password: string;
 }
 
@@ -36,7 +35,7 @@ export const SigninForm = ({
     register
   } = useForm<ISigninFormValues>({
     defaultValues: {
-      username: '',
+      email: '',
       password: ''
     },
     resolver: yupResolver(validationSchema)
@@ -46,21 +45,21 @@ export const SigninForm = ({
     handleSubmitForm(values);
   };
 
-  const { username: usernameError, password: passwordError } = errors;
+  const { email: emailError, password: passwordError } = errors;
 
   return (
     <form className="w-full" onSubmit={handleSubmit(onSubmit)}>
       <fieldset disabled={isLoading} className="flex flex-col gap-[1.86rem]">
-        {/*  Username */}
+        {/* Email */}
         <div>
           <Input
-            type="text"
-            label="Username"
+            type="email"
+            label="Email"
             placeholder="example@gmail.com"
-            hasError={!!usernameError?.message?.length}
-            {...register('username')}
+            hasError={!!emailError?.message?.length}
+            {...register('email')}
           />
-          <ErrorText message={usernameError?.message} />
+          <ErrorText message={emailError?.message} />
         </div>
 
         {/* Password */}

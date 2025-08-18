@@ -10,13 +10,44 @@ import { useRouter } from 'nextjs-toploader/app';
 import toast from 'react-hot-toast';
 import { SigninForm } from '../organisms';
 import { ISigninFormValues } from '../organisms/sign-in-form';
+import {
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger
+} from '@/app/core/shared/components/atoms';
+import { useState } from 'react';
+import { useSetParams } from '@/app/core/shared/hooks';
+
+enum TABS_ITEMS_ENUM {
+  ORGANIZER = 'organizer',
+  EXHIBITOR = 'exhibitor'
+}
+
+const TABS_ITEMS = [
+  {
+    value: TABS_ITEMS_ENUM.ORGANIZER,
+    label: 'Organizer'
+  },
+  {
+    value: TABS_ITEMS_ENUM.EXHIBITOR,
+    label: 'Exhibitor'
+  }
+];
 
 export const OrganizerSigninPage = () => {
+  const { searchParamsObject } = useSetParams();
+  const queryTab = searchParamsObject?.['tab'] ?? TABS_ITEMS_ENUM.ORGANIZER;
+  const [selectedTab, setSelectedTab] = useState(queryTab);
   const router = useRouter();
   const { handleSaveToken, handleLogOut } = useOrganizerAuthStore();
   const mutation = useCustomMutation<{
     accessToken: string;
   }>();
+
+  const handleChangeTab = (value: TABS_ITEMS_ENUM) => {
+    setSelectedTab(value);
+  };
 
   const handleSubmit = (values: ISigninFormValues) => {
     mutation.mutate(organizerAuthService.signin(values), {
@@ -39,29 +70,56 @@ export const OrganizerSigninPage = () => {
 
   return (
     <AuthContainer>
-      {/* <div className="mb-4.5">
-        <SignupPrompt href={ORGANIZER_APP_ROUTES.auth.signup()} />
-      </div> */}
-      <AuthCard>
-        <div className="mb-[1.61rem]">
-          <header className="flex flex-col gap-[0.66rem] text-center">
-            <h2
-              className={
-                'text-[1.13rem] font-semibold text-center text-text-secondary'
-              }
-            >
-              Sign in to your account
-            </h2>
-            <p className="text-[.9rem] text-text-tertiary">
-              Enter your credentials to continue
-            </p>
-          </header>
+      <Tabs
+        defaultValue={selectedTab}
+        className="flex w-full flex-col justify-start items-center gap-6"
+      >
+        <div className="flex items-center justify-between w-full mb-4">
+          <div className="flex justify-center w-full">
+            <TabsList className="flex justify-center bg-transparent h-[2.7rem] px-[1rem] rounded-[6px] gap-x-4">
+              {TABS_ITEMS.map((tab) => {
+                return (
+                  <TabsTrigger
+                    value={tab.value}
+                    key={tab.label}
+                    className="px-[10px] cursor-pointer data-[state=active]:bg-highlight data-[state=active]:text-tertiary rounded-[6px] data-[state=active]:shadow-none"
+                    onClick={() => handleChangeTab(tab.value)}
+                  >
+                    {tab.label}
+                  </TabsTrigger>
+                );
+              })}
+            </TabsList>
+          </div>
         </div>
-        <SigninForm
-          isLoading={mutation.isPending}
-          handleSubmitForm={handleSubmit}
-        />
-      </AuthCard>
+
+        <AuthCard>
+          <div className="mb-[1.61rem]">
+            <header className="flex flex-col gap-[0.66rem] text-center">
+              <h2
+                className={
+                  'text-[1.13rem] font-semibold text-center text-text-secondary'
+                }
+              >
+                Sign in to your account
+              </h2>
+              <p className="text-[.9rem] text-text-tertiary">
+                Enter your credentials to continue
+              </p>
+            </header>
+          </div>
+
+          <TabsContent value={TABS_ITEMS_ENUM.ORGANIZER}>
+            <SigninForm
+              isLoading={mutation.isPending}
+              handleSubmitForm={handleSubmit}
+            />
+          </TabsContent>
+          <TabsContent value={TABS_ITEMS_ENUM.EXHIBITOR}>
+            <h1 className="text-center font-bold text-[1.6rem]">Exhibitor</h1>
+          </TabsContent>
+        </AuthCard>
+      </Tabs>
     </AuthContainer>
   );
 };

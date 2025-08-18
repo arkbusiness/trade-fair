@@ -1,5 +1,5 @@
 import { EMPTY_ARRAY } from '../../constants';
-import { categoriesService } from '../../services';
+import { boothCategoriesService } from '../../services';
 import { IPaginatedResponse } from '../../types';
 import { extractPaginationMeta } from '../../utils';
 import { useCustomQuery } from '../use-custom-query';
@@ -17,7 +17,7 @@ export const useCategories = (filter: Record<string, string> = {}) => {
     isRefetching: isRefetchingCategories,
     refetch
   } = useCustomQuery<IPaginatedResponse<ICategory>>({
-    ...categoriesService.getAll(filter),
+    ...boothCategoriesService.getAll(filter),
     options: {
       staleTime: Infinity
     }
@@ -38,7 +38,7 @@ export const useCategoryById = (id: string) => {
     isRefetching: isRefetchingCategory,
     refetch
   } = useCustomQuery<ICategory>({
-    ...categoriesService.getById(id),
+    ...boothCategoriesService.getById(id),
     options: {
       staleTime: Infinity
     }

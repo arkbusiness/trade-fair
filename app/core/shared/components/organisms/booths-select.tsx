@@ -1,5 +1,6 @@
 'use client';
 
+import { IBooth } from '@/app/module/organizer/booths/hooks';
 import { useQueryClient } from '@tanstack/react-query';
 import { UseFormReturn } from 'react-hook-form';
 import { clientFetcher } from '../../lib';
@@ -7,11 +8,10 @@ import { IPaginatedResponse } from '../../types';
 import { buildQueryParams } from '../../utils';
 import { HelperText } from '../atoms';
 import { AsyncMultiSelect } from '../molecules';
-import { ICategory } from '../../hooks/api';
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
-interface CategorySelectProps {
-  categoryError?: string;
+interface BoothsSelectProps {
+  boothsError?: string;
   onSelectChange: (value: any) => void;
   form: UseFormReturn<any>;
   name: string;
@@ -19,15 +19,15 @@ interface CategorySelectProps {
 
 type OptionType = {
   id: string;
-  name: string;
+  number: string;
 };
 
-export const CategorySelect = ({
+export const BoothsSelect = ({
   form,
   name,
-  categoryError = '',
+  boothsError = '',
   onSelectChange
-}: CategorySelectProps) => {
+}: BoothsSelectProps) => {
   const queryClient = useQueryClient();
   const { watch } = form;
   const watchedValue = watch(name);
@@ -37,20 +37,20 @@ export const CategorySelect = ({
     loadedOptions: OptionType[],
     { page }: { page: number }
   ) => {
-    const queryKey = ['categories-paginated', search, page];
+    const queryKey = ['booths-paginated', search, page];
     const queryParams = buildQueryParams({
       params: {
-        search
-        // limit: 50 TODO: UNCOMMENT AFTER IFEANYIN FIXES THE BUG
+        search,
+        limit: 50
       },
       appendDefaultLimit: false
     });
 
-    const result = await queryClient.fetchQuery<IPaginatedResponse<ICategory>>({
+    const result = await queryClient.fetchQuery<IPaginatedResponse<IBooth>>({
       queryKey,
       queryFn: async () =>
         clientFetcher({
-          url: `/organizer/category${queryParams ? `?${queryParams}` : ''}`,
+          url: `/organizer/booths${queryParams ? `?${queryParams}` : ''}`,
           method: 'GET'
         })
     });
@@ -71,12 +71,14 @@ export const CategorySelect = ({
     <div className="w-full">
       <AsyncMultiSelect
         name={name}
-        label="Category"
-        placeholder="Select category"
+        label="Booth"
+        placeholder="Select booth"
         value={watchedValue}
-        getOptionLabel={(option) => option?.name}
+        getOptionLabel={(option) =>
+          `${option?.number}(${option?.status} - ${option?.categoryName})`
+        }
         getOptionValue={(option) => option?.id?.toString()}
-        hasError={!!categoryError?.length}
+        hasError={!!boothsError?.length}
         loadOptions={loadOptions as never}
         onSelectChange={(value) => {
           onSelectChange(value);
