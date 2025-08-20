@@ -42,14 +42,14 @@ interface IOrganizerMetrics {
   };
 }
 
-export const useOrganizerOverview = () => {
+export const useOrganizerOverview = (filter: Record<string, string> = {}) => {
   const {
     data: overviewStats,
     isLoading: isLoadingOverviewStats,
     isRefetching: isRefetchingOverviewStats,
     refetch
   } = useCustomQuery<IOrganizerMetrics>({
-    ...organizerOverviewService.getMetrics(),
+    ...organizerOverviewService.getMetrics(filter),
     options: {
       staleTime: Infinity
     }

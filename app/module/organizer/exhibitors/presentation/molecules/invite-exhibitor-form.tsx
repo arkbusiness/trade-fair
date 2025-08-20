@@ -9,7 +9,7 @@ import { useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import * as yup from 'yup';
 import { IBooth } from '../../../booths/hooks';
-import { exhibitorsService } from '../../services';
+import { organizerExhibitorsService } from '../../services';
 
 interface InviteExhibitorFormProps {
   isOpen: boolean;
@@ -56,7 +56,7 @@ export const InviteExhibitorForm = ({
       ...data,
       boothNumber: data.boothNumber?.number as string
     };
-    mutation.mutate(exhibitorsService.inviteExhibitor(formValues), {
+    mutation.mutate(organizerExhibitorsService.inviteExhibitor(formValues), {
       onError(error) {
         const errorMessage = errorHandler(error);
         toast.error(errorMessage);

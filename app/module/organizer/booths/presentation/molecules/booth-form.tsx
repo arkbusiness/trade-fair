@@ -82,17 +82,34 @@ export const BoothForm = ({
 
   const handleUpdateBooth = (data: BoothFormType) => {
     if (!selectedBooth?.id) return;
-    const formValues = {
-      ...data,
-      categoryId: data.categoryId?.id as string
+
+    const { categoryId, number } = data;
+
+    const formValues = {} as {
+      categoryId?: string;
+      number?: string;
     };
+
+    if (categoryId?.id !== selectedBooth?.categoryId) {
+      formValues['categoryId'] = categoryId.id;
+    }
+
+    if (number !== selectedBooth?.number) {
+      formValues['number'] = number;
+    }
+
+    if (Object.keys(formValues).length === 0) {
+      toast.error('No changes made.');
+      return;
+    }
+
     mutation.mutate(boothsService.updateBooth(selectedBooth?.id, formValues), {
       onError(error) {
         const errorMessage = errorHandler(error);
         toast.error(errorMessage);
       },
       onSuccess() {
-        toast.success('Booth created successfully.');
+        toast.success('Booth updated successfully.');
         handleCloseModal();
       }
     });

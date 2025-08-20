@@ -1,9 +1,11 @@
+import { OrganizerExhibitorHeader } from '../atoms';
+import { ExhibitorTable } from '../organisms';
+
 export const ExhibitorsPage = () => {
   return (
-    <div className="flex flex-col">
-      Lorem ipsum dolor, sit amet consectetur adipisicing elit. Repellat neque
-      ex deserunt inventore eos sit, nisi architecto sed iusto quis non sapiente
-      saepe assumenda deleniti odio tempora illum. Facilis, culpa?
+    <div className="w-full flex flex-col gap-7.5">
+      <OrganizerExhibitorHeader />
+      <ExhibitorTable />
     </div>
   );
 };

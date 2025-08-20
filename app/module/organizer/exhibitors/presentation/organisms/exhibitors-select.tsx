@@ -1,42 +1,33 @@
 'use client';
 
+import { HelperText } from '@/app/core/shared/components/atoms';
+import { AsyncMultiSelect } from '@/app/core/shared/components/molecules';
+import { clientFetcher } from '@/app/core/shared/lib';
+import { IPaginatedResponse } from '@/app/core/shared/types';
+import { buildQueryParams } from '@/app/core/shared/utils';
 import { useQueryClient } from '@tanstack/react-query';
 import { UseFormReturn } from 'react-hook-form';
-import { GroupBase, Props as SelectProps } from 'react-select';
-import { IBoothCategory } from '../../hooks/api';
-import { clientFetcher } from '../../lib';
-import { IPaginatedResponse } from '../../types';
-import { buildQueryParams } from '../../utils';
-import { HelperText } from '../atoms';
-import { AsyncMultiSelect } from '../molecules';
+import { IOrganizerExhibitor } from '../../hooks';
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
-interface BoothCategorySelectProps {
-  categoryError?: string;
-  placeholder?: string;
+interface ExhibitorsSelectProps {
+  exhibitorsError?: string;
   onSelectChange: (value: any) => void;
-  classNames?: SelectProps<any, true, GroupBase<any>>['classNames'];
-  showHelperText?: boolean;
   form: UseFormReturn<any>;
-  label?: string;
   name: string;
 }
 
 type OptionType = {
   id: string;
-  name: string;
+  number: string;
 };
 
-export const BoothCategorySelect = ({
+export const ExhibitorsSelect = ({
   form,
   name,
-  categoryError = '',
-  label = 'Category',
-  placeholder = 'Select category',
-  onSelectChange,
-  classNames,
-  showHelperText = true
-}: BoothCategorySelectProps) => {
+  exhibitorsError = '',
+  onSelectChange
+}: ExhibitorsSelectProps) => {
   const queryClient = useQueryClient();
   const { watch } = form;
   const watchedValue = watch(name);
@@ -46,7 +37,7 @@ export const BoothCategorySelect = ({
     loadedOptions: OptionType[],
     { page }: { page: number }
   ) => {
-    const queryKey = ['categories-paginated', search, page];
+    const queryKey = ['invites-exhibitors-paginated', search, page];
     const queryParams = buildQueryParams({
       params: {
         search,
@@ -56,12 +47,12 @@ export const BoothCategorySelect = ({
     });
 
     const result = await queryClient.fetchQuery<
-      IPaginatedResponse<IBoothCategory>
+      IPaginatedResponse<IOrganizerExhibitor>
     >({
       queryKey,
       queryFn: async () =>
         clientFetcher({
-          url: `/organizer/category${queryParams ? `?${queryParams}` : ''}`,
+          url: `/organizer/invites-exhibitors${queryParams ? `?${queryParams}` : ''}`,
           method: 'GET'
         })
     });
@@ -82,19 +73,20 @@ export const BoothCategorySelect = ({
     <div className="w-full">
       <AsyncMultiSelect
         name={name}
-        label={label}
-        placeholder={placeholder}
+        label="Exhibitor"
+        placeholder="Select exhibitor"
         value={watchedValue}
-        getOptionLabel={(option) => option?.name}
+        getOptionLabel={(option) =>
+          `${option?.exhibitorName ?? option.email}(${option?.status})`
+        }
         getOptionValue={(option) => option?.id?.toString()}
-        hasError={!!categoryError?.length}
+        hasError={!!exhibitorsError?.length}
         loadOptions={loadOptions as never}
         onSelectChange={(value) => {
           onSelectChange(value);
         }}
-        classNames={classNames}
       />
-      {showHelperText && <HelperText text="Scroll to load more options" />}
+      <HelperText text="Scroll to load more options" />
     </div>
   );
 };

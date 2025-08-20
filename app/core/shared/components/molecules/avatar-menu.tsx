@@ -10,6 +10,8 @@ import {
   DropdownMenuTrigger,
   SidebarMenuButton
 } from '../atoms';
+import { useOrganizerUser } from '../../hooks/api';
+import Image from 'next/image';
 interface AvatarMenuProps {
   userName: string;
   handleLogout(): void;
@@ -23,6 +25,7 @@ export function AvatarMenu({
   profilePageHref,
   settingPageHref
 }: AvatarMenuProps) {
+  const { user } = useOrganizerUser();
   const router = useRouter();
 
   const handleNavigateToProfile = () => {
@@ -44,7 +47,17 @@ export function AvatarMenu({
             >
               <div className="flex items-center flex-1 text-left text-sm leading-tight gap-y-1 gap-x-2">
                 <div className="flex items-center justify-center w-[26px] h-[26px] rounded-full bg-sidebar-accent">
-                  <User size={18} />
+                  {user?.logo ? (
+                    <Image
+                      src={user.logo}
+                      alt="User"
+                      width={26}
+                      height={26}
+                      className="object-contain rounded-full h-full w-full"
+                    />
+                  ) : (
+                    <User size={18} />
+                  )}
                 </div>
                 <span className="line-clamp-1 font-semibold text-[0.7rem] flex-[0.9] hidden sm:inline-block">
                   {userName}

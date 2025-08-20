@@ -1,12 +1,15 @@
 'use client';
 
-import { LabelValueCard, Modal } from '@/app/core/shared/components/molecules';
-import { cn } from '@/app/core/shared/utils';
-import { Edit3, Upload } from 'lucide-react';
-import { IBooth } from '../../hooks';
-import Image from 'next/image';
-import { formatDate } from '@/app/core/shared/lib';
 import { Button } from '@/app/core/shared/components/atoms';
+import {
+  LabelValueCard,
+  Modal,
+  QRGenerator
+} from '@/app/core/shared/components/molecules';
+import { formatDate } from '@/app/core/shared/lib';
+import { cn } from '@/app/core/shared/utils';
+import { Edit3 } from 'lucide-react';
+import { IBooth } from '../../hooks';
 
 interface BoothDetailsProps {
   isOpen: boolean;
@@ -36,6 +39,8 @@ export const BoothDetails = ({
   };
 
   const style = mapStatus[assignedLabel];
+
+  const qrValue = `${selectedBooth?.number}`;
 
   return (
     <Modal
@@ -74,21 +79,14 @@ export const BoothDetails = ({
 
         <div className="flex gap-5">
           <div className="max-w-[135px] w-full border border-foreground/10 rounded-[8px] px-2 pb-6 pt-3 flex flex-col gap-1 justify-center">
-            <div className="flex-1 flex justify-center">
-              <Image
-                src="/images/qrcode.png"
-                alt="QR"
-                width={74}
-                height={74}
-                className="object-contain"
+            <div className="flex-1 flex justify-center h-[74px] w-[74px] mx-auto">
+              <QRGenerator
+                size={74}
+                value={qrValue}
+                showDownload={true}
+                downloadFileName={`booth-${selectedBooth?.number}-qr-code`}
               />
             </div>
-            <button className="flex gap-1 justify-center items-center mt-3">
-              <Upload size={16} className="text-light-blue-2" />
-              <span className="text-light-blue-2 text-sm font-medium">
-                Download
-              </span>
-            </button>
           </div>
 
           {/* Basic Details */}
@@ -115,8 +113,8 @@ export const BoothDetails = ({
           <h3 className="text-foreground font-semibold h-[53px] flex items-center bg-gray-light-3 px-2">
             More Information
           </h3>
-          <div className="px-2 flex flex-wrap justify-between gap-2 w-full max-w-[600px]">
-            <LabelValueCard label="QR Code Usage" value="43 Attendees" />
+          <div className="px-2 flex flex-wrap  gap-7 w-full max-w-[600px]">
+            {/* <LabelValueCard label="QR Code Usage" value="43 Attendees" /> */}
 
             <LabelValueCard
               label="Assigned to"

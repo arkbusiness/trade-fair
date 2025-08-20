@@ -19,6 +19,9 @@ export const OrganizerGlobalHeader = () => {
   const { toggleSidebar } = useSidebar();
   const { handleLogOut } = useOrganizerAuthStore();
   const { user } = useOrganizerUser();
+  const { eventLogoUrl } = user ?? {
+    eventLogoUrl: null
+  };
 
   return (
     <header className="flex flex-col h-[var(--organizer-header-height)] fixed top-0 w-full z-20">
@@ -44,8 +47,8 @@ export const OrganizerGlobalHeader = () => {
           <div className="flex flex-col xs:flex-row xs:gap-3 xs:items-center">
             <div className="w-[50px] h-[50px] xs:w-[80px] xs:h-[80px] overflow-hidden">
               <Image
-                src="https://placehold.co/600x400/png"
-                alt=""
+                src={eventLogoUrl ?? 'https://placehold.co/600x400/png'}
+                alt={user?.eventName ?? 'Event Logo'}
                 width={80}
                 height={80}
                 className="object-contain rounded-2 w-full h-full"

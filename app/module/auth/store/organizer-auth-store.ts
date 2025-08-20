@@ -25,7 +25,7 @@ export interface IOrganizerAuthUser {
   venueName: string;
   eventLogoUrl: null | string;
   eventTimeZone: string | null;
-  invitedId: string;
+  invitedId: string | null;
 }
 interface IAuthState {
   accessToken: string;

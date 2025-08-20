@@ -1,1 +1,1 @@
-export * from './use-exhibitors';
+export * from './use-organizer-exhibitors';

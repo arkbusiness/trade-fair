@@ -16,7 +16,7 @@ export const OrganizerDashboardExport = () => {
       setIsLoading(true);
       const response = await clientFetcher({
         method: 'GET',
-        url: `/organizer/export?type=${type}`,
+        url: `/organizer/dashboard/export?type=${type}`,
         responseType: 'blob'
       });
 

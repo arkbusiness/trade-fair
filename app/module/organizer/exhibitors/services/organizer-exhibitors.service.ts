@@ -1,15 +1,15 @@
 import { buildQueryParams } from '@/app/core/shared/utils';
 import { AxiosRequestConfig } from 'axios';
 
-export const exhibitorsService = {
+export const organizerExhibitorsService = {
   getExhibitors: (filter: Record<string, string> = {}) => {
     const queryParams = buildQueryParams({
       params: filter
     });
 
     return {
-      url: `/organizer/exhibitors${queryParams ? `?${queryParams}` : ''}`,
-      queryKey: ['exhibitors', queryParams]
+      url: `/organizer/invites-exhibitors${queryParams ? `?${queryParams}` : ''}`,
+      queryKey: ['invites-exhibitors', queryParams]
     };
   },
   inviteExhibitor: (data: {
@@ -21,18 +21,11 @@ export const exhibitorsService = {
     data
   }),
   deleteExhibitor: (id: string): AxiosRequestConfig => ({
-    url: `/organizer/exhibitors/${id}`,
+    url: `/organizer/invites-exhibitors/${id}`,
     method: 'DELETE'
   }),
-  updateExhibitor: (
-    id: string,
-    data: {
-      number: string;
-      categoryId: string;
-    }
-  ): AxiosRequestConfig => ({
-    url: `/organizer/exhibitors/${id}`,
-    method: 'PUT',
-    data
+  deactivateExhibitor: (id: string): AxiosRequestConfig => ({
+    url: `/organizer/invites-exhibitors/${id}/deactivate`,
+    method: 'PATCH'
   })
 };

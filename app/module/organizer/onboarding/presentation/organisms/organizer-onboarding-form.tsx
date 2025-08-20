@@ -12,7 +12,7 @@ import { errorHandler } from '@/app/core/shared/utils';
 import { organizerAuthService } from '@/app/module/auth/services';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { formatISO } from 'date-fns';
-import { useRouter } from 'next/navigation';
+import { useRouter } from 'nextjs-toploader/app';
 import { useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import * as yup from 'yup';

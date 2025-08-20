@@ -9,44 +9,15 @@ import {
   ChartContainer,
   ChartTooltip,
   ChartTooltipContent,
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
   Spinner
 } from '@/app/core/shared/components/atoms';
-import { formatCurrency } from '@/app/core/shared/utils';
-
-import { useState } from 'react';
+import { BoothCategorySelect } from '@/app/core/shared/components/organisms';
+import { useBoothCategories } from '@/app/core/shared/hooks/api';
+import { cn, formatCurrency } from '@/app/core/shared/utils';
+import { useEffect } from 'react';
+import { useForm } from 'react-hook-form';
 import { Bar, BarChart, XAxis, YAxis } from 'recharts';
 import { useOrganizerOverview } from '../../hooks';
-
-enum TIME_RANGE_ENUM {
-  DAILY = 'DAILY',
-  WEEKLY = 'WEEKLY',
-  MONTHLY = 'MONTHLY',
-  YEARLY = 'YEARLY'
-}
-
-const TIME_RANGE = [
-  {
-    label: 'Daily',
-    value: TIME_RANGE_ENUM.DAILY
-  },
-  {
-    label: 'Weekly',
-    value: TIME_RANGE_ENUM.WEEKLY
-  },
-  {
-    label: 'Monthly',
-    value: TIME_RANGE_ENUM.MONTHLY
-  },
-  {
-    label: 'Yearly',
-    value: TIME_RANGE_ENUM.YEARLY
-  }
-];
 
 const chartConfig = {
   currentYear: {
@@ -64,8 +35,31 @@ const CurrencyFormatter = (value: number) => {
 };
 
 export const OrganizerRevenueChart = () => {
+  const { firstCategory } = useBoothCategories();
+  const form = useForm<{ categoryId: { id: string; name: string } | null }>({
+    values: {
+      categoryId: firstCategory ?? null
+    },
+    mode: 'onChange'
+  });
+
+  const watchedCategoryId = form.watch('categoryId');
+  const hasCategoryId = !!watchedCategoryId;
+
+  useEffect(() => {
+    if (!watchedCategoryId && firstCategory) {
+      form.setValue('categoryId', {
+        id: firstCategory.id,
+        name: firstCategory.name
+      });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [firstCategory]);
+
   const { overviewStats, isLoadingOverviewStats, isRefetchingOverviewStats } =
-    useOrganizerOverview();
+    useOrganizerOverview({
+      categoryId: watchedCategoryId?.id || ''
+    });
   const isLoading = isLoadingOverviewStats || isRefetchingOverviewStats;
 
   const { charts } = overviewStats ?? {};
@@ -84,12 +78,6 @@ export const OrganizerRevenueChart = () => {
     amount
   }));
 
-  const [range, setRange] = useState(TIME_RANGE_ENUM.DAILY);
-
-  const handleRangeSelection = (value: TIME_RANGE_ENUM) => {
-    setRange(value);
-  };
-
   return (
     <Card className="w-full justify-between">
       <CardHeader className="relative">
@@ -97,25 +85,36 @@ export const OrganizerRevenueChart = () => {
           <CardDescription className="text-foreground font-medium text-base">
             Revenue Chart
           </CardDescription>
-          <div className="h-[37px]">
-            <Select value={range} onValueChange={handleRangeSelection}>
-              <SelectTrigger className="cursor-pointer bg-tertiary text-background border-0 h-full! min-h-full!">
-                <SelectValue placeholder="Select..." />
-              </SelectTrigger>
-              <SelectContent>
-                {TIME_RANGE.map((timeRange) => (
-                  <SelectItem key={timeRange.value} value={timeRange.value}>
-                    {timeRange.label}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+          <div
+            className={cn('h-[37px] w-[110px]', {
+              'w-auto': hasCategoryId
+            })}
+          >
+            <BoothCategorySelect
+              label=""
+              placeholder="Category"
+              name="categoryId"
+              onSelectChange={(value) => {
+                form.setValue('categoryId', value, {
+                  shouldValidate: true,
+                  shouldDirty: true,
+                  shouldTouch: true
+                });
+              }}
+              form={form}
+              showHelperText={false}
+              classNames={{
+                placeholder: () => 'text-foreground!',
+                indicatorSeparator: () => 'hidden'
+              }}
+            />
           </div>
         </div>
       </CardHeader>
       <CardContent>
         <div className="flex flex-col gap-3 w-full">
-          <div className="my-3.5">
+          {/* TODO: Missing in the api */}
+          {/* <div className="my-3.5">
             <h3 className="text-foreground font-semibold text-xl">
               {formatCurrency({
                 amount: 46000000,
@@ -123,7 +122,7 @@ export const OrganizerRevenueChart = () => {
                 compactThreshold: 0
               })}
             </h3>
-          </div>
+          </div> */}
           {/* Chart */}
           <>
             {!isLoading && (

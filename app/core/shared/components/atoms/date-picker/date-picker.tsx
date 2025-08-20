@@ -62,6 +62,7 @@ export const DatePicker = <T extends FieldValues>({
             locale="en"
             dateFormat={format}
             showTimeSelect={showTimeSelect}
+            timeIntervals={10}
           />
         </div>
         <div className="w-10 flex h-full  justify-center items-center border-l border-border">

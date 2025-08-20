@@ -12,24 +12,11 @@ export interface IBooth {
   categoryName: string;
   categoryId: string;
   organizerId: string;
-  organizer: {
-    id: string;
-    companyName: string;
-    companyEmail: string;
-    contactName: string;
-    contactPhone?: string;
-  };
+  logoUrl?: string | null;
   exhibitorName?: string | null;
   exhibitorEmail?: string | null;
   exhibitorId?: string | null;
   productsCount: number;
-  exhibitor?: {
-    companyName: string;
-    companyEmail: string;
-    contactName: string;
-    contactPhone: string;
-    logoUrl?: string;
-  } | null;
   createdAt?: string;
 }
 

@@ -48,8 +48,8 @@ export const boothsService = {
   updateBooth: (
     id: string,
     data: {
-      number: string;
-      categoryId: string;
+      number?: string;
+      categoryId?: string;
     }
   ): AxiosRequestConfig => ({
     url: `/organizer/booths/${id}`,

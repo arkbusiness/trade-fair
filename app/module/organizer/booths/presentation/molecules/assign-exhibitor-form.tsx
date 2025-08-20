@@ -1,5 +1,5 @@
 'use client';
-import { Button } from '@/app/core/shared/components/atoms';
+import { Button, ErrorText } from '@/app/core/shared/components/atoms';
 import { LoadingButton, Modal } from '@/app/core/shared/components/molecules';
 import { useCustomMutation } from '@/app/core/shared/hooks/use-mutate';
 import { errorHandler } from '@/app/core/shared/utils';
@@ -9,6 +9,7 @@ import toast from 'react-hot-toast';
 import * as yup from 'yup';
 import { IBooth } from '../../hooks';
 import { boothsService } from '../../services';
+import { ExhibitorsSelect } from '../../../exhibitors/presentation/organisms';
 
 interface AssignExhibitorFormProps {
   isOpen: boolean;
@@ -23,7 +24,6 @@ const validationSchema = yup.object().shape({
       name: string;
     }>()
     .required('Exhibitor is required')
-    .nullable()
 });
 
 type AssignExhibitorFormType = yup.InferType<typeof validationSchema>;
@@ -38,15 +38,14 @@ export const AssignExhibitorForm = ({
   const form = useForm<AssignExhibitorFormType>({
     resolver: yupResolver(validationSchema),
     values: {
-      exhibitorId: null
+      exhibitorId: null as never
     },
     mode: 'onChange'
   });
 
   const {
-    // register,
     handleSubmit,
-    // formState: { errors },
+    formState: { errors },
     reset
   } = form;
 
@@ -81,7 +80,7 @@ export const AssignExhibitorForm = ({
     handleAssignExhibitor(data);
   };
 
-  // const { exhibitorId: exhibitorIdError } = errors;
+  const { exhibitorId: exhibitorIdError } = errors;
 
   return (
     <Modal
@@ -89,28 +88,34 @@ export const AssignExhibitorForm = ({
       onClose={handleCloseModal}
       title="Assign an Exhibitor"
       description="Quickly send an invite to an exhibitor to claim this Booth."
-      contentClassName="px-0 pb-0 overflow-hidden"
+      contentClassName="px-0 pb-0 overflow-hidden max-h-[400px] h-full"
       headerClassName="px-6"
     >
       <form
-        className="flex flex-col gap-[1.86rem] w-full text-left relative"
+        className="flex flex-col flex-1 h-full gap-[1.86rem] w-full text-left relative"
         onSubmit={handleSubmit(onSubmit)}
       >
-        <fieldset className="w-full px-4" disabled={mutation.isPending}>
-          <div className="grid lg:grid-cols-2 gap-[1.86rem]">
-            {/* Company Name */}
-            {/* <div>
-              <Input
-                label="Booth Number"
-                placeholder="e.g. B0003"
-                hasError={!!boothNumberError?.message?.length}
-                {...register('number')}
-              />
-              <ErrorText message={boothNumberError?.message} />
-            </div> */}
+        <fieldset
+          className="w-full px-4 h-[150px]"
+          disabled={mutation.isPending}
+        >
+          <div>
+            <ExhibitorsSelect
+              form={form}
+              name="exhibitorId"
+              exhibitorsError={exhibitorIdError?.message}
+              onSelectChange={(value) => {
+                form.setValue('exhibitorId', value, {
+                  shouldValidate: true,
+                  shouldDirty: true,
+                  shouldTouch: true
+                });
+              }}
+            />
+            <ErrorText message={exhibitorIdError?.message} />
           </div>
         </fieldset>
-        <div className="mt-[10.19rem] w-full flex justify-between bg-gray-light-3 py-5 px-6">
+        <div className="mt-5 w-full flex justify-between bg-gray-light-3 py-5 px-6 flex-1 items-center">
           <Button
             variant="outline"
             className="gap-[0.5rem] flex items-center h-8"

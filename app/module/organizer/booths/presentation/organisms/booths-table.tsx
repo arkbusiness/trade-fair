@@ -99,23 +99,25 @@ export const BoothsTable = () => {
       accessorKey: 'Exhibitor',
       header: 'Exhibitor',
       cell: ({ row }) => {
-        const exhibitor = row.original?.exhibitor;
-        const hasExhibitor = !!exhibitor;
+        const original = row.original;
+        const hasExhibitor = !!original?.exhibitorId;
+        const exhibitorName = original?.exhibitorName;
+        const exhibitorLogo = original?.logoUrl;
 
         return (
-          <div className="w-[200px] whitespace-break-spaces line-clamp-1">
+          <div>
             {hasExhibitor ? (
               <div className="flex gap-1 items-center">
                 <Image
-                  src={exhibitor?.logoUrl || 'https://placehold.co/45/png'}
-                  alt={exhibitor?.companyName || ''}
+                  src={exhibitorLogo || 'https://placehold.co/45/png'}
+                  alt={exhibitorName || ''}
                   width={45}
                   height={45}
                   className="border-input rounded object-contain"
                 />
                 <Text>
-                  <span className="font-semibold text-foreground text-xs">
-                    {exhibitor?.companyName}
+                  <span className="font-semibold text-foreground text-xs  w-[150px] whitespace-pre-wrap break-word">
+                    {exhibitorName}
                   </span>
                 </Text>
               </div>
@@ -145,21 +147,21 @@ export const BoothsTable = () => {
       id: 'contact',
       header: 'Contact',
       cell: ({ row }) => {
-        const exhibitor = row.original?.exhibitor;
-        const hasExhibitor = !!exhibitor;
+        const original = row.original;
+        const hasExhibitor = !!original?.exhibitorId;
+        const exhibitorName = original?.exhibitorName;
+        const exhibitorEmail = original?.exhibitorEmail;
 
         return (
-          <div className="w-[200px] whitespace-break-spaces line-clamp-1">
+          <div>
             {hasExhibitor ? (
-              <div className="flex flex-col gap-1 items-center">
-                <Text>
-                  <span className="font-semibold text-foreground text-xs inline-block w-full">
-                    {exhibitor?.companyName}
-                  </span>
-                  <span className="text-light-blue-2 font-medium text-xs inline-block w-full">
-                    {exhibitor?.companyEmail}
-                  </span>
-                </Text>
+              <div className="flex flex-col">
+                <span className="font-semibold text-foreground text-xs inline-block  w-[240px] whitespace-pre-wrap break-words">
+                  {exhibitorName}
+                </span>
+                <span className="text-light-blue-2 font-medium text-xs inline-block  w-[240px] whitespace-pre-wrap break-word">
+                  {exhibitorEmail}
+                </span>
               </div>
             ) : (
               <span>-</span>
@@ -212,6 +214,20 @@ export const BoothsTable = () => {
             {row.getValue('assignedAt')
               ? formatDate(row.getValue('assignedAt') as string)
               : 'Not assigned'}
+          </span>
+        </Text>
+      ),
+      enableSorting: true
+    },
+    {
+      accessorKey: 'createdAt',
+      header: 'Created Date',
+      cell: ({ row }) => (
+        <Text>
+          <span>
+            {row.getValue('createdAt')
+              ? formatDate(row.getValue('createdAt') as string)
+              : 'Not created'}
           </span>
         </Text>
       ),

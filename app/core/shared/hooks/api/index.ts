@@ -1,2 +1,2 @@
 export * from './use-organizer-user';
-export * from './use-categories';
+export * from './use-booth-categories';

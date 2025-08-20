@@ -1,1 +1,1 @@
-export * from './exhibitors.service';
+export * from './organizer-exhibitors.service';

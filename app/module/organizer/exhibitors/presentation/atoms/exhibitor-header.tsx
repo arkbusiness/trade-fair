@@ -10,7 +10,7 @@ import { CloudDownload, Plus } from 'lucide-react';
 import { useState } from 'react';
 import { getQueryClient } from '@/app/core/shared/lib';
 import { InviteExhibitorForm } from '../molecules';
-import { exhibitorsService } from '../../services';
+import { organizerExhibitorsService } from '../../services';
 
 enum ModalType {
   NONE = 'NONE',
@@ -23,7 +23,7 @@ export const OrganizerExhibitorHeader = () => {
 
   const handleCloseModal = () => {
     queryClient.invalidateQueries({
-      queryKey: [...exhibitorsService.getExhibitors().queryKey]
+      queryKey: [...organizerExhibitorsService.getExhibitors().queryKey]
     });
     setActiveModal(ModalType.NONE);
   };
