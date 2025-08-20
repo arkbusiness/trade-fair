@@ -14,11 +14,11 @@ export const ImagePlaceholder = ({
   return (
     <div
       className={cn(
-        'w-[100px] h-[100px] overflow-hidden rounded-[12px] flex items-center justify-center bg-gray-200',
+        'w-[100px] h-[100px] overflow-hidden rounded-[12px] flex items-center justify-center bg-gray-200 text-lg',
         className
       )}
     >
-      <p className="text-lg text-gray-600">{label}</p>
+      <p className="text-gray-600">{label}</p>
     </div>
   );
 };

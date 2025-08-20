@@ -14,7 +14,7 @@ export const organizerExhibitorsService = {
   },
   getExhibitorById: (id: string) => ({
     url: `/organizer/invites-exhibitors/${id}`,
-    queryKey: ['invites-exhibitors', id]
+    queryKey: ['invites-exhibitors-by-id', id]
   }),
   inviteExhibitor: (data: {
     boothNumber: string;

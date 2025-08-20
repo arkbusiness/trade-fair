@@ -3,7 +3,9 @@
 import { GoBackButton } from '@/app/core/shared/components/atoms';
 import {
   ConfirmationModal,
-  IconButton
+  IconButton,
+  LoadingButton,
+  OverlaySpinner
 } from '@/app/core/shared/components/molecules';
 import { ORGANIZER_APP_ROUTES } from '@/app/core/shared/constants';
 import { useCustomMutation } from '@/app/core/shared/hooks/use-mutate';
@@ -46,6 +48,7 @@ export const ExhibitorDetailHeader = ({ id }: { id: string }) => {
 
   return (
     <>
+      {mutation.isPending && <OverlaySpinner />}
       <ConfirmationModal
         isOpen={openDeleteModal}
         onClose={() => setOpenDeleteModal(false)}
@@ -72,16 +75,17 @@ export const ExhibitorDetailHeader = ({ id }: { id: string }) => {
           </IconButton>
 
           {/* Delete */}
-          <IconButton
+          <LoadingButton
             variant="ghost"
             className="hover:bg-transparent hover:text-primary gap-1.5 px-4 py-1.5 h-auto"
             onClick={() => setOpenDeleteModal(true)}
+            isLoading={mutation.isPending}
           >
             <Trash className="stroke-tertiary" />
             <span className="font-light text-[0.81rem] text-tertiary">
               Delete
             </span>
-          </IconButton>
+          </LoadingButton>
         </div>
       </div>
     </>

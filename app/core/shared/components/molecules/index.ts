@@ -31,3 +31,4 @@ export * from './organizer-global-header';
 export * from './dashboard-toolbar';
 export * from './table-tabs';
 export * from './qr-generator';
+export * from './content-card';

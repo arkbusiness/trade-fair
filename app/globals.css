@@ -62,6 +62,7 @@ body {
   --gray-light: #e1e1e1;
   --gray-light-2: #eeeeee;
   --gray-light-3: #f7f7f7;
+  --gray-light-4: #f9fafb;
   --gray-ultra-light: #f8f8f8;
   --lavender-light: #f3e8ff;
   --purple-primary: #9333ea;
@@ -115,6 +116,7 @@ body {
   --light-gray: #ededed;
   --light-gray-2: #fefcfc;
   --light-gray-3: #f7f7f7;
+  --light-gray-4: #f9fafb;
   --hr: #ede7e7;
   --sidebar-highlight: #1d0202;
   --light-blue: #3b82f6;
@@ -196,6 +198,7 @@ body {
   --color-yellow-dark: var(--yellow-dark);
   --color-gray-light-2: var(--gray-light-2);
   --color-gray-light-3: var(--gray-light-3);
+  --color-gray-light-4: var(--gray-light-4);
 }
 
 @layer base {

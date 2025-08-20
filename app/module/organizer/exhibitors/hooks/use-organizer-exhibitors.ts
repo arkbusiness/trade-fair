@@ -33,6 +33,7 @@ export interface IOrganizerExhibitor {
   exhibitorEmail: string | null;
   exhibitorCompanyName: string | null;
   registeredAt: string | null;
+  website: string | null;
   inviteLink: string;
 }
 
