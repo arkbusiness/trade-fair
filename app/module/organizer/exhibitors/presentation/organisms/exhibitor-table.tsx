@@ -138,22 +138,20 @@ export const ExhibitorTable = () => {
 
         return (
           <div className="flex flex-col gap-1">
-            <Text className="flex flex-col">
-              {hasNameAndEmail ? (
-                <div className="w-[240px] flex flex-col">
-                  <span className="font-semibold text-foreground text-xs inline-block w-full whitespace-pre-wrap break-words">
-                    {original?.exhibitorName ?? '-'}
-                  </span>
-                  <span className="text-light-blue-2 font-medium text-xs inline-block w-full whitespace-pre-wrap break-words">
-                    {original?.exhibitorEmail ?? '-'}
-                  </span>
-                </div>
-              ) : (
-                <span className="font-semibold text-foreground text-xs inline-block w-full">
-                  N/A
+            {hasNameAndEmail ? (
+              <div className="w-[240px] flex flex-col">
+                <span className="font-semibold text-foreground text-xs inline-block w-full whitespace-pre-wrap break-words">
+                  {original?.exhibitorName ?? '-'}
                 </span>
-              )}
-            </Text>
+                <span className="text-light-blue-2 font-medium text-xs inline-block w-full whitespace-pre-wrap break-words">
+                  {original?.exhibitorEmail ?? '-'}
+                </span>
+              </div>
+            ) : (
+              <span className="font-semibold text-foreground text-xs inline-block w-full">
+                N/A
+              </span>
+            )}
           </div>
         );
       }
