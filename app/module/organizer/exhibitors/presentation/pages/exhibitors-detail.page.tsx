@@ -25,10 +25,18 @@ export const ExhibitorsDetailPage = async ({ id }: { id: string }) => {
   }
 
   return (
-    <div className="w-full flex flex-col">
-      <ExhibitorDetailHeader id={id} />
+    <div className="w-full flex flex-col" id="exhibitor-detail">
+      <div className="no-print">
+        <ExhibitorDetailHeader id={id} />
+      </div>
       <div className="mt-6">
         <ExhibitorDetailHero id={id} />
+        <div className="mt-6">
+          Lorem ipsum dolor sit amet consectetur adipisicing elit. Molestias
+          repellat laudantium eum accusantium voluptas nemo voluptatibus,
+          veritatis obcaecati incidunt expedita distinctio ipsa dolorum illum
+          corporis officia quidem inventore! Voluptatum, non?
+        </div>
       </div>
     </div>
   );

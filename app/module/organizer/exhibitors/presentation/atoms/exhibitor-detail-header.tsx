@@ -10,7 +10,7 @@ import { useCustomMutation } from '@/app/core/shared/hooks/use-mutate';
 import { Printer, Trash } from 'lucide-react';
 import { useState } from 'react';
 import { organizerExhibitorsService } from '../../services';
-import { errorHandler } from '@/app/core/shared/utils';
+import { errorHandler, printElement } from '@/app/core/shared/utils';
 import toast from 'react-hot-toast';
 import { useRouter } from 'nextjs-toploader/app';
 import { getQueryClient } from '@/app/core/shared/lib';
@@ -22,7 +22,10 @@ export const ExhibitorDetailHeader = ({ id }: { id: string }) => {
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
 
   const handlePrint = () => {
-    window.print();
+    printElement({
+      elementId: 'exhibitor-detail',
+      title: 'Exhibitor Details'
+    });
   };
 
   const handleDelete = () => {

@@ -16,3 +16,4 @@ export * from './convert-to-spaced-lowercase.utils';
 export * from './id-encoder.utils';
 export * from './has-preview';
 export * from './format-filters.utils';
+export * from './print-element.utils';
