@@ -26,12 +26,13 @@ import { cn, errorHandler } from '@/app/core/shared/utils';
 import { ColumnDef } from '@tanstack/react-table';
 import { MoreHorizontal } from 'lucide-react';
 import Image from 'next/image';
-import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import toast from 'react-hot-toast';
 import { IOrganizerExhibitor, useOrganizerExhibitors } from '../../hooks';
 import { organizerExhibitorsService } from '../../services';
 import { BoothMembers } from '../molecules';
+import { ORGANIZER_APP_ROUTES } from '@/app/core/shared/constants';
+import { useRouter } from 'nextjs-toploader/app';
 
 enum ModalType {
   NONE = 'NONE',
@@ -222,7 +223,9 @@ export const ExhibitorTable = () => {
             <DropdownMenuContent align="end">
               <DropdownMenuItem
                 onClick={() => {
-                  router.push('#');
+                  router.push(
+                    ORGANIZER_APP_ROUTES.exhibitors.detail(row.original.id)
+                  );
                 }}
                 className="cursor-pointer text-xs"
               >

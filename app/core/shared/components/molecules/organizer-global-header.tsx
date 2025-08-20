@@ -47,7 +47,10 @@ export const OrganizerGlobalHeader = () => {
           <div className="flex flex-col xs:flex-row xs:gap-3 xs:items-center">
             <div className="w-[50px] h-[50px] xs:w-[80px] xs:h-[80px] overflow-hidden">
               <Image
-                src={eventLogoUrl ?? 'https://placehold.co/600x400/png'}
+                src={
+                  eventLogoUrl ??
+                  'https://placehold.co/600x400/png?text=Event+Logo'
+                }
                 alt={user?.eventName ?? 'Event Logo'}
                 width={80}
                 height={80}

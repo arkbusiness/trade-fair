@@ -17,6 +17,11 @@ export interface IOrganizerExhibitor {
   expiresAt: string;
   createdAt: string;
   updatedAt: string;
+  publicDescription: string | null;
+  registrationTimeLine: {
+    invited: string | null;
+    registered: string | null;
+  };
   boothMembersList: {
     id: string;
     createdAt: string;
@@ -46,5 +51,22 @@ export const useOrganizerExhibitors = (filter: Record<string, string> = {}) => {
     isRefetchingExhibitors,
     paginationMeta: extractPaginationMeta(exhibitors),
     refetchExhibitors: refetch
+  };
+};
+
+export const useOrganizerExhibitorById = (id: string) => {
+  const {
+    data: exhibitor,
+    isLoading: isLoadingExhibitor,
+    isRefetching: isRefetchingExhibitor,
+    refetch
+  } = useCustomQuery<IOrganizerExhibitor>({
+    ...organizerExhibitorsService.getExhibitorById(id)
+  });
+  return {
+    exhibitor,
+    isLoadingExhibitor,
+    isRefetchingExhibitor,
+    refetchExhibitor: refetch
   };
 };

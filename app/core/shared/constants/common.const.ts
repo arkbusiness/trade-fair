@@ -8,6 +8,7 @@ export const ORGANIZER_APP_ROUTES = {
   },
   exhibitors: {
     root: () => '/organizer/exhibitors/manage',
+    detail: (id: string) => `/organizer/exhibitors/manage/${id}`,
     booths: {
       root: () => '/organizer/exhibitors/booths'
     }

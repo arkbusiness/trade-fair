@@ -12,6 +12,10 @@ export const organizerExhibitorsService = {
       queryKey: ['invites-exhibitors', queryParams]
     };
   },
+  getExhibitorById: (id: string) => ({
+    url: `/organizer/invites-exhibitors/${id}`,
+    queryKey: ['invites-exhibitors', id]
+  }),
   inviteExhibitor: (data: {
     boothNumber: string;
     email: string;
