@@ -21,6 +21,7 @@ body {
   --secondary-foreground: oklch(0.205 0 0);
   --tertiary: #f02e2f;
   --gold: #8f3600;
+  --brownish: #ac7f5e;
   --tertiary-foreground: #ffffff;
   --text-secondary: #544f4f;
   --text-tertiary: #525252;
@@ -84,6 +85,7 @@ body {
   --secondary-foreground: oklch(0.985 0 0);
   --tertiary: #1d0202;
   --gold: #8f3600;
+  --brownish: #ac7f5e;
   --tertiary-foreground: #ffffff;
   --text-secondary: #544f4f;
   --text-tertiary: #525252;
@@ -199,6 +201,7 @@ body {
   --color-gray-light-2: var(--gray-light-2);
   --color-gray-light-3: var(--gray-light-3);
   --color-gray-light-4: var(--gray-light-4);
+  --color-brownish: var(--brownish);
 }
 
 @layer base {

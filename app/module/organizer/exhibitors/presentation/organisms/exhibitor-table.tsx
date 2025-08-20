@@ -372,31 +372,9 @@ export const ExhibitorTable = () => {
 
   return (
     <>
-      {/* <BoothForm
-        isOpen={
-          activeModal === ModalType.ADD_BOOTH ||
-          activeModal === ModalType.EDIT_BOOTH
-        }
-        onClose={handleCloseModal}
-        selectedBooth={selectedBooth}
-      />
-
-      <BoothDetails
-        isOpen={activeModal === ModalType.VIEW_BOOTH}
-        handleClose={handleCloseModal}
-        handleEdit={handleEditBooth}
-        selectedBooth={selectedBooth}
-      />
-
-      <AssignExhibitorForm
-        isOpen={activeModal === ModalType.ASSIGN_EXHIBITOR}
-        onClose={handleCloseModal}
-        selectedBooth={selectedBooth}
-      /> */}
-
       <BoothMembers
         isOpen={activeModal === ModalType.VIEW_MEMBER}
-        selectedExhibitor={selectedExhibitor?.boothMembersList ?? []}
+        members={selectedExhibitor?.boothMembersList ?? []}
         handleClose={handleCloseModal}
       />
 

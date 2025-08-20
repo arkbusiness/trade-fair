@@ -9,6 +9,8 @@ import { Globe, Mail } from 'lucide-react';
 
 export const ExhibitorProfileInformation = ({ id }: { id: string }) => {
   const { exhibitor } = useOrganizerExhibitorById(id);
+  const members = exhibitor?.boothMembersList ?? [];
+  const hasMembers = members?.length > 0;
 
   const hasLogo = !!exhibitor?.logo;
 
@@ -27,13 +29,13 @@ export const ExhibitorProfileInformation = ({ id }: { id: string }) => {
     }
   ];
 
-  const mapStatus = {
+  const mapMemberType = {
     owner: {
-      bg: 'bg-purple-600',
+      bg: 'bg-purple-primary',
       text: 'text-white'
     },
     member: {
-      bg: 'bg-amber-800',
+      bg: 'bg-brownish',
       text: 'text-white'
     }
   };
@@ -70,8 +72,8 @@ export const ExhibitorProfileInformation = ({ id }: { id: string }) => {
             <span
               className={cn(
                 'px-2 h-[26px] w-[94px] rounded-[23px] text-xs flex justify-center items-center border capitalize',
-                mapStatus.owner.bg,
-                mapStatus.owner.text
+                mapMemberType.owner.bg,
+                mapMemberType.owner.text
               )}
             >
               Booth owner
@@ -84,7 +86,7 @@ export const ExhibitorProfileInformation = ({ id }: { id: string }) => {
               const value =
                 item.type === 'email' ? `mailto:${item.value}` : item.value;
               return (
-                <div key={key} className="flex items-center gap-[3px]">
+                <div key={key} className="flex items-center gap-[5px]">
                   <span>{item.icon}</span>
                   <span className="text-sm font-normal text-light-blue-2">
                     <a href={value}>{item.value ?? 'N/A'}</a>
@@ -93,6 +95,53 @@ export const ExhibitorProfileInformation = ({ id }: { id: string }) => {
               );
             })}
           </div>
+        </div>
+      </ContentCard>
+
+      {/* Booth Members */}
+      <ContentCard title="Other Members">
+        <div className="flex gap-x-10 gap-y-12 mt-3 flex-wrap">
+          {members?.map((item, index) => {
+            const memberHasEmail = !!item.email;
+            const key = `member-${index}-${item.id}`;
+
+            return (
+              <div key={key} className="flex justify-between">
+                <div className="flex flex-col">
+                  <div className="flex items-center gap-2">
+                    <p className="text-sm font-medium text-foreground">
+                      {item.username}
+                    </p>
+                    <span
+                      className={cn(
+                        'px-2 h-[23px] w-[68px] rounded-[20px] text-xs flex justify-center items-center border capitalize',
+                        mapMemberType.member.bg,
+                        mapMemberType.member.text
+                      )}
+                    >
+                      Member
+                    </span>
+                  </div>
+
+                  <div className="flex items-center gap-[5px] mt-1">
+                    <Mail size={12} />
+                    <span className="text-sm font-normal text-light-blue-2">
+                      {memberHasEmail ? (
+                        <a href={item.email}>{item.email}</a>
+                      ) : (
+                        'N/A'
+                      )}
+                    </span>
+                  </div>
+                </div>
+                <div></div>
+              </div>
+            );
+          })}
+
+          {!hasMembers && (
+            <p className="text-sm flex justify-center">No members found</p>
+          )}
         </div>
       </ContentCard>
     </div>

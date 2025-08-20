@@ -9,7 +9,7 @@ import { IOrganizerExhibitor } from '../../hooks';
 interface BoothDetailsProps {
   isOpen: boolean;
   handleClose: () => void;
-  selectedExhibitor: IOrganizerExhibitor['boothMembersList'];
+  members: IOrganizerExhibitor['boothMembersList'];
 }
 
 const MAX_ITEMS_TO_SHOW = 5;
@@ -17,11 +17,10 @@ const MAX_ITEMS_TO_SHOW = 5;
 export const BoothMembers = ({
   isOpen,
   handleClose,
-  selectedExhibitor = []
+  members = []
 }: BoothDetailsProps) => {
-  const hasMembers = selectedExhibitor?.length > 0;
-  const isMaxLength =
-    hasMembers && selectedExhibitor?.length > MAX_ITEMS_TO_SHOW;
+  const hasMembers = members?.length > 0;
+  const isMaxLength = hasMembers && members?.length > MAX_ITEMS_TO_SHOW;
 
   return (
     <Modal
@@ -38,16 +37,16 @@ export const BoothMembers = ({
         })}
       >
         {hasMembers &&
-          selectedExhibitor?.map((item, index) => {
+          members?.map((item, index) => {
             const isOwner = item.isPrimary;
             const label = isOwner ? 'owner' : 'member';
             const mapStatus = {
               owner: {
-                bg: 'bg-purple-600',
+                bg: 'bg-purple-primary',
                 text: 'text-white'
               },
               member: {
-                bg: 'bg-amber-800',
+                bg: 'bg-brownish',
                 text: 'text-white'
               }
             };
