@@ -1,14 +1,14 @@
 'use client';
 
-import { useAuthStore } from '@/module/auth/store';
-import { LogOut, MoreVerticalIcon } from 'lucide-react';
-import { useUser } from '../../hooks/api';
+import { LogOut, MoreVerticalIcon, Settings, UserCircle } from 'lucide-react';
+import { useRouter } from 'nextjs-toploader/app';
 import { useIsMobile } from '../../hooks/use-mobile';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuLabel,
+  DropdownMenuSeparator,
   DropdownMenuTrigger,
   SidebarMenu,
   SidebarMenuButton,
@@ -16,14 +16,32 @@ import {
 } from '../atoms';
 
 interface SidebarUserProps {
-  name: string;
-  role: string;
+  companyName: string;
+  username: string;
+  email: string;
+  profilePageHref: string;
+  settingPageHref: string;
+  handleLogOut: () => void;
 }
 
-export function SidebarUser({ name, role }: SidebarUserProps) {
-  const { user } = useUser();
+export function SidebarUser({
+  companyName,
+  username,
+  email,
+  profilePageHref,
+  settingPageHref,
+  handleLogOut
+}: SidebarUserProps) {
   const isMobile = useIsMobile();
-  const { handleLogOut } = useAuthStore();
+  const router = useRouter();
+
+  const handleNavigateToProfile = () => {
+    router.push(profilePageHref);
+  };
+
+  const handleNavigateToSettings = () => {
+    router.push(settingPageHref);
+  };
 
   return (
     <SidebarMenu>
@@ -36,10 +54,10 @@ export function SidebarUser({ name, role }: SidebarUserProps) {
             >
               <div className="grid flex-1 text-left text-sm leading-tight gap-y-1">
                 <span className="truncate font-semibold text-[0.75rem] text-text-secondary">
-                  {name}
+                  {companyName}
                 </span>
                 <span className="truncate font-normal text-[0.63rem] text-foreground/70">
-                  {role}
+                  {email}
                 </span>
               </div>
               <MoreVerticalIcon className="ml-auto size-4" />
@@ -56,20 +74,36 @@ export function SidebarUser({ name, role }: SidebarUserProps) {
               <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
                 <div className="grid flex-1 text-left text-sm leading-tight gap-y-1">
                   <span className="line-clamp-1 truncate inline-block font-semibold text-[0.75rem] text-text-secondary">
-                    {user?.firstName} {user?.lastName}
+                    {username}
                   </span>
                   <span className="truncate inline-block line-clamp-1 font-normal text-[0.63rem] text-foreground/70">
-                    {user?.email}
+                    {email}
                   </span>
                 </div>
               </div>
             </DropdownMenuLabel>
             <DropdownMenuItem
-              onClick={handleLogOut}
-              className="cursor-pointer text-xs text-tertiary stroke-tertiary"
+              className="cursor-pointer text-xs hover:bg-highlight! hover:border-tertiary! hover:border-1!"
+              onClick={handleNavigateToProfile}
             >
-              <LogOut className="rotate-180" color="inherit" />
-              Sign out
+              <UserCircle className="text-inherit" />
+              Profile
+            </DropdownMenuItem>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem
+              className="cursor-pointer text-xs hover:bg-highlight! hover:border-tertiary! hover:border-1!"
+              onClick={handleNavigateToSettings}
+            >
+              <Settings className="text-inherit" />
+              Settings
+            </DropdownMenuItem>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem
+              className="cursor-pointer text-xs text-tertiary hover:text-tertiary!"
+              onClick={handleLogOut}
+            >
+              <LogOut className="text-inherit" />
+              Logout
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

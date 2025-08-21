@@ -1,46 +1,35 @@
-import { AuthProvider } from '@/app/core/providers';
-import {
-  AppSidebarTrigger,
-  SidebarProvider
-} from '@/app/core/shared/components/atoms';
-import { GlobalHeader } from '@/app/core/shared/components/molecules';
+import { OrganizerAuthProvider } from '@/app/core/providers';
+import { SidebarProvider } from '@/app/core/shared/components/atoms';
+import { OrganizerGlobalHeader } from '@/app/core/shared/components/molecules';
 import { OrganizerSidebar } from '@/app/core/shared/components/organisms';
-import { ORGANIZER_APP_ROUTES } from '@/app/core/shared/constants/common.const';
+import {
+  COOKIE_KEYS,
+  ORGANIZER_APP_ROUTES
+} from '@/app/core/shared/constants/common.const';
+import { cookies } from 'next/headers';
+import { redirect } from 'next/navigation';
 
 export default async function OrganizerLayout({
   children
 }: {
   children: React.ReactNode;
 }) {
-  // const accessToken = (await cookies()).get(
-  //   COOKIE_KEYS.auth.token
-  // )?.value;
+  const accessToken = (await cookies()).get(COOKIE_KEYS.auth.token)?.value;
 
-  //TODO: UNComment
-  // if (!accessToken) {
-  //   return redirect(ORGANIZER_APP_ROUTES.auth.login());
-  // }
+  if (!accessToken) {
+    return redirect(ORGANIZER_APP_ROUTES.auth.login());
+  }
 
   return (
-    <AuthProvider signInRoute={ORGANIZER_APP_ROUTES.auth.login()}>
-
+    <OrganizerAuthProvider>
       <SidebarProvider>
-        <GlobalHeader />
+        <OrganizerGlobalHeader />
         <OrganizerSidebar />
-        <main className="w-full overflow-x-hidden">
-
-
-          {/* <div className="px-3 py-1">
-            <AppSidebarTrigger />
-          </div> */}
-
-          <div className=" px-[1.13rem] pb-[6.25rem] overflow-x-hidden relative top-[var(--organizer-header-height)]">
-            <hr className="w-screen  h-[1px] border-foreground/10 absolute left-0 z-[1]" />
-            <div className="mt-[1.22rem]" />
-            {children}
-          </div>
+        <main className="w-full pb-[6.25rem] overflow-x-hidden relative top-[var(--organizer-header-height)] px-[1.13rem]">
+          <div className="mt-5" />
+          {children}
         </main>
       </SidebarProvider>
-    </AuthProvider>
+    </OrganizerAuthProvider>
   );
 }

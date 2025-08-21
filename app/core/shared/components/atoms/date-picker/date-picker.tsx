@@ -49,10 +49,7 @@ export const DatePicker = <T extends FieldValues>({
           {label}
         </label>
       )}
-      <div className="flex items-center h-10 w-full rounded-md border  bg-background  text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground disabled:cursor-not-allowed disabled:opacity-50 relative">
-        <div className="w-10 flex h-full  justify-center items-center border-r border-border">
-          <CalendarIcon size={16} />
-        </div>
+      <div className="flex items-center h-10 w-full rounded-md border  bg-background  text-sm ring-offset-background disabled:cursor-not-allowed disabled:opacity-50">
         <div className="flex-1 h-full text-left">
           <ReactDatePicker
             name={name}
@@ -65,7 +62,11 @@ export const DatePicker = <T extends FieldValues>({
             locale="en"
             dateFormat={format}
             showTimeSelect={showTimeSelect}
+            timeIntervals={10}
           />
+        </div>
+        <div className="w-10 flex h-full  justify-center items-center border-l border-border">
+          <CalendarIcon size={16} />
         </div>
       </div>
     </div>

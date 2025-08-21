@@ -1,42 +1,35 @@
 'use client';
-
-import Image from 'next/image';
-import Link from 'next/link';
 import type * as React from 'react';
-import { useUser } from '../../hooks/api';
-import {
-  Separator,
-  Sidebar,
-  SidebarContent,
-  SidebarFooter,
-  SidebarHeader,
-  SidebarMenu,
-  SidebarMenuItem
-} from '../atoms';
+import { Sidebar, SidebarContent, SidebarFooter } from '../atoms';
 import { OrganizerSidebarItems, SidebarUser } from '../molecules';
+import { useOrganizerUser } from '../../hooks/api';
+import { useOrganizerAuthStore } from '@/app/module/auth/store';
+import { ORGANIZER_APP_ROUTES } from '../../constants';
 
-export function OrganizerSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
-  const { user } = useUser();
-
+export function OrganizerSidebar({
+  ...props
+}: React.ComponentProps<typeof Sidebar>) {
+  const { handleLogOut } = useOrganizerAuthStore();
+  const { user } = useOrganizerUser();
   return (
     <Sidebar
       collapsible="offcanvas"
       {...props}
-      className="pt-[calc(var(--organizer-header-height))] px-[1.12rem] bg-sidebar"
+      className="top-[calc(var(--organizer-header-height)+1.75rem)] pb-[calc(var(--organizer-header-height)+1.75rem)] px-[1.12rem] bg-sidebar"
     >
       <SidebarContent className="mt-[2.86rem]">
         <OrganizerSidebarItems />
       </SidebarContent>
-      {/* <SidebarFooter>
-        <span className="text-[0.75rem] uppercase text-[#3C3CFF] font-semibold mb-[10px]">
-          {user?.AdminRole?.[0]?.name ?? ''}
-        </span>
-        <Separator />
+      <SidebarFooter>
         <SidebarUser
-          name={user?.firstName ?? ''}
-          role={user?.department ?? ''}
+          companyName={user?.companyName ?? ''}
+          username={user?.username ?? ''}
+          email={user?.officialEmail ?? ''}
+          profilePageHref={ORGANIZER_APP_ROUTES.settings()}
+          settingPageHref={ORGANIZER_APP_ROUTES.settings()}
+          handleLogOut={handleLogOut}
         />
-      </SidebarFooter> */}
+      </SidebarFooter>
     </Sidebar>
   );
 }

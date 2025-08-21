@@ -5,7 +5,7 @@
 
 body {
   background: var(--background);
-  color: var(--foreground);
+  color: var(--text-secondary);
 }
 
 :root {
@@ -19,8 +19,9 @@ body {
   --primary-foreground: #ffffff;
   --secondary: oklch(0.97 0 0);
   --secondary-foreground: oklch(0.205 0 0);
-  --tertiary: #F02E2F;
+  --tertiary: #f02e2f;
   --gold: #8f3600;
+  --brownish: #ac7f5e;
   --tertiary-foreground: #ffffff;
   --text-secondary: #544f4f;
   --text-tertiary: #525252;
@@ -31,7 +32,7 @@ body {
   --accent-foreground: oklch(0.205 0 0);
   --destructive: oklch(0.577 0.245 27.325);
   --border: oklch(0.922 0 0);
-  --input: oklch(0.922 0 0);
+  --input: #e1e1e1;
   --ring: oklch(0.708 0 0);
   --chart-1: oklch(0.646 0.222 41.116);
   --chart-2: oklch(0.6 0.118 184.704);
@@ -56,16 +57,19 @@ body {
   --light-gray: #ededed;
   --light-gray-2: #fefcfc;
   --dark-brown: #662b00;
-  --light-blue: #3B82F6;
-  --dark-blue: #4F46E5;
-  --gray-light: #E1E1E1;
-  --gray-light-2: #EEEEEE;
-  --gray-ultra-light: #F8F8F8;
-  --lavender-light: #F3E8FF;
-  --purple-primary: #9333EA;
-  --blue-light: #DBEAFE;
-  --yellow-light: #FEF9C3;
-  --yellow-dark: #CA8A04;
+  --light-blue: #3b82f6;
+  --light-blue-2: #0088ff;
+  --dark-blue: #4f46e5;
+  --gray-light: #e1e1e1;
+  --gray-light-2: #eeeeee;
+  --gray-light-3: #f7f7f7;
+  --gray-light-4: #f9fafb;
+  --gray-ultra-light: #f8f8f8;
+  --lavender-light: #f3e8ff;
+  --purple-primary: #9333ea;
+  --blue-light: #dbeafe;
+  --yellow-light: #fef9c3;
+  --yellow-dark: #ca8a04;
 }
 
 .dark {
@@ -81,6 +85,7 @@ body {
   --secondary-foreground: oklch(0.985 0 0);
   --tertiary: #1d0202;
   --gold: #8f3600;
+  --brownish: #ac7f5e;
   --tertiary-foreground: #ffffff;
   --text-secondary: #544f4f;
   --text-tertiary: #525252;
@@ -112,18 +117,21 @@ body {
   --light-yellow: #fef0d8;
   --light-gray: #ededed;
   --light-gray-2: #fefcfc;
+  --light-gray-3: #f7f7f7;
+  --light-gray-4: #f9fafb;
   --hr: #ede7e7;
   --sidebar-highlight: #1d0202;
-  --light-blue: #3B82F6;
-  --dark-blue: #4F46E5;
-  --gray-light: #E1E1E1;
-  --gray-light-2: #EEEEEE;
-  --gray-ultra-light: #F8F8F8;
-  --lavender-light: #F3E8FF;
-  --purple-primary: #9333EA;
-  --blue-light: #DBEAFE;
-  --yellow-light: #FEF9C3;
-  --yellow-dark: #CA8A04;
+  --light-blue: #3b82f6;
+  --light-blue-2: #0088ff;
+  --dark-blue: #4f46e5;
+  --gray-light: #e1e1e1;
+  --gray-light-2: #eeeeee;
+  --gray-ultra-light: #f8f8f8;
+  --lavender-light: #f3e8ff;
+  --purple-primary: #9333ea;
+  --blue-light: #dbeafe;
+  --yellow-light: #fef9c3;
+  --yellow-dark: #ca8a04;
 }
 
 @theme {
@@ -147,7 +155,7 @@ body {
   --color-tertiary-foreground: var(--tertiary-foreground);
   --color-highlight: var(--highlight);
   --color-gold: var(--gold);
-  --color-secondary: var(--secondary);
+  --color-secondary: var(--text-secondary);
   --color-secondary-foreground: var(--secondary-foreground);
   --color-muted: var(--muted);
   --color-muted-foreground: var(--muted-foreground);
@@ -187,14 +195,22 @@ body {
   --color-lavender-light: var(--lavender-light);
   --color-purple-primary: var(--purple-primary);
   --color-blue-light: var(--blue-light);
+  --color-light-blue-2: var(--light-blue-2);
   --color-yellow-light: var(--yellow-light);
   --color-yellow-dark: var(--yellow-dark);
   --color-gray-light-2: var(--gray-light-2);
+  --color-gray-light-3: var(--gray-light-3);
+  --color-gray-light-4: var(--gray-light-4);
+  --color-brownish: var(--brownish);
 }
 
 @layer base {
   * {
     @apply border-border outline-ring/50;
+  }
+
+  button {
+    cursor: pointer;
   }
 
   .PhoneInput {

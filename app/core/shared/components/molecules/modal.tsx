@@ -18,6 +18,7 @@ interface ModalProps {
   onClose: () => void;
   isModal?: boolean;
   contentClassName?: string;
+  headerClassName?: string;
   loading?: boolean;
 }
 
@@ -27,6 +28,7 @@ export const Modal = ({
   description,
   children,
   contentClassName,
+  headerClassName,
   isModal = true,
   visuallyHiddenTitle = false,
   onClose
@@ -55,16 +57,18 @@ export const Modal = ({
           contentClassName
         )}
       >
-        <DialogHeader>
+        <DialogHeader
+          className={cn('justify-center py-3 border-b', headerClassName)}
+        >
           {title && !visuallyHiddenTitle && (
-            <DialogTitle className="text-[1.25rem] font-bold">
+            <DialogTitle className="text-[1.25rem] font-semibold text-foreground">
               {title}
             </DialogTitle>
           )}
           {title && visuallyHiddenTitle && (
             <DialogTitle
               className={cn({
-                'sr-only "text-[1.25rem] font-bold': visuallyHiddenTitle
+                'sr-only "text-[1.25rem] font-semibold': visuallyHiddenTitle
               })}
             >
               {title}
@@ -75,7 +79,6 @@ export const Modal = ({
               {description}
             </DialogDescription>
           )}
-          {title && !visuallyHiddenTitle && <hr />}
         </DialogHeader>
 
         <div>{children && children}</div>

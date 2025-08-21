@@ -4,7 +4,7 @@ import { useRouter } from 'nextjs-toploader/app';
 
 interface GoBackButtonProps {
   title?: string;
-  route?: `/${string}`;
+  route?: string;
 }
 
 export const GoBackButton = ({
@@ -24,25 +24,25 @@ export const GoBackButton = ({
   return (
     <button
       type="button"
-      className="flex gap-[0.63rem] items-center gap stroke-tertiary text-tertiary cursor-pointer"
+      className="flex gap-[0.13rem] items-center text-secondary stroke-secondary cursor-pointer opacity-70 relative -left-1"
       onClick={handleGoToPreviousPage}
     >
       <svg
-        width={14}
-        height={14}
-        viewBox="0 0 14 14"
+        width={20}
+        height={21}
+        viewBox="0 0 20 21"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
         aria-label="Go Back Arrow Icon"
       >
         <path
-          d="M6.125 11.375L1.75 7M1.75 7L6.125 2.625M1.75 7H12.25"
-          strokeWidth="1.5"
+          d="M12.5 15.6666L7.5 10.6666L12.5 5.66663"
+          strokeWidth={2}
           strokeLinecap="round"
           strokeLinejoin="round"
-        />
+        ></path>
       </svg>
-      <span className="text-xs">{title}</span>
+      <span className="text-xs font-light">{title}</span>
     </button>
   );
 };

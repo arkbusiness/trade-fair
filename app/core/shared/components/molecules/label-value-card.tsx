@@ -1,23 +1,23 @@
 import { ReactNode } from 'react';
+import { cn } from '@/app/core/shared/utils';
 
 interface LabelValueCardProps {
   label: string;
   value: string | ReactNode;
-  children?: ReactNode;
+  labelClassName?: string;
 }
 
 export const LabelValueCard = ({
   label,
   value,
-  children
+  labelClassName
 }: LabelValueCardProps) => {
   return (
-    <div className="flex justify-between items-center gap-[0.75rem]">
-      <div className="flex flex-gap flex-col gap-[0.55rem]">
-        <h4 className="text-sm font-semibold">{label}</h4>
-        <div className="font-normal text-xs text-foreground/70">{value}</div>
-      </div>
-      <div>{children && children}</div>
+    <div className="flex flex-col">
+      <h4 className={cn('text-sm font-medium text-foreground', labelClassName)}>
+        {label}
+      </h4>
+      <div className="text-xs font-medium mt-1.5">{value}</div>
     </div>
   );
 };

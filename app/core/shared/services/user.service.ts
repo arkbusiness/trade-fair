@@ -1,15 +1,15 @@
 import { AxiosRequestConfig } from 'axios';
 
-export const userService = {
+export const organizerUserService = {
   getUser: () => ({
-    url: '/me',
-    queryKey: ['me']
+    url: '/organizer/profile',
+    queryKey: ['organizer-profile']
   }),
   changePassword: (data: {
     currentPassword: string;
     newPassword: string;
   }): AxiosRequestConfig => ({
-    url: `/change-password`,
+    url: `/organizer/change-password`,
     method: 'POST',
     data
   }),
@@ -19,7 +19,7 @@ export const userService = {
     department: string;
     phone: string;
   }): AxiosRequestConfig => ({
-    url: `/update-profile`,
+    url: `/organizer/update-profile`,
     method: 'PATCH',
     data
   })

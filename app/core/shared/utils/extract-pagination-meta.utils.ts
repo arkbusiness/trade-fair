@@ -8,10 +8,10 @@ export function extractPaginationMeta<T>(
       total: 0,
       page: 0,
       limit: 0,
-      totalPages: 0
+      pages: 0
     };
   }
 
-  const { total, page, limit, pages: totalPages } = response;
-  return { total, page, limit, totalPages };
+  const { total, page, limit, pages } = response;
+  return { total, page, limit, pages };
 }
