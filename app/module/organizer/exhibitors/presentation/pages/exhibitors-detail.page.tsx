@@ -9,7 +9,10 @@ import {
   TabsList,
   TabsTrigger
 } from '@/app/core/shared/components/atoms';
-import { ExhibitorProfileInformation } from '../organisms';
+import {
+  ExhibitorProfileInformation,
+  ExhibitorRegistrationDetails
+} from '../organisms';
 
 const TABS_ITEMS = [
   {
@@ -72,7 +75,7 @@ export const ExhibitorsDetailPage = async ({ id }: { id: string }) => {
             </TabsContent>
             <TabsContent value="registration" className="p-0 m-0">
               <div className="mt-[1.38rem]">
-                <p>Registration Details</p>
+                <ExhibitorRegistrationDetails id={id} />
               </div>
             </TabsContent>
           </Tabs>

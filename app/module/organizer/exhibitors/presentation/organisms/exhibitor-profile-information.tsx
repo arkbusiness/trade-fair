@@ -43,13 +43,16 @@ export const ExhibitorProfileInformation = ({ id }: { id: string }) => {
   return (
     <div className="flex flex-col gap-6">
       {/* About */}
-      <ContentCard
-        title="About"
-        description={exhibitor?.publicDescription ?? 'No description available'}
-      />
+      <ContentCard title="About">
+        <div className="pb-10">
+          <p className="mt-4 text-sm">
+            {exhibitor?.publicDescription ?? 'No description available'}
+          </p>
+        </div>
+      </ContentCard>
       {/* Contact Information */}
       <ContentCard title="Contact Information">
-        <div className="flex flex-col gap-5 mt-3">
+        <div className="flex flex-col gap-5 mt-3 pb-10">
           <div className="flex items-center gap-2">
             {hasLogo ? (
               <Image
@@ -100,7 +103,7 @@ export const ExhibitorProfileInformation = ({ id }: { id: string }) => {
 
       {/* Booth Members */}
       <ContentCard title="Other Members">
-        <div className="flex gap-x-10 gap-y-12 mt-3 flex-wrap">
+        <div className="flex gap-x-10 gap-y-12 mt-3 flex-wrap pb-10">
           {members?.map((item, index) => {
             const memberHasEmail = !!item.email;
             const key = `member-${index}-${item.id}`;
