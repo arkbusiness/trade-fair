@@ -48,19 +48,19 @@ const TABLE_TABS = [
     value: 'all'
   },
   {
-    label: 'Registered',
-    value: 'registered'
+    label: 'Active',
+    value: 'active'
   },
   {
-    label: 'Invited',
-    value: 'invited'
+    label: 'Inactive',
+    value: 'inactive'
   }
 ];
 
 export const ExhibitorTable = () => {
   const router = useRouter();
   const mutation = useCustomMutation();
-  const { setFilterParams, filter } = useQueryFilters(['search', 'page']);
+  const { setFilterParams, filter } = useQueryFilters(['email', 'page']);
 
   const [selectedExhibitor, setSelectedExhibitor] =
     useState<IOrganizerExhibitor | null>(null);
@@ -128,6 +128,15 @@ export const ExhibitorTable = () => {
           </div>
         );
       }
+    },
+    {
+      accessorKey: 'email',
+      header: 'Email',
+      cell: ({ row }) => (
+        <Text>
+          <span>{row.getValue('email')}</span>
+        </Text>
+      )
     },
     {
       id: 'contact',
@@ -200,7 +209,7 @@ export const ExhibitorTable = () => {
           <span>
             {row.getValue('createdAt')
               ? formatDate(row.getValue('createdAt') as string)
-              : 'Not assigned'}
+              : 'N/A'}
           </span>
         </Text>
       ),
@@ -291,7 +300,7 @@ export const ExhibitorTable = () => {
 
   const handleSearch = (value: string) => {
     setFilterParams({
-      search: value
+      email: value
     });
   };
 
@@ -405,7 +414,7 @@ export const ExhibitorTable = () => {
           {/* Search */}
           <div className="xs:max-w-[300px] w-full">
             <TableSearchInput
-              placeholder="Search..."
+              placeholder="Search by email..."
               handleSearch={handleSearch}
             />
           </div>

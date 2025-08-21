@@ -14,7 +14,8 @@ export const ORGANIZER_APP_ROUTES = {
     }
   },
   attendees: {
-    root: () => '/organizer/attendees'
+    root: () => '/organizer/attendees/manage',
+    detail: (id: string) => `/organizer/attendees/manage/${id}`
   }
 };
 

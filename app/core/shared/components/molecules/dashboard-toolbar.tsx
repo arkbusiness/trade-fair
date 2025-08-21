@@ -22,7 +22,9 @@ export const DashboardToolbar = ({
         <h2 className="text-[1.13rem] font-bold text-foreground">
           {title ? title : `Welcome Back ${userName ?? ''}`}
         </h2>
-        <div className="text-[0.75rem] mt-[0.78rem]">{description}</div>
+        {description && (
+          <div className="text-[0.75rem] mt-[0.78rem]">{description}</div>
+        )}
       </div>
 
       <div>{children && children}</div>
