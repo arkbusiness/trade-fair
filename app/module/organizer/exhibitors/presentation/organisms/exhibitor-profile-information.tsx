@@ -103,7 +103,7 @@ export const ExhibitorProfileInformation = ({ id }: { id: string }) => {
 
       {/* Booth Members */}
       <ContentCard title="Other Members">
-        <div className="flex gap-x-10 gap-y-12 mt-3 flex-wrap pb-10">
+        <div className="flex gap-x-10 gap-y-6 mt-3 flex-wrap pb-10">
           {members?.map((item, index) => {
             const memberHasEmail = !!item.email;
             const key = `member-${index}-${item.id}`;

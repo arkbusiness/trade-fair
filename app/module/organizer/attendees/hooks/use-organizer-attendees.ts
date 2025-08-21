@@ -16,10 +16,15 @@ export interface IOrganizerAttendee {
   logoUrl: string;
   phone: string;
   contactName: string;
+  interests: string[];
   registeredAt: string;
   username: string;
   inviteLink: string;
   chatUnlocked: boolean;
+  registrationTimeLine: {
+    registered: string;
+    invited: string;
+  };
 }
 
 export const useOrganizerAttendees = (filter: Record<string, string> = {}) => {
