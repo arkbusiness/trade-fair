@@ -5,6 +5,7 @@ import { MainContainer } from './core/shared/components/atoms';
 import { ORGANIZER_APP_ROUTES } from './core/shared/constants';
 import Image from 'next/image';
 import Link from 'next/link';
+import { Suspense } from 'react';
 
 export const metadata: Metadata = {
   title: createMetaTitle('Sign in')
@@ -28,7 +29,9 @@ export default function Signin() {
         </Link>
       </div>
       <div className="w-full mt-[4.61rem]">
-        <OrganizerSigninPage />
+        <Suspense fallback={<h1>Loading...</h1>}>
+          <OrganizerSigninPage />
+        </Suspense>
       </div>
     </MainContainer>
   );
