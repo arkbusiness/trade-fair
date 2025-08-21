@@ -45,7 +45,11 @@ const TABLE_TABS = [
 
 export const AttendeesTable = () => {
   const router = useRouter();
-  const { setFilterParams, filter } = useQueryFilters(['email', 'page']);
+  const { setFilterParams, filter } = useQueryFilters([
+    'email',
+    'page',
+    'status'
+  ]);
 
   const {
     attendees,
@@ -209,11 +213,11 @@ export const AttendeesTable = () => {
   const handleTabChange = (value: string) => {
     if (value === TABLE_TABS[0].value) {
       setFilterParams({
-        filter: ''
+        status: ''
       });
     } else {
       setFilterParams({
-        filter: value
+        status: value
       });
     }
   };

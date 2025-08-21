@@ -60,7 +60,11 @@ const TABLE_TABS = [
 export const ExhibitorTable = () => {
   const router = useRouter();
   const mutation = useCustomMutation();
-  const { setFilterParams, filter } = useQueryFilters(['email', 'page']);
+  const { setFilterParams, filter } = useQueryFilters([
+    'email',
+    'status',
+    'page'
+  ]);
 
   const [selectedExhibitor, setSelectedExhibitor] =
     useState<IOrganizerExhibitor | null>(null);
@@ -289,11 +293,11 @@ export const ExhibitorTable = () => {
   const handleTabChange = (value: string) => {
     if (value === TABLE_TABS[0].value) {
       setFilterParams({
-        filter: ''
+        status: ''
       });
     } else {
       setFilterParams({
-        filter: value
+        status: value
       });
     }
   };
