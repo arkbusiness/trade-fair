@@ -22,7 +22,7 @@ export const ORGANIZER_APP_ROUTES = {
 export const EXHIBITOR_APP_ROUTES = {
   root: () => '/exhibitor',
   auth: {
-    login: () => '/exhibitor/sign-in'
+    login: () => '/?tab=exhibitor'
   }
 };
 

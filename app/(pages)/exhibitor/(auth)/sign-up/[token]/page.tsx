@@ -1,11 +1,11 @@
 import { createMetaTitle } from '@/app/core/shared/utils';
-import { OrganizerSignupPage } from '@/app/module/auth/organizer-signup/presentation/pages';
+import { ExhibitorSignupPage } from '@/app/module/auth/exhibitor-signup/presentation/pages';
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
   title: createMetaTitle('Sign up')
 };
 
-export default function OrganizerSignup() {
-  return <OrganizerSignupPage />;
+export default function ExhibitorSignup() {
+  return <ExhibitorSignupPage />;
 }

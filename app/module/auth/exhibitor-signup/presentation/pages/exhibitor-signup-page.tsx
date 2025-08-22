@@ -1,14 +1,14 @@
 import { AuthCard } from '@/app/module/auth/components/auth-card';
 import { AuthContainer } from '@/app/module/auth/components/auth-container';
-import { OrganizerSignupForm } from '../organisms';
 import { SigninPrompt } from '../../../sign-in/presentation/atoms';
-import { ORGANIZER_APP_ROUTES } from '@/app/core/shared/constants';
+import { EXHIBITOR_APP_ROUTES } from '@/app/core/shared/constants';
+import { ExhibitorSignupForm } from '../organisms';
 
-export const OrganizerSignupPage = () => {
+export const ExhibitorSignupPage = () => {
   return (
     <AuthContainer className="max-w-[35.94rem]">
-      <div className="mb-4.5">
-        <SigninPrompt href={ORGANIZER_APP_ROUTES.auth.login()} />
+      <div className="mb-[3.19rem]">
+        <SigninPrompt href={EXHIBITOR_APP_ROUTES.auth.login()} />
       </div>
       <AuthCard>
         <div className="mb-[1.61rem]">
@@ -21,11 +21,11 @@ export const OrganizerSignupPage = () => {
               Create your account
             </h2>
             <p className="text-[.9rem] text-text-tertiary">
-              Enter your information to get started
+              Enter your business information to get started
             </p>
           </header>
         </div>
-        <OrganizerSignupForm />
+        <ExhibitorSignupForm />
       </AuthCard>
     </AuthContainer>
   );

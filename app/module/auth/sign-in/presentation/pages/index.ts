@@ -1,1 +1,1 @@
-export { OrganizerSigninPage } from './organizer-signin-page';
+export { SigninPage } from './signin-page';

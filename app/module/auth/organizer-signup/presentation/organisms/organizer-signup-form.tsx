@@ -166,7 +166,7 @@ export const OrganizerSignupForm = () => {
           <div>
             <Input
               label="Company Name"
-              placeholder="Tech Innovations"
+              placeholder="Enter your company name"
               hasError={!!companyNameError?.message?.length}
               {...register('companyName')}
             />
