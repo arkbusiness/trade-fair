@@ -36,8 +36,8 @@ export enum UserGroup {
   EXHIBITOR
 }
 
-export enum OrganizerSettingsPages {
-  PROFILE,
-  CHANGE_PASSWORD,
-  COMPANY
+export enum OrganizerSettingsPage {
+  PROFILE = 'profile',
+  CHANGE_PASSWORD = 'change-password',
+  COMPANY = 'company'
 }

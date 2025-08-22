@@ -32,3 +32,5 @@ export * from './dashboard-toolbar';
 export * from './table-tabs';
 export * from './qr-generator';
 export * from './content-card';
+export * from './profile-image-uploader';
+export * from './cover-image-uploder';

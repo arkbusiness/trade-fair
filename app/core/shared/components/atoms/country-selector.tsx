@@ -14,6 +14,7 @@ interface CountrySelectorProps {
   name?: string;
   country?: string;
   value: string;
+  labelClassName?: string;
   hasError?: boolean;
   onChange: (value: string) => void;
 }
@@ -22,13 +23,17 @@ export const CountrySelector = ({
   label,
   name,
   value,
+  labelClassName,
   hasError,
   onChange
 }: CountrySelectorProps) => {
   return (
     <div className="flex flex-col gap-[0.5rem] w-full">
       {label && (
-        <label htmlFor={name} className="text-[0.75rem] font-medium">
+        <label
+          htmlFor={name}
+          className={cn('text-[0.75rem] font-medium', labelClassName)}
+        >
           {label}
         </label>
       )}

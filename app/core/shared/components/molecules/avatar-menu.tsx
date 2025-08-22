@@ -1,7 +1,9 @@
 'use client';
 
-import { ChevronDown, LogOut, Settings, User, UserCircle } from 'lucide-react';
+import { ChevronDown, Lock, LogOut, User, UserCircle } from 'lucide-react';
+import Image from 'next/image';
 import { useRouter } from 'nextjs-toploader/app';
+import { useOrganizerUser } from '../../hooks/api';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -10,20 +12,18 @@ import {
   DropdownMenuTrigger,
   SidebarMenuButton
 } from '../atoms';
-import { useOrganizerUser } from '../../hooks/api';
-import Image from 'next/image';
 interface AvatarMenuProps {
   userName: string;
   handleLogout(): void;
   profilePageHref: string;
-  settingPageHref: string;
+  passwordPageHref: string;
 }
 
 export function AvatarMenu({
   userName,
   handleLogout,
   profilePageHref,
-  settingPageHref
+  passwordPageHref
 }: AvatarMenuProps) {
   const { user } = useOrganizerUser();
   const router = useRouter();
@@ -32,8 +32,8 @@ export function AvatarMenu({
     router.push(profilePageHref);
   };
 
-  const handleNavigateToSettings = () => {
-    router.push(settingPageHref);
+  const handleNavigateToPassword = () => {
+    router.push(passwordPageHref);
   };
 
   return (
@@ -88,10 +88,10 @@ export function AvatarMenu({
             <DropdownMenuSeparator />
             <DropdownMenuItem
               className="cursor-pointer text-xs hover:bg-highlight! hover:border-tertiary! hover:border-1!"
-              onClick={handleNavigateToSettings}
+              onClick={handleNavigateToPassword}
             >
-              <Settings className="text-inherit" />
-              Settings
+              <Lock className="text-inherit" />
+              Change password
             </DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem

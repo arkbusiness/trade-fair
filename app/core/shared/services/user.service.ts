@@ -14,13 +14,18 @@ export const organizerUserService = {
     data
   }),
   updateUser: (data: {
-    firstName: string;
-    lastName: string;
-    department: string;
+    name: string;
     phone: string;
+    companyName: string;
+    country: string;
+    email: string;
+    file?: File | null;
   }): AxiosRequestConfig => ({
-    url: `/organizer/update-profile`,
+    url: `/organizer/profile`,
     method: 'PATCH',
-    data
+    data,
+    headers: {
+      'Content-Type': 'multipart/form-data'
+    }
   })
 };

@@ -5,6 +5,7 @@ import { OrganizerSidebarItems, SidebarUser } from '../molecules';
 import { useOrganizerUser } from '../../hooks/api';
 import { useOrganizerAuthStore } from '@/app/module/auth/store';
 import { ORGANIZER_APP_ROUTES } from '../../constants';
+import { OrganizerSettingsPage } from '../../types';
 
 export function OrganizerSidebar({
   ...props
@@ -25,8 +26,12 @@ export function OrganizerSidebar({
           companyName={user?.companyName ?? ''}
           username={user?.username ?? ''}
           email={user?.officialEmail ?? ''}
-          profilePageHref={ORGANIZER_APP_ROUTES.settings()}
-          settingPageHref={ORGANIZER_APP_ROUTES.settings()}
+          profilePageHref={ORGANIZER_APP_ROUTES.settings(
+            OrganizerSettingsPage.PROFILE
+          )}
+          passwordPageHref={ORGANIZER_APP_ROUTES.settings(
+            OrganizerSettingsPage.CHANGE_PASSWORD
+          )}
           handleLogOut={handleLogOut}
         />
       </SidebarFooter>

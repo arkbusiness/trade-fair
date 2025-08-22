@@ -4,16 +4,26 @@ import { ComponentProps } from 'react';
 export interface InputProps extends ComponentProps<'input'> {
   label?: string;
   inputClassName?: string;
+  labelClassName?: string;
   hasError?: boolean;
 }
 
-function Input({ type, hasError, inputClassName, ...props }: InputProps) {
+function Input({
+  type,
+  hasError,
+  inputClassName,
+  labelClassName,
+  ...props
+}: InputProps) {
   const { name, label } = props;
 
   return (
     <div className="flex flex-col gap-[0.5rem] w-full">
       {label && (
-        <label htmlFor={name} className="text-[0.75rem] font-medium">
+        <label
+          htmlFor={name}
+          className={cn('text-[0.75rem] font-medium', labelClassName)}
+        >
           {label}
         </label>
       )}
