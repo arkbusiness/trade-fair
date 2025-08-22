@@ -10,7 +10,6 @@ import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { ErrorText, Input } from '@/app/core/shared/components/atoms';
 import {
-  CoverImageUploader,
   LoadingButton,
   PhoneNumberInput,
   ProfileImageUploader
@@ -22,12 +21,12 @@ import { organizerUserService } from '@/app/core/shared/services';
 import { errorHandler } from '@/app/core/shared/utils';
 
 const validationSchema = yup.object().shape({
-  name: yup.string().trim().required('Name is required'),
-  email: yup.string().trim().required('Email is required'),
+  contactName: yup.string().trim().required('Name is required'),
+  officialEmail: yup.string().trim().required('Email is required'),
   companyName: yup.string().trim().required('Company name is required'),
   country: yup.string().trim().required('Country is required'),
   file: yup.mixed().nullable(),
-  phone: yup
+  contactPhone: yup
     .string()
     .trim()
     .test({
@@ -46,10 +45,10 @@ const validationSchema = yup.object().shape({
     .required('Phone number is required')
 });
 
-type ISignupFormValues = yup.InferType<typeof validationSchema>;
+type IProfileFormValues = yup.InferType<typeof validationSchema>;
 
 export const OrganizerSettingsProfile = () => {
-  const { user } = useOrganizerUser();
+  const { user, refetchUser } = useOrganizerUser();
   const mutation = useCustomMutation();
   const {
     handleSubmit,
@@ -57,13 +56,13 @@ export const OrganizerSettingsProfile = () => {
     watch,
     formState: { errors },
     register
-  } = useForm<ISignupFormValues>({
+  } = useForm<IProfileFormValues>({
     values: {
-      name: user?.contactName ?? '',
-      email: user?.officialEmail ?? '',
+      contactName: user?.contactName ?? '',
+      officialEmail: user?.officialEmail ?? '',
       country: user?.country ?? 'Nigeria',
       file: null,
-      phone: user?.contactPhone
+      contactPhone: user?.contactPhone
         ? (parsePhoneNumber(user?.contactPhone)?.number as string)
         : '',
       companyName: user?.companyName ?? ''
@@ -72,17 +71,17 @@ export const OrganizerSettingsProfile = () => {
     resolver: yupResolver(validationSchema)
   });
 
-  const watchedPhoneNo = watch('phone');
+  const watchedPhoneNo = watch('contactPhone');
   const watchedCountry = watch('country');
   const {
-    name: nameError,
-    email: emailError,
+    contactName: nameError,
+    officialEmail: emailError,
     companyName: companyNameError,
     country: countryError,
-    phone: phoneError
+    contactPhone: phoneError
   } = errors;
 
-  const onSubmit = (values: ISignupFormValues) => {
+  const onSubmit = (values: IProfileFormValues) => {
     mutation.mutate(
       organizerUserService.updateUser({
         ...values,
@@ -95,6 +94,7 @@ export const OrganizerSettingsProfile = () => {
         },
         onSuccess() {
           toast.success('Profile updated successfully');
+          refetchUser();
         }
       }
     );
@@ -113,18 +113,8 @@ export const OrganizerSettingsProfile = () => {
           </p>
         </div>
         <form onSubmit={handleSubmit(onSubmit)} className="mt-5">
-          <div className="h-[clamp(10rem,_30vw,_15rem)] z-[5] relative">
-            <p className="text-sm font-semibold mb-2">Cover photo</p>
-            <CoverImageUploader
-              onImageUpload={(file: File) => {
-                console.log(file);
-                // setValue('file', file);
-              }}
-              // imageUrl={user?.logo || ''}
-            />
-          </div>
           <fieldset className="w-full px-8" disabled={mutation.isPending}>
-            <div className="flex items-center gap-5 mb-7 relative top-0 md:-top-7 z-10 flex-col md:flex-row">
+            <div className="flex items-center gap-4 mb-7 relative  flex-col">
               <div className="w-[clamp(100px,_30vw,_160px)] h-[clamp(100px,_30vw,_160px)] overflow-hidden">
                 <ProfileImageUploader
                   user={{
@@ -136,7 +126,7 @@ export const OrganizerSettingsProfile = () => {
                   }}
                 />
               </div>
-              <div className="relative md:top-8 text-center md:text-left">
+              <div className="text-center">
                 <h4 className="text-2xl font-semibold text-foreground">
                   {user?.contactName ?? 'N/A'}
                 </h4>
@@ -156,7 +146,7 @@ export const OrganizerSettingsProfile = () => {
                   labelClassName="md:hidden"
                   placeholder="Enter your name"
                   hasError={!!nameError?.message?.length}
-                  {...register('name')}
+                  {...register('contactName')}
                 />
                 <ErrorText message={nameError?.message} />
               </div>
@@ -172,8 +162,10 @@ export const OrganizerSettingsProfile = () => {
                   label="Email"
                   labelClassName="md:hidden"
                   placeholder="Enter your email"
+                  readOnly
+                  disabled
                   hasError={!!emailError?.message?.length}
-                  {...register('email')}
+                  {...register('officialEmail')}
                 />
                 <ErrorText message={emailError?.message} />
               </div>
@@ -192,7 +184,7 @@ export const OrganizerSettingsProfile = () => {
                   value={watchedPhoneNo}
                   onChange={(value) => {
                     if (value) {
-                      setValue('phone', value, {
+                      setValue('contactPhone', value, {
                         shouldValidate: true
                       });
                     }

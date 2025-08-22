@@ -9,7 +9,11 @@ import {
 import { useSetParams } from '@/app/core/shared/hooks';
 import { OrganizerSettingsPage } from '@/app/core/shared/types/common';
 import { useEffect, useState } from 'react';
-import { OrganizerSettingsProfile } from '../organisms';
+import {
+  OrganizerSettingsEvent,
+  OrganizerSettingsPassword,
+  OrganizerSettingsProfile
+} from '../organisms';
 
 const TABS_ITEMS = [
   {
@@ -17,8 +21,8 @@ const TABS_ITEMS = [
     label: 'Personal Profile'
   },
   {
-    value: OrganizerSettingsPage.COMPANY,
-    label: 'Company'
+    value: OrganizerSettingsPage.EVENT,
+    label: 'Event Details'
   },
   {
     value: OrganizerSettingsPage.CHANGE_PASSWORD,
@@ -69,16 +73,20 @@ export const SettingsPage = () => {
           </div>
         </TabsContent>
         <TabsContent
-          value={OrganizerSettingsPage.COMPANY}
+          value={OrganizerSettingsPage.EVENT}
           className="p-0 md:px-3 m-0"
         >
-          <div className="mt-2">2</div>
+          <div className="mt-2">
+            <OrganizerSettingsEvent />
+          </div>
         </TabsContent>
         <TabsContent
           value={OrganizerSettingsPage.CHANGE_PASSWORD}
           className="p-0 md:px-3 m-0"
         >
-          <div className="mt-2">3</div>
+          <div className="mt-2">
+            <OrganizerSettingsPassword />
+          </div>
         </TabsContent>
       </Tabs>
     </>

@@ -14,6 +14,7 @@ export interface IDatePicker<T extends FieldValues> {
   name: Path<T> | string;
   label?: string;
   className?: string;
+  labelClassName?: string;
   placeholderText?: string;
   showTimeSelect?: boolean;
   dateFormat?: string;
@@ -32,6 +33,7 @@ export interface IDatePicker<T extends FieldValues> {
 export const DatePicker = <T extends FieldValues>({
   name,
   label,
+  labelClassName,
   placeholderText,
   min = undefined,
   max = undefined,
@@ -45,7 +47,10 @@ export const DatePicker = <T extends FieldValues>({
   return (
     <div className={cn('flex flex-col gap-[0.5rem]', className)}>
       {label && (
-        <label htmlFor={name} className="text-[0.75rem] font-medium">
+        <label
+          htmlFor={name}
+          className={cn('text-[0.75rem] font-medium', labelClassName)}
+        >
           {label}
         </label>
       )}

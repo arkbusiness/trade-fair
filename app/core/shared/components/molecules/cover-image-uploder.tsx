@@ -2,14 +2,15 @@
 
 import React, { useRef, useState } from 'react';
 
+import { UploadIcon } from 'lucide-react';
+import Image from 'next/image';
 import toast from 'react-hot-toast';
 import { cn } from '../../utils';
 import { Button } from '../atoms';
-import { UploadIcon } from 'lucide-react';
-import Image from 'next/image';
 
 interface CoverImageUploaderProps {
-  onImageUpload?: (file: File) => void;
+  onImageUpload?: (file: File | null) => void;
+  onImageRemove?: () => void;
   maxSizeMB?: number;
   acceptedFormats?: string[];
   className?: string;
@@ -18,7 +19,8 @@ interface CoverImageUploaderProps {
 
 export const CoverImageUploader: React.FC<CoverImageUploaderProps> = ({
   onImageUpload,
-  maxSizeMB = 6,
+  // onImageRemove,
+  maxSizeMB = 7,
   acceptedFormats = ['image/jpeg', 'image/png'],
   className = '',
   imageUrl
@@ -60,6 +62,10 @@ export const CoverImageUploader: React.FC<CoverImageUploaderProps> = ({
     }
   };
 
+  // const handleRemoveImage = () => {
+  //  onImageRemove?.();
+  // };
+
   const handleImageClick = () => {
     fileInputRef.current?.click();
   };
@@ -69,7 +75,10 @@ export const CoverImageUploader: React.FC<CoverImageUploaderProps> = ({
   return (
     <div
       className={cn(
-        'h-full w-full relative flex items-center justify-center overflow-hidden rounded-[8px] border-1 border-dashed border-muted-foreground/25 cursor-pointer px-3',
+        'h-full w-full relative flex items-center justify-center overflow-hidden rounded-[8px] border-1 border-dashed border-muted-foreground/25 cursor-pointer',
+        {
+          'px-3': !hasImage
+        },
         className
       )}
       onClick={() => {
@@ -98,7 +107,7 @@ export const CoverImageUploader: React.FC<CoverImageUploaderProps> = ({
       )}
 
       {hasImage && (
-        <div className="flex items-center justify-center absolute left-0 top-0 w-full h-full">
+        <div className="flex items-center justify-center absolute left-0 top-0 w-full h-full gap-3">
           <Button
             type="button"
             variant="default"
@@ -107,6 +116,15 @@ export const CoverImageUploader: React.FC<CoverImageUploaderProps> = ({
           >
             Change
           </Button>
+          {/* <Button
+            type="button"
+            variant="highlight"
+            className="rounded-md h-10 w-[90px] gap-1"
+            onClick={handleRemoveImage}
+          >
+            <X />
+            <span>Remove</span>
+          </Button> */}
         </div>
       )}
 

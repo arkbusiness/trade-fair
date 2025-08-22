@@ -39,5 +39,5 @@ export enum UserGroup {
 export enum OrganizerSettingsPage {
   PROFILE = 'profile',
   CHANGE_PASSWORD = 'change-password',
-  COMPANY = 'company'
+  EVENT = 'event'
 }

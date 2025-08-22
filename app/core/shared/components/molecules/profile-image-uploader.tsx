@@ -4,12 +4,14 @@ import { useRef, useState } from 'react';
 import toast from 'react-hot-toast';
 import { cn } from '../../utils';
 import Image from 'next/image';
+import { ImagePlaceholder } from '../atoms/image-placeholder';
 
 interface ProfileImageUploaderProps {
   onImageUpload?: (file: File) => void;
   maxSizeMB?: number;
   acceptedFormats?: string[];
   className?: string;
+  avatarPlaceholder?: string;
   user?: {
     photoUrl?: string;
     name?: string;
@@ -21,6 +23,7 @@ export const ProfileImageUploader: React.FC<ProfileImageUploaderProps> = ({
   maxSizeMB = 6,
   acceptedFormats = ['image/jpeg', 'image/png'],
   className = '',
+  avatarPlaceholder = '/images/avatar.png',
   user
 }) => {
   const [previewImage, setPreviewImage] = useState<string | null>(null);
@@ -75,7 +78,7 @@ export const ProfileImageUploader: React.FC<ProfileImageUploaderProps> = ({
       <div
         className={cn(
           'absolute left-0 top-0 w-full h-full',
-          user?.photoUrl ? '' : 'bg-black/35'
+          user?.photoUrl || previewImage ? '' : 'bg-black/35'
         )}
       />
 
@@ -131,13 +134,17 @@ export const ProfileImageUploader: React.FC<ProfileImageUploaderProps> = ({
         />
       ) : (
         <>
-          <Image
-            width={160}
-            height={160}
-            src={user?.photoUrl || '/images/avatar.png'}
-            alt={user?.name || 'User avatar'}
-            className="w-full h-full mx-auto object-cover"
-          />
+          {user?.photoUrl || avatarPlaceholder ? (
+            <Image
+              width={160}
+              height={160}
+              src={user?.photoUrl || avatarPlaceholder}
+              alt={user?.name || 'User avatar'}
+              className="w-full h-full mx-auto object-cover"
+            />
+          ) : (
+            <ImagePlaceholder />
+          )}
         </>
       )}
     </div>
