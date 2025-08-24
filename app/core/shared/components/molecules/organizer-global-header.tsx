@@ -9,6 +9,7 @@ import { AvatarMenu } from './avatar-menu';
 import { useSidebar } from '../atoms';
 import { AlignLeft } from 'lucide-react';
 import { useOrganizerAuthStore } from '@/app/module/auth/store';
+import { OrganizerSettingsPage } from '../../types';
 
 export enum GlobalHeaderModalType {
   NONE,
@@ -70,8 +71,12 @@ export const OrganizerGlobalHeader = () => {
           <AvatarMenu
             userName={user?.username ?? ''}
             handleLogout={handleLogOut}
-            profilePageHref={ORGANIZER_APP_ROUTES.settings()}
-            settingPageHref={ORGANIZER_APP_ROUTES.settings()}
+            profilePageHref={ORGANIZER_APP_ROUTES.settings(
+              OrganizerSettingsPage.PROFILE
+            )}
+            passwordPageHref={ORGANIZER_APP_ROUTES.settings(
+              OrganizerSettingsPage.CHANGE_PASSWORD
+            )}
           />
         </div>
       </div>

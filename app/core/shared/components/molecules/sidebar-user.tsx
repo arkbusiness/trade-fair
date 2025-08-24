@@ -1,6 +1,6 @@
 'use client';
 
-import { LogOut, MoreVerticalIcon, Settings, UserCircle } from 'lucide-react';
+import { Lock, LogOut, MoreVerticalIcon, UserCircle } from 'lucide-react';
 import { useRouter } from 'nextjs-toploader/app';
 import { useIsMobile } from '../../hooks/use-mobile';
 import {
@@ -20,7 +20,7 @@ interface SidebarUserProps {
   username: string;
   email: string;
   profilePageHref: string;
-  settingPageHref: string;
+  passwordPageHref: string;
   handleLogOut: () => void;
 }
 
@@ -29,7 +29,7 @@ export function SidebarUser({
   username,
   email,
   profilePageHref,
-  settingPageHref,
+  passwordPageHref,
   handleLogOut
 }: SidebarUserProps) {
   const isMobile = useIsMobile();
@@ -39,8 +39,8 @@ export function SidebarUser({
     router.push(profilePageHref);
   };
 
-  const handleNavigateToSettings = () => {
-    router.push(settingPageHref);
+  const handleNavigateToPassword = () => {
+    router.push(passwordPageHref);
   };
 
   return (
@@ -92,10 +92,10 @@ export function SidebarUser({
             <DropdownMenuSeparator />
             <DropdownMenuItem
               className="cursor-pointer text-xs hover:bg-highlight! hover:border-tertiary! hover:border-1!"
-              onClick={handleNavigateToSettings}
+              onClick={handleNavigateToPassword}
             >
-              <Settings className="text-inherit" />
-              Settings
+              <Lock className="text-inherit" />
+              Change password
             </DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem

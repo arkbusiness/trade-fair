@@ -1,6 +1,6 @@
 export const ORGANIZER_APP_ROUTES = {
   root: () => '/organizer',
-  settings: () => '/organizer/settings',
+  settings: (tab?: string) => `/organizer/settings${tab ? `?tab=${tab}` : ''}`,
   auth: {
     login: () => '/?tab=organizer',
     signup: (token: string) => `/organizer/sign-up/${token}`,
@@ -22,7 +22,7 @@ export const ORGANIZER_APP_ROUTES = {
 export const EXHIBITOR_APP_ROUTES = {
   root: () => '/exhibitor',
   auth: {
-    login: () => '/exhibitor/sign-in'
+    login: () => '/?tab=exhibitor'
   }
 };
 

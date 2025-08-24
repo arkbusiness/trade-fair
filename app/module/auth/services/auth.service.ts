@@ -31,3 +31,32 @@ export const organizerAuthService = {
     data
   })
 };
+
+export const exhibitorAuthService = {
+  signin: (data: ISigninFormValues): AxiosRequestConfig => ({
+    url: '/exhibitor/login',
+    method: 'POST',
+    data
+  }),
+  getOnboarding: (token: string) => ({
+    url: `/exhibitor/register/${token}`,
+    queryKey: ['exhibitor-onboarding', token]
+  }),
+  register: (data: {
+    token: string;
+    contactEmail: string;
+    companyName: string;
+    country: string;
+    password: string;
+    contactName: string;
+    username: string;
+    logo?: File | null;
+  }): AxiosRequestConfig => ({
+    url: `/exhibitor/register/${data.token}`,
+    method: 'POST',
+    data,
+    headers: {
+      'Content-Type': 'multipart/form-data'
+    }
+  })
+};

@@ -6,6 +6,6 @@ export const metadata: Metadata = {
   title: createMetaTitle('Sign up')
 };
 
-export default function Signup() {
+export default function OrganizerSignup() {
   return <OrganizerSignupPage />;
 }

@@ -1,13 +1,15 @@
 import { AuthCard } from '@/app/module/auth/components/auth-card';
 import { AuthContainer } from '@/app/module/auth/components/auth-container';
 import { OrganizerSignupForm } from '../organisms';
+import { SigninPrompt } from '../../../sign-in/presentation/atoms';
+import { ORGANIZER_APP_ROUTES } from '@/app/core/shared/constants';
 
 export const OrganizerSignupPage = () => {
   return (
     <AuthContainer className="max-w-[35.94rem]">
-      {/* <div className="mb-4.5">
+      <div className="mb-4.5">
         <SigninPrompt href={ORGANIZER_APP_ROUTES.auth.login()} />
-      </div> */}
+      </div>
       <AuthCard>
         <div className="mb-[1.61rem]">
           <header className="flex flex-col gap-[0.66rem] text-center">

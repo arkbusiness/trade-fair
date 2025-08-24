@@ -11,6 +11,7 @@ interface PhoneNumberInputProp {
   value?: string;
   label?: string;
   error?: string;
+  labelClassName?: string;
   isDisabled?: boolean;
   onChange: (value: Value | undefined) => void;
 }
@@ -19,12 +20,16 @@ export const PhoneNumberInput = ({
   error,
   name,
   label = 'Phone Number',
+  labelClassName,
   isDisabled = false,
   onChange
 }: PhoneNumberInputProp) => {
   return (
     <div className="flex flex-col gap-[0.5rem] w-full">
-      <label htmlFor={name} className="text-[0.75rem] font-medium">
+      <label
+        htmlFor={name}
+        className={cn('text-[0.75rem] font-medium', labelClassName)}
+      >
         {label}
       </label>
 

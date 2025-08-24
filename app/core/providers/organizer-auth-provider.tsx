@@ -6,6 +6,7 @@ import { SplashScreen } from '../shared/components/atoms';
 import { useOrganizerUser } from '../shared/hooks/api';
 import { useOrganizerAuthStore } from '@/app/module/auth/store';
 import { ORGANIZER_APP_ROUTES } from '../shared/constants';
+import { useScrollToTop } from '../shared/hooks';
 
 export const OrganizerAuthProvider = ({
   children
@@ -13,6 +14,7 @@ export const OrganizerAuthProvider = ({
   children: ReactNode;
 }) => {
   const router = useRouter();
+  useScrollToTop();
 
   const { handleLoadToken, accessToken, hasCheckedToken } =
     useOrganizerAuthStore();

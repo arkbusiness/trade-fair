@@ -10,3 +10,4 @@ export * from './use-current-page';
 export * from './use-debounce';
 export * from './use-query-filters';
 export * from './use-countdown';
+export * from './use-scroll-to-top';

@@ -5,7 +5,7 @@ import { COOKIE_KEYS } from '../constants/common.const';
 
 export const clientAxios = axios.create({
   baseURL: environment.baseUrl,
-  timeout: 50000 // 50 seconds
+  timeout: 120000 // 2 minutes
 });
 
 clientAxios.interceptors.request.use(async (config) => {
