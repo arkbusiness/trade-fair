@@ -5,12 +5,12 @@ import {
   DashboardToolbar,
   IconButton
 } from '@/app/core/shared/components/molecules';
-import { CsvIcon } from '@/app/core/shared/icons';
+import { ExportButton } from '@/app/core/shared/components/organisms/export-button';
+import { getQueryClient } from '@/app/core/shared/lib';
 import { CloudDownload, Plus } from 'lucide-react';
 import { useState } from 'react';
-import { BoothForm } from '../molecules';
-import { getQueryClient } from '@/app/core/shared/lib';
 import { boothsService } from '../../services';
+import { BoothForm } from '../molecules';
 
 enum ModalType {
   NONE = 'NONE',
@@ -42,10 +42,11 @@ export const BoothsHeader = () => {
             <span>Import</span>
           </IconButton>
 
-          <IconButton variant="outline" className="stroke-foreground">
-            <CsvIcon size={16} />
-            <span>Export</span>
-          </IconButton>
+          <ExportButton
+            apiRoute={boothsService.exportBooth().url as string}
+            exportName="booths"
+          />
+
           <Button
             variant="tertiary"
             className="flex gap-x-[0.63rem]"

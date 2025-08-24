@@ -43,7 +43,6 @@ export const boothsService = {
    * @param {Object} data - An object containing the updated booth data.
    * @param {string} data.number - The updated booth number.
    * @param {string} data.category - The updated booth category.
-   * @return {AxiosRequestConfig} The Axios request configuration for the update request.
    */
   updateBooth: (
     id: string,
@@ -54,6 +53,16 @@ export const boothsService = {
   ): AxiosRequestConfig => ({
     url: `/organizer/booths/${id}`,
     method: 'PUT',
+    data
+  }),
+  /**
+   * Exports a booth with the given ID.
+   *
+   * @param {string[]} [data] - An optional array of booth IDs to export.
+   */
+  exportBooth: (data?: string[]): AxiosRequestConfig => ({
+    url: `/organizer/booths/export`,
+    method: 'POST',
     data
   })
 };
