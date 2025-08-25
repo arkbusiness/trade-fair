@@ -25,7 +25,7 @@ export default async function OrganizerLayout({
       <SidebarProvider>
         <OrganizerGlobalHeader />
         <OrganizerSidebar />
-        <main className="w-full pb-[6.25rem] overflow-x-hidden relative top-[var(--organizer-header-height)] px-[1.13rem]">
+        <main className="w-full pb-[6.25rem] overflow-x-hidden relative top-[var(--header-height)] px-[1.13rem]">
           <div className="mt-5" />
           {children}
         </main>

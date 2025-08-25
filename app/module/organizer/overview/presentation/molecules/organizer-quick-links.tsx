@@ -16,14 +16,12 @@ const QUICK_LINKS = [
     title: 'Add New Exhibitor',
     message: 'Send Invite to an Exhibitor',
     icon: <User className="text-tertiary" size={18} />,
-    // TODO: Add CORRECT link
     link: ORGANIZER_APP_ROUTES.exhibitors.root()
   },
   {
     title: 'Add New Attendee',
     message: 'Send Invite to an Attendee',
     icon: <Users className="text-tertiary" size={18} />,
-    // TODO: Add CORRECT link
     link: ORGANIZER_APP_ROUTES.attendees.root()
   }
 ];

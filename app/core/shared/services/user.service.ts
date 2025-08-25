@@ -45,8 +45,8 @@ export const organizerUserService = {
 };
 
 export const exhibitorUserService = {
-  getUser: (token: string) => ({
-    url: `/${token}`,
+  getUser: () => ({
+    url: `/exhibitor`,
     queryKey: ['exhibitor-profile']
   })
 };

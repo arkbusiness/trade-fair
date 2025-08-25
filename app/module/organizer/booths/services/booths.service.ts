@@ -64,5 +64,15 @@ export const boothsService = {
     url: `/organizer/booths/export`,
     method: 'POST',
     data
+  }),
+  importFile: (data: { file: File }): AxiosRequestConfig => ({
+    url: `/organizer/booths/import`,
+    method: 'POST',
+    data: {
+      file: data.file
+    },
+    headers: {
+      'Content-Type': 'multipart/form-data'
+    }
   })
 };

@@ -1,16 +1,14 @@
 'use client';
 
 import { Button } from '@/app/core/shared/components/atoms';
-import {
-  DashboardToolbar,
-  IconButton
-} from '@/app/core/shared/components/molecules';
+import { DashboardToolbar } from '@/app/core/shared/components/molecules';
 import { ExportButton } from '@/app/core/shared/components/organisms/export-button';
 import { getQueryClient } from '@/app/core/shared/lib';
-import { CloudDownload, Plus } from 'lucide-react';
+import { Plus } from 'lucide-react';
 import { useState } from 'react';
 import { boothsService } from '../../services';
 import { BoothForm } from '../molecules';
+import { ImportBoothForm } from '../organisms';
 
 enum ModalType {
   NONE = 'NONE',
@@ -37,10 +35,12 @@ export const BoothsHeader = () => {
       />
       <DashboardToolbar title="Manage Booths" description="">
         <div className="flex items-center gap-x-[7px]">
-          <IconButton variant="outline">
-            <CloudDownload size={16} />
-            <span>Import</span>
-          </IconButton>
+          <ImportBoothForm
+            onSuccess={() => {
+              closeModal();
+            }}
+            sampleFileUrl="/csv-sample/booth-sample.csv"
+          />
 
           <ExportButton
             apiRoute={boothsService.exportBooth().url as string}
