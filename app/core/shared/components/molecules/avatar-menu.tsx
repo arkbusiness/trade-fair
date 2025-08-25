@@ -3,7 +3,6 @@
 import { ChevronDown, Lock, LogOut, User, UserCircle } from 'lucide-react';
 import Image from 'next/image';
 import { useRouter } from 'nextjs-toploader/app';
-import { useOrganizerUser } from '../../hooks/api';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -17,15 +16,18 @@ interface AvatarMenuProps {
   handleLogout(): void;
   profilePageHref: string;
   passwordPageHref: string;
+  logo?: string;
+  className?: string;
 }
 
 export function AvatarMenu({
   userName,
   handleLogout,
   profilePageHref,
-  passwordPageHref
+  passwordPageHref,
+  logo,
+  className
 }: AvatarMenuProps) {
-  const { user } = useOrganizerUser();
   const router = useRouter();
 
   const handleNavigateToProfile = () => {
@@ -43,13 +45,13 @@ export function AvatarMenu({
           <DropdownMenuTrigger asChild>
             <SidebarMenuButton
               size="lg"
-              className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground border border-input bg-background h-[2.19rem] rounded-[40px] cursor-pointer px-3"
+              className={`data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground border border-input bg-background h-[2.19rem] rounded-[40px] cursor-pointer px-3 ${className}`}
             >
               <div className="flex items-center flex-1 text-left text-sm leading-tight gap-y-1 gap-x-2">
                 <div className="flex items-center justify-center w-[26px] h-[26px] rounded-full bg-sidebar-accent">
-                  {user?.logo ? (
+                  {logo ? (
                     <Image
-                      src={user.logo}
+                      src={logo}
                       alt="User"
                       width={26}
                       height={26}
@@ -59,10 +61,7 @@ export function AvatarMenu({
                     <User size={18} />
                   )}
                 </div>
-                <span className="line-clamp-1 font-semibold text-[0.7rem] flex-[0.9] hidden sm:inline-block">
-                  {userName}
-                </span>
-                <span className="line-clamp-1 font-semibold text-[0.7rem] flex-[0.9] sm:hidden">
+                <span className="truncate font-semibold text-[0.7rem] flex-[0.9]">
                   {userName}
                 </span>
               </div>

@@ -20,12 +20,12 @@ export const OrganizerGlobalHeader = () => {
   const { toggleSidebar } = useSidebar();
   const { handleLogOut } = useOrganizerAuthStore();
   const { user } = useOrganizerUser();
-  const { eventLogoUrl } = user ?? {
+  const { eventLogoUrl, logo } = user ?? {
     eventLogoUrl: null
   };
 
   return (
-    <header className="flex flex-col h-[var(--organizer-header-height)] fixed top-0 w-full z-20">
+    <header className="flex flex-col h-[var(--header-height)] fixed top-0 w-full z-20">
       <div className="h-[3.75rem] flex items-center bg-gold/100 px-[1.13rem] ">
         <Link href={ORGANIZER_APP_ROUTES.root()}>
           <Image
@@ -71,6 +71,7 @@ export const OrganizerGlobalHeader = () => {
           <AvatarMenu
             userName={user?.username ?? ''}
             handleLogout={handleLogOut}
+            logo={logo ?? undefined}
             profilePageHref={ORGANIZER_APP_ROUTES.settings(
               OrganizerSettingsPage.PROFILE
             )}

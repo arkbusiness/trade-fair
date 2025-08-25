@@ -6,7 +6,6 @@ import { ImagePlaceholder } from '@/app/core/shared/components/atoms/image-place
 
 export const AttendeeDetailHero = ({ id }: { id: string }) => {
   const { attendee } = useOrganizerAttendeeById(id);
-  const isChatEnabled = attendee?.chatUnlocked ?? false;
   const hasLogo = !!attendee?.logoUrl;
 
   return (
@@ -38,12 +37,6 @@ export const AttendeeDetailHero = ({ id }: { id: string }) => {
               {attendee?.phone ?? 'N/A'}
             </p>
           </div>
-        </div>
-
-        <div className="w-[133px] h-[32px] flex items-center justify-center rounded-[6px] mt-2 bg-green-100">
-          <span className="text-green-600 font-semibold text-xs">
-            {isChatEnabled ? 'Chat Unlocked' : 'Chat Locked'}
-          </span>
         </div>
       </div>
     </div>

@@ -91,7 +91,7 @@ export const BoothsTable = () => {
       header: 'Category',
       cell: ({ row }) => (
         <Text>
-          <span>{row.getValue('categoryName')}</span>
+          <span>{row.getValue('categoryName') || '---'}</span>
         </Text>
       )
     },
@@ -164,7 +164,7 @@ export const BoothsTable = () => {
                 </span>
               </div>
             ) : (
-              <span>-</span>
+              <span>---</span>
             )}
           </div>
         );
@@ -300,6 +300,7 @@ export const BoothsTable = () => {
   ];
 
   const handleCloseModal = () => {
+    if (mutation.isPending) return;
     refetchBooths();
     setActiveModal(ModalType.NONE);
   };

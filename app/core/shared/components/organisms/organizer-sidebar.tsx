@@ -16,7 +16,7 @@ export function OrganizerSidebar({
     <Sidebar
       collapsible="offcanvas"
       {...props}
-      className="top-[calc(var(--organizer-header-height)+1.75rem)] pb-[calc(var(--organizer-header-height)+1.75rem)] px-[1.12rem] bg-sidebar"
+      className="top-[calc(var(--header-height)+1.75rem)] pb-[calc(var(--header-height)+1.75rem)] px-[1.12rem] bg-sidebar"
     >
       <SidebarContent className="mt-[2.86rem]">
         <OrganizerSidebarItems />

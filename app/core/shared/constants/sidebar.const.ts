@@ -1,6 +1,13 @@
-import { House, SettingsIcon } from 'lucide-react';
+import {
+  BoxIcon,
+  CalendarIcon,
+  House,
+  MessageCircleMore,
+  SettingsIcon,
+  ShoppingBagIcon
+} from 'lucide-react';
 import { AltUserIcon, BoothIcon } from '../icons';
-import { ORGANIZER_APP_ROUTES } from './common.const';
+import { EXHIBITOR_APP_ROUTES, ORGANIZER_APP_ROUTES } from './common.const';
 
 export const ORGANIZER_SIDEBAR_ITEMS = [
   {
@@ -35,5 +42,48 @@ export const ORGANIZER_SIDEBAR_ITEMS = [
     url: ORGANIZER_APP_ROUTES.settings(),
     icon: SettingsIcon,
     routes: []
+  }
+];
+
+export const EXHIBITOR_SIDEBAR_ITEMS = [
+  {
+    title: 'Home',
+    url: EXHIBITOR_APP_ROUTES.root(),
+    icon: House,
+    routes: []
+  },
+  {
+    title: 'My Products',
+    url: undefined,
+    icon: undefined,
+    routes: [
+      {
+        title: 'Inventory',
+        icon: BoxIcon,
+        url: EXHIBITOR_APP_ROUTES.products.root()
+      },
+      {
+        title: 'Invoice',
+        icon: ShoppingBagIcon,
+        url: EXHIBITOR_APP_ROUTES.products.invoice.root()
+      }
+    ]
+  },
+  {
+    title: 'Attendees',
+    url: undefined,
+    icon: undefined,
+    routes: [
+      {
+        icon: CalendarIcon,
+        title: 'Appointments',
+        url: EXHIBITOR_APP_ROUTES.attendees.appointment.root()
+      },
+      {
+        icon: MessageCircleMore,
+        title: 'Messaging',
+        url: EXHIBITOR_APP_ROUTES.attendees.messaging.root()
+      }
+    ]
   }
 ];

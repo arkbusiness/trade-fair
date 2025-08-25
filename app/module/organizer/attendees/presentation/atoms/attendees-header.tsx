@@ -1,14 +1,11 @@
 'use client';
 
 import { Button } from '@/app/core/shared/components/atoms';
-import {
-  DashboardToolbar,
-  IconButton
-} from '@/app/core/shared/components/molecules';
-import { CsvIcon } from '@/app/core/shared/icons';
-import { CloudDownload, Plus } from 'lucide-react';
-import { useState } from 'react';
+import { DashboardToolbar } from '@/app/core/shared/components/molecules';
+import { ExportButton } from '@/app/core/shared/components/organisms/export-button';
 import { getQueryClient } from '@/app/core/shared/lib';
+import { Plus } from 'lucide-react';
+import { useState } from 'react';
 import { organizerAttendeesService } from '../../services';
 import { InviteAttendeeForm } from '../molecules';
 
@@ -36,15 +33,10 @@ export const OrganizerAttendeesHeader = () => {
       />
       <DashboardToolbar title="Attendees" description="">
         <div className="flex items-center gap-x-[7px]">
-          <IconButton variant="outline">
-            <CloudDownload size={16} />
-            <span>Import</span>
-          </IconButton>
-
-          <IconButton variant="outline" className="stroke-foreground">
-            <CsvIcon size={16} />
-            <span>Export</span>
-          </IconButton>
+          <ExportButton
+            apiRoute={organizerAttendeesService.exportAttendee().url as string}
+            exportName="attendees"
+          />
           <Button
             variant="tertiary"
             className="flex gap-x-[0.63rem]"

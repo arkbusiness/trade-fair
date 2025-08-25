@@ -23,6 +23,23 @@ export const EXHIBITOR_APP_ROUTES = {
   root: () => '/exhibitor',
   auth: {
     login: () => '/?tab=exhibitor'
+  },
+  settings: (tab?: string) => `/exhibitor/settings${tab ? `?tab=${tab}` : ''}`,
+  products: {
+    root: () => '/exhibitor/products',
+    detail: (id: string) => `/exhibitor/products/${id}`,
+    invoice: {
+      root: () => '/exhibitor/products/invoice',
+      detail: (id: string) => `/exhibitor/products/invoice/${id}`
+    }
+  },
+  attendees: {
+    appointment: {
+      root: () => '/exhibitor/attendees/appointments'
+    },
+    messaging: {
+      root: () => '/exhibitor/attendees/messaging'
+    }
   }
 };
 

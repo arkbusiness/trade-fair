@@ -7,7 +7,7 @@ import { AxiosError } from 'axios';
 import { clientAxios } from '../../lib';
 import { exhibitorUserService } from '../../services';
 
-export const useExhibitorUser = (token: string) => {
+export const useExhibitorUser = () => {
   const { accessToken, handleLogOut } = useExhibitorAuthStore();
 
   const fetchUser = async (
@@ -16,7 +16,7 @@ export const useExhibitorUser = (token: string) => {
     try {
       const response = await clientAxios({
         method: 'get',
-        url: exhibitorUserService.getUser(token).url
+        url: exhibitorUserService.getUser().url
       });
       const responseData = response.data as IExhibitorAuthUser;
 
@@ -39,7 +39,7 @@ export const useExhibitorUser = (token: string) => {
     refetch: refetchUser,
     ...queryMeta
   } = useQuery<IExhibitorAuthUser | null>({
-    queryKey: exhibitorUserService.getUser(token).queryKey,
+    queryKey: exhibitorUserService.getUser().queryKey,
     queryFn: () =>
       fetchUser(() => {
         handleLogOut();
