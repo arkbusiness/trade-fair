@@ -35,7 +35,8 @@ export const EXHIBITOR_APP_ROUTES = {
   },
   attendees: {
     appointment: {
-      root: () => '/exhibitor/attendees/appointments'
+      root: () => '/exhibitor/attendees/appointments',
+      details: (id: string) => `/exhibitor/attendees/appointments/${id}`
     },
     messaging: {
       root: () => '/exhibitor/attendees/messaging'

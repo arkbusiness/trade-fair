@@ -1,14 +1,39 @@
 import { useCustomQuery } from '@/app/core/shared/hooks';
 import { exhibitorOverviewService } from '../services';
+import { InventoryStatus } from '../../inventory/hooks';
 
-interface IExhibitorMetrics {
+export interface IExhibitorLatestOrder {
+  id: string;
+  attendeeId: string;
+  exhibitorId: string;
+  trackingId: string;
+  payment_slip: string | null;
+  payment_slip_uploaded_at: string | null;
+  payment_method: string | null;
+  invoice_url: string | null;
+  status: InventoryStatus;
+  updatedAt: string | null;
+  currency: string;
+  createdAt: string;
+}
+
+export interface IExhibitorAppointment {
+  id: string;
+  startTime: string;
+  endTime: string;
+  status: string;
+  waitlistPosition: string | null;
+  attendee: { id: string; email: string };
+}
+
+export interface IExhibitorMetrics {
   counts: {
     products: number;
     appointments: number;
     invoices: number;
   };
-  latestOrders: [];
-  appointments: [];
+  latestOrders: IExhibitorLatestOrder[];
+  appointments: IExhibitorAppointment[];
   chartData: {
     Sun: number;
     Mon: number;

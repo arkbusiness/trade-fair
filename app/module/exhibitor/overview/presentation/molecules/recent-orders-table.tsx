@@ -1,12 +1,13 @@
 'use client';
 
-import { useTable, useTablePagination } from '@/app/core/shared/hooks';
-import { InventoryStatus } from '../../../inventory/hooks';
 import { LinkButton, Text } from '@/app/core/shared/components/atoms';
-import { ColumnDef } from '@tanstack/react-table';
-import { formatDate } from '@/app/core/shared/lib';
 import { DataTable } from '@/app/core/shared/components/molecules';
+import { EXHIBITOR_APP_ROUTES } from '@/app/core/shared/constants';
+import { useTable, useTablePagination } from '@/app/core/shared/hooks';
+import { distanceFormat } from '@/app/core/shared/lib';
+import { StatusStyleEnum } from '@/app/core/shared/types';
 import { cn, getStatusStyle } from '@/app/core/shared/utils';
+import { ColumnDef } from '@tanstack/react-table';
 import {
   CircleAlert,
   CircleCheckBig,
@@ -14,58 +15,16 @@ import {
   ReceiptText,
   Truck
 } from 'lucide-react';
-import { StatusStyleEnum } from '@/app/core/shared/types';
-import { EXHIBITOR_APP_ROUTES } from '@/app/core/shared/constants';
-
-const DATA = [
-  {
-    id: 1,
-    customer: 'John Doe',
-    product: 'Product 1',
-    status: InventoryStatus.PENDING,
-    date: '2022-01-01'
-  },
-  {
-    id: 2,
-    customer: 'John Doe',
-    product: 'Product 2',
-    status: InventoryStatus.CONFIRMED,
-    date: '2022-01-02'
-  },
-  {
-    id: 3,
-    customer: 'John Doe',
-    product: 'Product 3',
-    status: InventoryStatus.CANCELLED,
-    date: '2022-01-03'
-  },
-  {
-    id: 4,
-    customer: 'John Doe',
-    product: 'Product 4',
-    status: InventoryStatus.COMPLETED,
-    date: '2022-01-04'
-  },
-  {
-    id: 5,
-    customer: 'John Doe',
-    product: 'Product 5',
-    status: InventoryStatus.SHIPPED,
-    date: '2022-01-05'
-  },
-  {
-    id: 6,
-    customer: 'John Doe',
-    product: 'Product 6',
-    status: InventoryStatus.INVOICE,
-    date: '2022-01-06'
-  }
-];
+import { InventoryStatus } from '../../../inventory/hooks';
+import { IExhibitorLatestOrder, useExhibitorOverview } from '../../hooks';
 
 export const RecentOrdersTable = () => {
-  // TODO: ORDER DATA SHOULD BE LIMITED TO 4
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const columns: ColumnDef<any>[] = [
+  const { isLoadingOverviewStats, isRefetchingOverviewStats, overviewStats } =
+    useExhibitorOverview();
+
+  const orders = overviewStats?.latestOrders ?? [];
+
+  const columns: ColumnDef<IExhibitorLatestOrder>[] = [
     {
       accessorKey: 'id',
       header: 'Order ID',
@@ -75,24 +34,27 @@ export const RecentOrdersTable = () => {
         </Text>
       )
     },
-    {
-      accessorKey: 'customer',
-      header: 'Customer',
-      cell: ({ row }) => (
-        <Text>
-          <span>{row.getValue('customer') || '---'}</span>
-        </Text>
-      )
-    },
-    {
-      accessorKey: 'product',
-      header: 'Product',
-      cell: ({ row }) => (
-        <Text>
-          <span>{row.getValue('product') || '---'}</span>
-        </Text>
-      )
-    },
+    // {
+    //   id: 'customer',
+    //   header: 'Customer',
+    //   cell: ({ row }) => {
+    //     const attendee = row.original?.attendee;
+    //     return (
+    //       <Text>
+    //         <span>{attendee?.email || '---'}</span>
+    //       </Text>
+    //     );
+    //   }
+    // },
+    // {
+    //   accessorKey: 'product',
+    //   header: 'Product',
+    //   cell: ({ row }) => (
+    //     <Text>
+    //       <span>{row.getValue('product') || '---'}</span>
+    //     </Text>
+    //   )
+    // },
     {
       accessorKey: 'status',
       header: 'Status',
@@ -149,13 +111,13 @@ export const RecentOrdersTable = () => {
       }
     },
     {
-      accessorKey: 'date',
-      header: 'Created Date',
+      accessorKey: 'createdAt',
+      header: 'Date',
       cell: ({ row }) => (
         <Text>
           <span>
-            {row.getValue('date')
-              ? formatDate(row.getValue('date') as string)
+            {row.getValue('createdAt')
+              ? distanceFormat(row.getValue('createdAt') as string)
               : 'Not created'}
           </span>
         </Text>
@@ -166,9 +128,9 @@ export const RecentOrdersTable = () => {
   const { table, manualPagination } = useTable({
     columns: columns,
     pageSize: 4,
-    data: DATA,
+    data: orders,
     manualPagination: false,
-    total: DATA.length ?? 0
+    total: orders.length ?? 0
   });
 
   const {
@@ -179,11 +141,11 @@ export const RecentOrdersTable = () => {
   } = useTablePagination({ table, manualPagination });
 
   return (
-    <div className="rounded-[8px] border border-input bg-background">
+    <div className="rounded-[8px] border border-input bg-background flex flex-col">
       <h2 className="text-lg font-semibold text-foreground px-3.5 py-4.5 border-b">
         Recent Orders
       </h2>
-      <div className="px-5 mt-4">
+      <div className="px-5 mt-4 flex-1">
         <DataTable
           table={table}
           columns={columns}
@@ -194,16 +156,18 @@ export const RecentOrdersTable = () => {
           handleGoToNextPage={handleGoToNextPage}
           handleGoToLastPage={handleGoToLastPage}
           showPagination={false}
+          isLoading={isLoadingOverviewStats}
+          isRefetching={isRefetchingOverviewStats}
         />
-        <div className="my-4 px-2">
-          <LinkButton
-            variant="tertiary"
-            className="w-[6.75rem]"
-            href={EXHIBITOR_APP_ROUTES.products.root()}
-          >
-            View All Orders
-          </LinkButton>
-        </div>
+      </div>
+      <div className="my-4 px-4">
+        <LinkButton
+          variant="tertiary"
+          className="w-[6.75rem]"
+          href={EXHIBITOR_APP_ROUTES.products.root()}
+        >
+          View All Orders
+        </LinkButton>
       </div>
     </div>
   );

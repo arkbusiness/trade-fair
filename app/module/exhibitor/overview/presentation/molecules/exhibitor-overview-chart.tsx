@@ -30,12 +30,19 @@ export const ExhibitorOverviewChart = () => {
     Sat: 0
   };
 
+  const orderComparison = overviewStats?.orderComparison ?? {
+    today: 0,
+    yesterday: 0,
+    difference: 0
+  };
+
   const hasChartData = Object.values(chartData).some((amount) => amount > 0);
 
   const orderArray = Object.entries(chartData).map(([name, amount]) => ({
     name,
     amount
   }));
+  const totalAmount = Object.values(chartData).reduce((a, b) => a + b, 0);
 
   return (
     <div className="rounded-[8px] border border-input bg-background">
@@ -43,6 +50,25 @@ export const ExhibitorOverviewChart = () => {
         Sales Overview
       </h2>
       <div className="mt-7 px-6">
+        <div className="mt-2 mb-4">
+          <h3 className="text-foreground font-semibold text-xl">
+            {formatCurrency({
+              amount: totalAmount,
+              currency: 'NGN',
+              compactThreshold: 0
+            })}
+          </h3>
+          <p className="text-xs text-secondary mt-2 flex items-center gap-1">
+            <span className="text-green-600 font-semibold">
+              {formatCurrency({
+                amount: orderComparison.difference,
+                currency: 'NGN',
+                compactThreshold: 0
+              })}
+            </span>
+            <span>more than yesterday</span>
+          </p>
+        </div>
         {!isLoading && hasChartData && (
           <ChartContainer
             config={{}}
