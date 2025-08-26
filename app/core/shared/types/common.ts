@@ -16,6 +16,7 @@ export interface IPaginatedMeta {
 
 export interface IPaginatedResponse<T> extends IPaginatedMeta {
   data: T[];
+  items: T[];
 }
 
 export interface CustomIconProps extends SVGProps<SVGSVGElement> {
@@ -40,4 +41,9 @@ export enum OrganizerSettingsPage {
   PROFILE = 'profile',
   CHANGE_PASSWORD = 'change-password',
   EVENT = 'event'
+}
+
+export enum SortOrderEnum {
+  ASC = 'asc',
+  DESC = 'desc'
 }

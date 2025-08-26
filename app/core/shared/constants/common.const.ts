@@ -1,3 +1,5 @@
+import { SortOrderEnum } from '../types';
+
 export const ORGANIZER_APP_ROUTES = {
   root: () => '/organizer',
   settings: (tab?: string) => `/organizer/settings${tab ? `?tab=${tab}` : ''}`,
@@ -25,12 +27,13 @@ export const EXHIBITOR_APP_ROUTES = {
     login: () => '/?tab=exhibitor'
   },
   settings: (tab?: string) => `/exhibitor/settings${tab ? `?tab=${tab}` : ''}`,
-  products: {
-    root: () => '/exhibitor/products',
-    detail: (id: string) => `/exhibitor/products/${id}`,
+  inventory: {
+    root: () => '/exhibitor/inventory/manage',
+    detail: (id: string) => `/exhibitor/inventory/manage/${id}`,
+    add: () => `/exhibitor/inventory/manage/add`,
     invoice: {
-      root: () => '/exhibitor/products/invoice',
-      detail: (id: string) => `/exhibitor/products/invoice/${id}`
+      root: () => '/exhibitor/inventory/invoice',
+      detail: (id: string) => `/exhibitor/inventory/invoice/${id}`
     }
   },
   attendees: {
@@ -86,6 +89,11 @@ export const COOKIE_KEYS = {
 };
 
 export const EMPTY_ARRAY = [];
+
+export const SORTING_OPTIONS = [
+  { value: SortOrderEnum.ASC, label: 'Highest' },
+  { value: SortOrderEnum.DESC, label: 'Lowest' }
+];
 
 export const COUNTRIES_DATA = [
   'Afghanistan',

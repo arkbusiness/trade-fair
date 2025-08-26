@@ -8,6 +8,14 @@ export interface IExhibitorLatestOrder {
   exhibitorId: string;
   trackingId: string;
   payment_slip: string | null;
+  attendee: {
+    contactName: string;
+  };
+  items: {
+    product: {
+      name: string;
+    };
+  }[];
   payment_slip_uploaded_at: string | null;
   payment_method: string | null;
   invoice_url: string | null;

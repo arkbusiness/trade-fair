@@ -1,0 +1,3 @@
+name,sku,basePrice,currency,description,quantity
+Product 1,Example-SKU-001,80000,NGN,Product 1 description,5
+Product 2,Example-SKU-002,60000,NGN,Product 2 description,10

@@ -60,12 +60,12 @@ export const EXHIBITOR_SIDEBAR_ITEMS = [
       {
         title: 'Inventory',
         icon: BoxIcon,
-        url: EXHIBITOR_APP_ROUTES.products.root()
+        url: EXHIBITOR_APP_ROUTES.inventory.root()
       },
       {
         title: 'Invoice',
         icon: ShoppingBagIcon,
-        url: EXHIBITOR_APP_ROUTES.products.invoice.root()
+        url: EXHIBITOR_APP_ROUTES.inventory.invoice.root()
       }
     ]
   },

@@ -25,36 +25,40 @@ export const RecentOrdersTable = () => {
   const orders = overviewStats?.latestOrders ?? [];
 
   const columns: ColumnDef<IExhibitorLatestOrder>[] = [
-    {
-      accessorKey: 'id',
-      header: 'Order ID',
-      cell: ({ row }) => (
-        <Text>
-          <span>{row.getValue('id')}</span>
-        </Text>
-      )
-    },
     // {
-    //   id: 'customer',
-    //   header: 'Customer',
-    //   cell: ({ row }) => {
-    //     const attendee = row.original?.attendee;
-    //     return (
-    //       <Text>
-    //         <span>{attendee?.email || '---'}</span>
-    //       </Text>
-    //     );
-    //   }
-    // },
-    // {
-    //   accessorKey: 'product',
-    //   header: 'Product',
+    //   accessorKey: 'id',
+    //   header: 'Order ID',
     //   cell: ({ row }) => (
     //     <Text>
-    //       <span>{row.getValue('product') || '---'}</span>
+    //       <span>{row.getValue('id')}</span>
     //     </Text>
     //   )
     // },
+    {
+      id: 'customer',
+      header: 'Customer',
+      cell: ({ row }) => {
+        const attendee = row.original?.attendee;
+        return (
+          <Text>
+            <span>{attendee?.contactName || '---'}</span>
+          </Text>
+        );
+      }
+    },
+    {
+      accessorKey: 'product',
+      header: 'Product',
+      cell: ({ row }) => {
+        const product = row.original?.items ?? [];
+        const productName = product.map((item) => item.product.name).join(', ');
+        return (
+          <Text className="w-[250px] break-words  whitespace-pre-wrap">
+            <span>{productName || '---'}</span>
+          </Text>
+        );
+      }
+    },
     {
       accessorKey: 'status',
       header: 'Status',
@@ -164,7 +168,7 @@ export const RecentOrdersTable = () => {
         <LinkButton
           variant="tertiary"
           className="w-[6.75rem]"
-          href={EXHIBITOR_APP_ROUTES.products.root()}
+          href={EXHIBITOR_APP_ROUTES.inventory.root()}
         >
           View All Orders
         </LinkButton>

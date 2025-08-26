@@ -6,6 +6,7 @@ import { Skeleton } from '../atoms';
 interface DashboardToolbarProps {
   description: string | ReactNode;
   title?: string | ReactNode;
+  showTitle?: boolean;
   children?: ReactNode;
   userName?: string;
 }
@@ -13,14 +14,20 @@ interface DashboardToolbarProps {
 export const DashboardToolbar = ({
   description,
   title,
+  showTitle,
   children,
   userName
 }: DashboardToolbarProps) => {
+  const renderTitle = () => {
+    if (!showTitle) return;
+    if (title) return title;
+    return `Welcome Back ${userName ?? ''}`;
+  };
   return (
     <header className="flex flex-wrap items-center justify-between w-full mt-4 gap-3">
       <div className="text-left w-full sm:w-auto">
         <h2 className="text-[1.13rem] font-bold text-foreground">
-          {title ? title : `Welcome Back ${userName ?? ''}`}
+          {renderTitle()}
         </h2>
         {description && (
           <div className="text-[0.75rem] mt-[0.78rem]">{description}</div>
