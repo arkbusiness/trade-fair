@@ -33,6 +33,9 @@ import { cn } from '../../utils';
 
 interface DataTableProps<TData> {
   columns: ColumnDef<TData, unknown>[];
+  cardClassName?: string;
+  theadClassName?: string;
+  tbodyClassName?: string;
   showSelectedRows?: boolean;
   contentClassName?: string;
   showPagination?: boolean;
@@ -48,6 +51,9 @@ interface DataTableProps<TData> {
 
 export function DataTable<TData>({
   columns,
+  cardClassName,
+  theadClassName,
+  tbodyClassName,
   table,
   contentClassName,
   handleGoToFirstPage,
@@ -85,7 +91,7 @@ export function DataTable<TData>({
   const hasData = table.getRowModel().rows?.length > 0;
 
   return (
-    <Card className="w-full max-w-full py-0">
+    <Card className={cn('w-full max-w-full py-0', cardClassName)}>
       <CardContent className="p-0">
         <div
           className={cn(
@@ -112,7 +118,8 @@ export function DataTable<TData>({
                           'px-[16px] py-[10px] text-foreground text-sm font-medium',
                           {
                             'cursor-pointer select-none': isSortable
-                          }
+                          },
+                          theadClassName
                         )}
                         onClick={() => {
                           if (isSortable) {
@@ -145,7 +152,12 @@ export function DataTable<TData>({
               ))}
             </TableHeader>
 
-            <TableBody className="**:data-[slot=table-cell]:first:w-8">
+            <TableBody
+              className={cn(
+                '**:data-[slot=table-cell]:first:w-8',
+                tbodyClassName
+              )}
+            >
               {hasData && !isLoading && (
                 <>
                   {table.getRowModel().rows.map((row) => {
@@ -158,7 +170,7 @@ export function DataTable<TData>({
                         {row.getVisibleCells().map((cell) => (
                           <TableCell
                             key={cell.id}
-                            className="px-[16px] py-[20px]"
+                            className="px-[16px] py-[20px] "
                           >
                             {flexRender(
                               cell.column.columnDef.cell,

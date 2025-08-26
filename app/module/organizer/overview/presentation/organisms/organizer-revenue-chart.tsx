@@ -5,7 +5,6 @@ import {
   CardContent,
   CardDescription,
   CardHeader,
-  ChartConfig,
   ChartContainer,
   ChartTooltip,
   ChartTooltipContent,
@@ -18,17 +17,6 @@ import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { Bar, BarChart, XAxis, YAxis } from 'recharts';
 import { useOrganizerOverview } from '../../hooks';
-
-const chartConfig = {
-  currentYear: {
-    label: 'Current Year: ',
-    color: '#e71623'
-  },
-  previousYear: {
-    label: 'Previous Year: ',
-    color: '#f6af30'
-  }
-} satisfies ChartConfig;
 
 const CurrencyFormatter = (value: number) => {
   return formatCurrency({ amount: value, currency: 'NGN' });
@@ -72,6 +60,8 @@ export const OrganizerRevenueChart = () => {
     Fri: 0,
     Sat: 0
   };
+
+  const hasChartData = Object.values(orders).some((amount) => amount > 0);
 
   const orderArray = Object.entries(orders).map(([name, amount]) => ({
     name,
@@ -125,9 +115,9 @@ export const OrganizerRevenueChart = () => {
           </div> */}
           {/* Chart */}
           <>
-            {!isLoading && (
+            {!isLoading && hasChartData && (
               <ChartContainer
-                config={chartConfig}
+                config={{}}
                 className="h-[245px] min-h-[200px] w-full"
               >
                 <BarChart data={orderArray}>
@@ -141,6 +131,8 @@ export const OrganizerRevenueChart = () => {
                   <YAxis
                     tickFormatter={CurrencyFormatter}
                     tick={{ fontSize: 12 }}
+                    domain={[0, 'dataMax']}
+                    scale="linear"
                   />
                   <ChartTooltip
                     content={<ChartTooltipContent />}
@@ -154,6 +146,11 @@ export const OrganizerRevenueChart = () => {
               </ChartContainer>
             )}
             {isLoading && <Spinner />}
+            {!isLoading && !hasChartData && (
+              <p className="text-center text-foreground mb-10 flex items-center justify-center">
+                No data available
+              </p>
+            )}
           </>
         </div>
       </CardContent>
