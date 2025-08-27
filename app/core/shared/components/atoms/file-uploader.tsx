@@ -39,7 +39,7 @@ function ImageCard({ file, onRemove }: FileCardProps) {
             width={50}
             height={50}
             loading="lazy"
-            className="aspect-square shrink-0 rounded-[4px] object-cover"
+            className="aspect-square shrink-0 rounded-[4px] object-contain"
           />
         ) : null}
         <div className="flex flex-col gap-1 max-w-[168px] w-full">

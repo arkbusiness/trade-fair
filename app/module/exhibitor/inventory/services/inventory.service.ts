@@ -30,7 +30,10 @@ export const inventoryService = {
   createInventory: (data: IMutateInventory): AxiosRequestConfig => ({
     url: `/exhibitor/products/manual-upload`,
     method: 'POST',
-    data
+    data,
+    headers: {
+      'Content-Type': 'multipart/form-data'
+    }
   }),
   deleteInventory: (id: string): AxiosRequestConfig => ({
     url: `/exhibitor/products/${id}`,
