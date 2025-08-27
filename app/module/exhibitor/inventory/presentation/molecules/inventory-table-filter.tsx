@@ -30,7 +30,7 @@ const SORT_OPTIONS = [
   },
   {
     label: 'Price',
-    value: 'price'
+    value: 'basePrice'
   },
   {
     label: 'SKU',

@@ -1,7 +1,7 @@
 'use client';
 
 import { ErrorText, Input } from '@/app/core/shared/components/atoms';
-import { CountrySelector } from '@/app/core/shared/components/atoms/country-selector';
+import { CountrySelector } from '@/app/core/shared/components/molecules';
 import {
   LoadingButton,
   OverlaySpinner,

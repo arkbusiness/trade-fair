@@ -24,10 +24,15 @@ export interface Inventory {
   quantity: number;
   description: string;
   images: string[];
-  tags: string[];
+  tags: string[] | null;
   availableFrom: string;
   availableTo: string;
-  customAttrs: string;
+  customAttrs:
+    | {
+        key: string;
+        value: string;
+      }[]
+    | null;
   createdAt: string;
   updatedAt: string;
   productCategoryId: string;

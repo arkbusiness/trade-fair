@@ -33,7 +33,7 @@ function Input({
         data-slot="input"
         {...props}
         className={cn(
-          'file:text-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-[1px] border-input flex h-[2.5rem] rounded-[4px] w-full min-w-0 bg-transparent px-3 py-1 outline-none file:inline-flex file:h-[2.5rem] file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive placeholder:text-muted-foreground/70',
+          'file:text-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-[1px] border-input flex h-[2.5rem] rounded-[4px] w-full min-w-0 bg-light-gray-2 px-3 py-1 outline-none file:inline-flex file:h-[2.5rem] file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive placeholder:text-muted-foreground/70',
           {
             'bg-tertiary/20 border-tertiary/20': hasError
           },

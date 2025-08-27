@@ -1,5 +1,5 @@
 'use client';
-import { COUNTRIES_DATA } from '../../constants';
+import { COUNTRY_CURRENCY_LIST } from '../../constants';
 import { cn } from '../../utils';
 import {
   Select,
@@ -7,26 +7,25 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue
-} from './select';
+} from '../atoms';
 
-interface CountrySelectorProps {
+interface CurrencySelectorProps {
   label?: string;
   name?: string;
-  country?: string;
   value: string;
   labelClassName?: string;
   hasError?: boolean;
   onChange: (value: string) => void;
 }
 
-export const CountrySelector = ({
+export const CurrencySelector = ({
   label,
   name,
   value,
   labelClassName,
   hasError,
   onChange
-}: CountrySelectorProps) => {
+}: CurrencySelectorProps) => {
   return (
     <div className="flex flex-col gap-[0.5rem] w-full">
       {label && (
@@ -51,11 +50,14 @@ export const CountrySelector = ({
             <SelectValue placeholder="Select..." />
           </SelectTrigger>
           <SelectContent>
-            {COUNTRIES_DATA.map((country) => (
-              <SelectItem key={country} value={country}>
-                {country}
-              </SelectItem>
-            ))}
+            {COUNTRY_CURRENCY_LIST.map((currency, index) => {
+              const key = currency.toLowerCase() + index;
+              return (
+                <SelectItem key={key} value={currency}>
+                  {currency}
+                </SelectItem>
+              );
+            })}
           </SelectContent>
         </Select>
       </div>

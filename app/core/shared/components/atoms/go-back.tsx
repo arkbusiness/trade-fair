@@ -42,7 +42,7 @@ export const GoBackButton = ({
           strokeLinejoin="round"
         ></path>
       </svg>
-      <span className="text-xs font-light">{title}</span>
+      <span className="text-xs font-light inline mt-0.5">{title}</span>
     </button>
   );
 };

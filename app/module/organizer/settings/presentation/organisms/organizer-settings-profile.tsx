@@ -10,11 +10,11 @@ import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { ErrorText, Input } from '@/app/core/shared/components/atoms';
 import {
+  CountrySelector,
   LoadingButton,
   PhoneNumberInput,
   ProfileImageUploader
 } from '@/app/core/shared/components/molecules';
-import { CountrySelector } from '@/app/core/shared/components/atoms/country-selector';
 import { useCustomMutation } from '@/app/core/shared/hooks/use-mutate';
 import { useOrganizerUser } from '@/app/core/shared/hooks/api';
 import { organizerUserService } from '@/app/core/shared/services';

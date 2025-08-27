@@ -26,7 +26,7 @@ interface UseFileUploaderReturn {
   maxFiles: number;
   maxSize: number;
   open: () => void;
-  onRemove: (index: number) => void;
+  onRemove: (key: string) => void;
 }
 
 export const ACCEPT_IMAGE = {
@@ -123,16 +123,25 @@ export const useFileUploader = ({
   });
 
   const onRemove = useCallback(
-    (index: number) => {
+    (input: string) => {
       if (!files) return;
-      const newFiles = files.filter((_, i) => i !== index);
+      const fileToRemove = files.find(
+        (fl) => (fl.name + fl.lastModified).toString() === input
+      );
+
+      if (fileToRemove && type === 'image' && hasPreview(fileToRemove)) {
+        URL.revokeObjectURL(fileToRemove.preview);
+      }
+
+      const newFiles = files.filter(
+        (fl) => (fl.name + fl.lastModified).toString() !== input
+      );
       setFiles(newFiles);
       onValueChange?.(newFiles);
     },
-    [files, setFiles, onValueChange]
+    [files, setFiles, onValueChange, type]
   );
 
-  // Cleanup previews for images only
   useEffect(() => {
     return () => {
       if (!files) return;
@@ -142,7 +151,7 @@ export const useFileUploader = ({
         }
       });
     };
-  }, [files, type]);
+  }, [type]);
 
   return {
     files,

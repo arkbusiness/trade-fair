@@ -1,11 +1,10 @@
 'use client';
 
-import { TrashIcon, UploadIcon } from 'lucide-react';
-import { DropzoneInputProps, DropzoneRootProps } from 'react-dropzone';
-import { cn, hasPreview } from '@/app/core/shared/utils';
-import { X } from 'lucide-react';
-import Image from 'next/image';
 import { Button, Progress } from '@/app/core/shared/components/atoms';
+import { cn, formatBytes, hasPreview } from '@/app/core/shared/utils';
+import { Trash, TrashIcon, UploadIcon } from 'lucide-react';
+import Image from 'next/image';
+import { DropzoneInputProps, DropzoneRootProps } from 'react-dropzone';
 
 interface FileUploaderProps {
   files: File[] | undefined;
@@ -20,7 +19,7 @@ interface FileUploaderProps {
   showPreview?: boolean;
   className?: string;
   progresses?: Record<string, number>;
-  removeFile: (index: number) => void;
+  removeFile: (key: string) => void;
 }
 
 interface FileCardProps {
@@ -29,37 +28,37 @@ interface FileCardProps {
   progress?: number;
 }
 
-function ImageCard({ file, progress, onRemove }: FileCardProps) {
+function ImageCard({ file, onRemove }: FileCardProps) {
   return (
-    <div className="relative">
-      <div className="flex flex-1 flex-col gap-3">
+    <div className="relative flex justify-between items-center border border-input rounded-[8px] py-2 px-3">
+      <div className="flex flex-1 items-center gap-2">
         {hasPreview(file) ? (
           <Image
             src={file.preview}
             alt={file.name}
-            width={58}
-            height={58}
+            width={50}
+            height={50}
             loading="lazy"
-            className="aspect-square shrink-0 rounded-md object-cover"
+            className="aspect-square shrink-0 rounded-[4px] object-cover"
           />
         ) : null}
-        <div className="flex w-full flex-col gap-2">
-          {progress ? (
-            <Progress value={progress} className="bg-muted/35 h-[10px]" />
-          ) : null}
+        <div className="flex flex-col gap-1 max-w-[168px] w-full">
+          <p className="text-sm  font-medium text-foreground truncate">
+            {file.name}
+          </p>
+          <p className="text-xs font-normal">{formatBytes(file.size)}</p>
         </div>
       </div>
-      <div className="absolute right-[-2px] top-[-5px]">
-        <Button
+      <div>
+        <button
           type="button"
-          variant="outline"
-          size="icon"
-          className="size-5 bg-danger hover:bg-danger/80 rounded-full text-white"
+          className="text-tertiary"
+          aria-label="Remove file"
           onClick={onRemove}
         >
-          <X className="size-4" aria-hidden="true" />
+          <Trash className="size-4" aria-hidden="true" />
           <span className="sr-only">Remove file</span>
-        </Button>
+        </button>
       </div>
     </div>
   );
@@ -113,7 +112,7 @@ export function FileUploader({
       <div
         {...getRootProps()}
         className={cn(
-          'group relative grid h-52 w-full cursor-pointer place-items-center rounded-lg border-1 border-dashed border-muted-foreground/25 px-5 py-2.5 text-center transition hover:bg-muted/15',
+          'group relative grid h-52 w-full cursor-pointer place-items-center rounded-lg border-1 border-dashed border-muted-foreground/25 px-5 py-2.5 text-center transition hover:bg-muted/15 bg-light-gray-2',
           'ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2',
           isDragActive && 'border-muted-foreground/50',
           isDisabled ? 'pointer-events-none opacity-60' : '',
@@ -130,18 +129,22 @@ export function FileUploader({
           </div>
         ) : (
           <div className="flex flex-col items-center justify-center gap-4 sm:px-5">
-            <div className="rounded-full border border-dashed p-3">
-              <UploadIcon className="size-7" aria-hidden="true" />
-            </div>
             <div className="space-y-3">
-              <p className="font-medium text-muted-foreground text-sm">
-                {placeholder}
+              <p className="font-normal text-sm">
+                <span>
+                  <span className="text-tertiary inline-block mr-1 font-medium">
+                    Click to upload
+                  </span>
+                  or drag and drop
+                </span>
+
+                <span className="inline-block w-full">{placeholder}</span>
               </p>
               <p className="text-sm text-muted-foreground italic">
                 You can upload
                 {maxFiles > 1
-                  ? ` ${maxFiles === Infinity ? 'multiple' : maxFiles} files (up to ${maxSize}MB each)`
-                  : ` a file with ${maxSize}MB`}
+                  ? ` ${maxFiles === Infinity ? 'multiple' : maxFiles} files (up to ${formatBytes(maxSize)} each)`
+                  : ` a file with ${formatBytes(maxSize)}`}
               </p>
             </div>
           </div>
@@ -149,12 +152,15 @@ export function FileUploader({
       </div>
 
       {showPreview && files?.length && type === 'image' ? (
-        <div className="flex gap-4 flex-wrap">
+        <div className="flex gap-4 flex-col">
           {files.map((file, index) => (
             <ImageCard
               key={index}
               file={file}
-              onRemove={() => removeFile(index)}
+              onRemove={() => {
+                const key = file.name + file.lastModified;
+                removeFile(key);
+              }}
               progress={progresses?.[file.name]}
             />
           ))}
@@ -167,7 +173,10 @@ export function FileUploader({
             <DocumentCard
               key={index}
               file={file}
-              onRemove={() => removeFile(index)}
+              onRemove={() => {
+                const key = file.name + file.lastModified;
+                removeFile(key);
+              }}
               progress={progresses?.[file.name]}
             />
           ))}

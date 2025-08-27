@@ -1,6 +1,21 @@
 import { buildQueryParams } from '@/app/core/shared/utils';
 import { AxiosRequestConfig } from 'axios';
 
+interface IMutateInventory {
+  name: string;
+  description: string;
+  sku: string;
+  basePrice: number;
+  images: File[];
+  quantity: number;
+  currency: string;
+  tags: string[] | null;
+  customAttrs: { key: string; value: string }[] | null;
+  productCategoryId: string | null;
+  availableFrom: string;
+  availableTo: string;
+}
+
 export const inventoryService = {
   getProducts: (filter: Record<string, string> = {}) => {
     const queryParams = buildQueryParams({
@@ -12,6 +27,11 @@ export const inventoryService = {
       queryKey: ['exhibitor-products', queryParams]
     };
   },
+  createInventory: (data: IMutateInventory): AxiosRequestConfig => ({
+    url: `/exhibitor/products/manual-upload`,
+    method: 'POST',
+    data
+  }),
   deleteInventory: (id: string): AxiosRequestConfig => ({
     url: `/exhibitor/products/${id}`,
     method: 'DELETE'
