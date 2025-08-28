@@ -63,9 +63,9 @@ export const EXHIBITOR_SIDEBAR_ITEMS = [
         url: EXHIBITOR_APP_ROUTES.inventory.root()
       },
       {
-        title: 'Invoice',
+        title: 'Orders & Invoice',
         icon: ShoppingBagIcon,
-        url: EXHIBITOR_APP_ROUTES.inventory.invoice.root()
+        url: EXHIBITOR_APP_ROUTES.inventory.orders.root()
       }
     ]
   },

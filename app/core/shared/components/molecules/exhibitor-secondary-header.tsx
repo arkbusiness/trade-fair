@@ -7,6 +7,7 @@ import { useExhibitorAuthStore } from '@/app/module/auth/store';
 
 const DASHBOARD_TITLES = {
   '/inventory': 'Inventory',
+  '/inventory/orders': 'Orders & Invoice',
   '/invoice': 'Invoice',
   '/appointments': 'Appointments',
   '/messaging': 'Messaging',
