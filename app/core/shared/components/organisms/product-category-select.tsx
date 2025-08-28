@@ -20,6 +20,7 @@ interface ProductCategorySelectProps {
   form: UseFormReturn<any>;
   label?: string;
   name: string;
+  isDisabled?: boolean;
 }
 
 type OptionType = {
@@ -35,6 +36,7 @@ export const ProductCategorySelect = ({
   placeholder = 'Select category',
   onSelectChange,
   classNames,
+  isDisabled = false,
   showHelperText = true
 }: ProductCategorySelectProps) => {
   const queryClient = useQueryClient();
@@ -79,6 +81,7 @@ export const ProductCategorySelect = ({
         label={label}
         placeholder={placeholder}
         value={watchedValue}
+        isDisabled={isDisabled}
         getOptionLabel={(option) => option?.name}
         getOptionValue={(option) => option?.id?.toString()}
         hasError={!!categoryError?.length}

@@ -17,6 +17,7 @@ export interface IDatePicker<T extends FieldValues> {
   labelClassName?: string;
   placeholderText?: string;
   showTimeSelect?: boolean;
+  isDisabled?: boolean;
   dateFormat?: string;
   value: Date | null;
   handleChange: ({
@@ -40,7 +41,8 @@ export const DatePicker = <T extends FieldValues>({
   value,
   handleChange,
   showTimeSelect = false,
-  className = ''
+  className = '',
+  isDisabled = false
 }: IDatePicker<T>) => {
   const format = showTimeSelect ? 'MMMM d, yyyy h:mm aa' : 'MMMM d, yyyy';
 
@@ -64,6 +66,7 @@ export const DatePicker = <T extends FieldValues>({
             minDate={min}
             maxDate={max}
             className="h-full"
+            disabled={isDisabled}
             locale="en"
             dateFormat={format}
             showTimeSelect={showTimeSelect}

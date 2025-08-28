@@ -32,6 +32,8 @@ import toast from 'react-hot-toast';
 import { Inventory, useInventory } from '../../hooks';
 import { inventoryService } from '../../services';
 import { InventoryTableFilter } from '../molecules';
+import { useRouter } from 'nextjs-toploader/app';
+import { EXHIBITOR_APP_ROUTES } from '@/app/core/shared/constants';
 
 enum ModalType {
   NONE = 'NONE',
@@ -47,6 +49,7 @@ const INVENTORY_FILTER_LABEL_MAP = {
 };
 
 export const InventoryTable = () => {
+  const router = useRouter();
   const mutation = useCustomMutation();
   const { setFilterParams, filter, handleClearFilter } = useQueryFilters([
     'page',
@@ -173,7 +176,11 @@ export const InventoryTable = () => {
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
               <DropdownMenuItem
-                onClick={() => {}}
+                onClick={() => {
+                  router.push(
+                    EXHIBITOR_APP_ROUTES.inventory.detail(row.original.id)
+                  );
+                }}
                 className="cursor-pointer text-xs"
               >
                 View
@@ -181,7 +188,11 @@ export const InventoryTable = () => {
               <DropdownMenuSeparator />
               <DropdownMenuItem
                 className="cursor-pointer text-xs"
-                onClick={() => {}}
+                onClick={() => {
+                  router.push(
+                    EXHIBITOR_APP_ROUTES.inventory.edit(row.original.id)
+                  );
+                }}
               >
                 Edit
               </DropdownMenuItem>

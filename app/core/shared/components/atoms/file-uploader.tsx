@@ -28,7 +28,7 @@ interface FileCardProps {
   progress?: number;
 }
 
-function ImageCard({ file, onRemove }: FileCardProps) {
+export function ImageCard({ file, onRemove }: FileCardProps) {
   return (
     <div className="relative flex justify-between items-center border border-input rounded-[8px] py-2 px-3">
       <div className="flex flex-1 items-center gap-2">

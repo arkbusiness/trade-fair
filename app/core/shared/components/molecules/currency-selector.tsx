@@ -15,6 +15,7 @@ interface CurrencySelectorProps {
   value: string;
   labelClassName?: string;
   hasError?: boolean;
+  isDisabled?: boolean;
   onChange: (value: string) => void;
 }
 
@@ -24,6 +25,7 @@ export const CurrencySelector = ({
   value,
   labelClassName,
   hasError,
+  isDisabled,
   onChange
 }: CurrencySelectorProps) => {
   return (
@@ -38,7 +40,12 @@ export const CurrencySelector = ({
       )}
 
       <div className="h-[2.5rem] w-full">
-        <Select value={value} name={name} onValueChange={onChange}>
+        <Select
+          value={value}
+          name={name}
+          onValueChange={onChange}
+          disabled={isDisabled}
+        >
           <SelectTrigger
             className={cn(
               'cursor-pointer  border-[1px] border-input h-full! min-h-full! w-full',

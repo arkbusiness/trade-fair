@@ -20,11 +20,18 @@ export const inventoryService = {
   getProducts: (filter: Record<string, string> = {}) => {
     const queryParams = buildQueryParams({
       params: filter,
+      //TODO: REMOVE THIS WHEN API IS FIXED
       appendDefaultLimit: false
     });
     return {
       url: `/exhibitor/products${queryParams ? `?${queryParams}` : ''}`,
       queryKey: ['exhibitor-products', queryParams]
+    };
+  },
+  getById: (id: string) => {
+    return {
+      url: `/exhibitor/products/${id}`,
+      queryKey: ['exhibitor-product', id]
     };
   },
   createInventory: (data: IMutateInventory): AxiosRequestConfig => ({

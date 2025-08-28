@@ -30,6 +30,7 @@ export const EXHIBITOR_APP_ROUTES = {
   inventory: {
     root: () => '/exhibitor/inventory/manage',
     detail: (id: string) => `/exhibitor/inventory/manage/${id}`,
+    edit: (id: string) => `/exhibitor/inventory/manage/edit/${id}`,
     add: () => `/exhibitor/inventory/manage/add`,
     invoice: {
       root: () => '/exhibitor/inventory/invoice',

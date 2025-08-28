@@ -14,7 +14,7 @@ interface DashboardToolbarProps {
 export const DashboardToolbar = ({
   description,
   title,
-  showTitle,
+  showTitle = true,
   children,
   userName
 }: DashboardToolbarProps) => {

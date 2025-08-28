@@ -36,6 +36,10 @@ export interface Inventory {
   createdAt: string;
   updatedAt: string;
   productCategoryId: string;
+  productCategory: {
+    id: string;
+    name: string;
+  } | null;
 }
 
 export const useInventory = (filter: Record<string, string> = {}) => {
@@ -45,10 +49,7 @@ export const useInventory = (filter: Record<string, string> = {}) => {
     isRefetching: isRefetchingInventory,
     refetch
   } = useCustomQuery<IPaginatedResponse<Inventory>>({
-    ...inventoryService.getProducts(filter),
-    options: {
-      staleTime: Infinity
-    }
+    ...inventoryService.getProducts(filter)
   });
   return {
     inventory: inventory?.items ?? EMPTY_ARRAY,

@@ -7,6 +7,7 @@ import {
   FileUploader,
   HelperText,
   Input,
+  Separator,
   Textarea
 } from '@/app/core/shared/components/atoms';
 import {
@@ -29,6 +30,7 @@ import * as yup from 'yup';
 import { Inventory, useInventory } from '../../hooks';
 import { inventoryService } from '../../services';
 import { PlusIcon, TrashIcon } from 'lucide-react';
+import Image from 'next/image';
 
 interface InventoryForm {
   isReadOnly?: boolean;
@@ -146,7 +148,9 @@ export const InventoryForm = ({ isReadOnly, inventory }: InventoryForm) => {
       basePrice: inventory?.basePrice ?? 0,
       quantity: inventory?.quantity ?? 0,
       currency: inventory?.currency ?? 'NGN',
-      tags: inventory?.tags ?? [],
+      tags: inventory?.tags
+        ? inventory.tags.map((tag) => ({ label: tag, value: tag }))
+        : [],
       images: [],
       customAttrs: inventory?.customAttrs ?? [
         {
@@ -154,10 +158,10 @@ export const InventoryForm = ({ isReadOnly, inventory }: InventoryForm) => {
           value: ''
         }
       ],
-      productCategoryId: inventory?.productCategoryId
+      productCategoryId: inventory?.productCategory
         ? {
-            id: '',
-            name: ''
+            id: inventory.productCategory.id,
+            name: inventory.productCategory.name
           }
         : undefined,
       sku: inventory?.sku ?? '',
@@ -215,7 +219,7 @@ export const InventoryForm = ({ isReadOnly, inventory }: InventoryForm) => {
         );
         return validAttrs.length > 0 ? validAttrs : null;
       })(),
-      images: data.images || [],
+      images: data.images ?? [],
       tags: (data.tags ?? []).map((tag) => tag.value),
       productCategoryId: data.productCategoryId?.id ?? null,
       availableFrom: formatISO(data.availableFrom!),
@@ -260,6 +264,9 @@ export const InventoryForm = ({ isReadOnly, inventory }: InventoryForm) => {
     availableTo: availableToError
   } = errors;
 
+  const uploadedImages = inventory?.images ?? [];
+  const hasUploadedImages = uploadedImages.length > 0;
+
   const hasMoreThanOneCustomAttr =
     watchedCustomAttrs && watchedCustomAttrs?.length > 1;
 
@@ -267,7 +274,7 @@ export const InventoryForm = ({ isReadOnly, inventory }: InventoryForm) => {
     <form onSubmit={handleSubmit(onSubmit)} className="w-full">
       <fieldset
         className="grid lg:grid-cols-[1fr_32.43rem] gap-x-[0.90rem] gap-y-5 w-full"
-        disabled={isReadOnly || mutation.isPending}
+        disabled={mutation.isPending}
       >
         {/* Section 1 */}
         <div className="rounded-[8px] border border-input bg-background py-[2.19rem] px-6 flex flex-col gap-6">
@@ -276,6 +283,7 @@ export const InventoryForm = ({ isReadOnly, inventory }: InventoryForm) => {
             <Input
               label="Name"
               placeholder="e.g Product name"
+              readOnly={isReadOnly}
               hasError={!!nameError?.message?.length}
               {...register('name')}
               /**
@@ -298,6 +306,7 @@ export const InventoryForm = ({ isReadOnly, inventory }: InventoryForm) => {
             <Input
               label="Stock Quantity"
               placeholder="e.g Enter quantity"
+              readOnly={isReadOnly}
               hasError={!!quantityError?.message?.length}
               {...register('quantity')}
             />
@@ -311,6 +320,7 @@ export const InventoryForm = ({ isReadOnly, inventory }: InventoryForm) => {
               <CurrencySelector
                 name="currency"
                 value={watchedCurrency}
+                isDisabled={isReadOnly}
                 onChange={(value) => {
                   if (value) {
                     form.setValue('currency', value, {
@@ -330,6 +340,7 @@ export const InventoryForm = ({ isReadOnly, inventory }: InventoryForm) => {
                 label="Price"
                 placeholder="e.g Enter price"
                 hasError={!!basePriceError?.message?.length}
+                readOnly={isReadOnly}
                 {...register('basePrice')}
               />
               <ErrorText message={basePriceError?.message} />
@@ -346,6 +357,7 @@ export const InventoryForm = ({ isReadOnly, inventory }: InventoryForm) => {
                 options={[]}
                 isCreatable
                 optionLabelProp="label"
+                isDisabled={isReadOnly}
                 optionValueProp="value"
                 defaultValue={watchedTags}
                 onSelectChange={(value) => {
@@ -368,6 +380,7 @@ export const InventoryForm = ({ isReadOnly, inventory }: InventoryForm) => {
                 name="productCategoryId"
                 label="Category (Optional)"
                 categoryError={productCategoryIdError?.message}
+                isDisabled={isReadOnly}
                 onSelectChange={(value) => {
                   form.setValue('productCategoryId', value, {
                     shouldValidate: true,
@@ -386,6 +399,7 @@ export const InventoryForm = ({ isReadOnly, inventory }: InventoryForm) => {
               label="SKU"
               placeholder="e.g Enter SKU"
               hasError={!!skuError?.message?.length}
+              readOnly={isReadOnly}
               {...register('sku')}
             />
             <ErrorText message={skuError?.message} />
@@ -396,6 +410,8 @@ export const InventoryForm = ({ isReadOnly, inventory }: InventoryForm) => {
             <Textarea
               label="Description"
               placeholder="Enter product description"
+              readOnly={isReadOnly}
+              rows={8}
               {...register('description')}
             />
             <ErrorText message={descriptionError?.message} />
@@ -430,7 +446,7 @@ export const InventoryForm = ({ isReadOnly, inventory }: InventoryForm) => {
                           <p>{index + 1}</p>
                         </div>
                         {/* Remove Button */}
-                        {hasMoreThanOneCustomAttr && (
+                        {hasMoreThanOneCustomAttr && !isReadOnly && (
                           <div className="flex">
                             <Button
                               type="button"
@@ -452,6 +468,7 @@ export const InventoryForm = ({ isReadOnly, inventory }: InventoryForm) => {
                             label="Key"
                             placeholder="e.g. Color"
                             hasError={!!keyErrorError?.length}
+                            readOnly={isReadOnly}
                             {...register(`customAttrs.${index}.key`)}
                           />
                           <ErrorText message={keyErrorError} />
@@ -463,6 +480,7 @@ export const InventoryForm = ({ isReadOnly, inventory }: InventoryForm) => {
                             type="text"
                             label="Value"
                             placeholder="e.g. Red"
+                            readOnly={isReadOnly}
                             hasError={!!valueErrorError?.length}
                             {...register(`customAttrs.${index}.value`)}
                           />
@@ -475,17 +493,19 @@ export const InventoryForm = ({ isReadOnly, inventory }: InventoryForm) => {
               })}
             </div>
             {/* Add Button */}
-            <div className="flex">
-              <IconButton
-                onClick={handleAddNewCustomAttr}
-                variant="highlight"
-                type="button"
-                className="text-foreground"
-              >
-                <PlusIcon />
-                <span>Add new attribute</span>
-              </IconButton>
-            </div>
+            {!isReadOnly && (
+              <div className="flex">
+                <IconButton
+                  onClick={handleAddNewCustomAttr}
+                  variant="highlight"
+                  type="button"
+                  className="text-foreground"
+                >
+                  <PlusIcon />
+                  <span>Add new attribute</span>
+                </IconButton>
+              </div>
+            )}
           </div>
         </div>
 
@@ -516,6 +536,7 @@ export const InventoryForm = ({ isReadOnly, inventory }: InventoryForm) => {
                     placeholderText="mm/dd/yyyy"
                     showTimeSelect={true}
                     max={watchedAvailableTo}
+                    isDisabled={isReadOnly}
                     handleChange={({ value }) => {
                       form.setValue('availableFrom', value as Date, {
                         shouldValidate: true,
@@ -537,6 +558,7 @@ export const InventoryForm = ({ isReadOnly, inventory }: InventoryForm) => {
                     placeholderText="mm/dd/yyyy"
                     className="rounded-[4px]"
                     min={watchedAvailableFrom}
+                    isDisabled={isReadOnly}
                     handleChange={({ value }) => {
                       form.setValue('availableTo', value as Date, {
                         shouldValidate: true,
@@ -557,6 +579,7 @@ export const InventoryForm = ({ isReadOnly, inventory }: InventoryForm) => {
                 maxFiles={maxFiles}
                 showPreview={true}
                 placeholder="SVG, PNG, JPEG, JPG"
+                isDisabled={isReadOnly}
                 type="image"
                 getInputProps={getInputProps}
                 getRootProps={getRootProps}
@@ -565,22 +588,59 @@ export const InventoryForm = ({ isReadOnly, inventory }: InventoryForm) => {
                 removeFile={(key) => onRemove(key)}
                 maxSize={maxSize}
               />
+              {hasUploadedImages && (
+                <>
+                  <div className="flex flex-col gap-4 mt-4">
+                    <Separator />
+                    <p className="text-sm font-medium">Uploaded images</p>
+                    <Separator />
+                  </div>
+                  {uploadedImages.map((image) => (
+                    <div
+                      key={image}
+                      className="relative flex justify-between items-center border border-input rounded-[8px] py-2 px-3"
+                    >
+                      <div className="flex flex-1 items-center gap-2">
+                        <Image
+                          src={image}
+                          alt="Product image"
+                          width={50}
+                          height={50}
+                          loading="lazy"
+                          className="aspect-square shrink-0 rounded-[4px] object-contain"
+                        />
+
+                        <div className="flex flex-col gap-1 max-w-[168px] w-full">
+                          <p className="text-sm  font-medium text-foreground truncate">
+                            {/* {file.name} */}
+                          </p>
+                          {/* <p className="text-xs font-normal">{formatBytes(file.size)}</p> */}
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </>
+              )}
               <ErrorText message={imagesError?.message} />
             </div>
           </div>
         </div>
       </fieldset>
-      <div className="flex justify-end lg:mt-[3.38rem] mt-[3.38rem]">
-        <LoadingButton
-          type="submit"
-          variant="tertiary"
-          isLoading={mutation.isPending}
-          disabled={mutation.isPending}
-          className="h-8"
-        >
-          {inventory ? 'Update Product' : 'Add Product'}
-        </LoadingButton>
-      </div>
+      {isReadOnly ? (
+        <></>
+      ) : (
+        <div className="flex justify-end lg:mt-[3.38rem] mt-[3.38rem]">
+          <LoadingButton
+            type="submit"
+            variant="tertiary"
+            isLoading={mutation.isPending}
+            disabled={mutation.isPending}
+            className="h-8"
+          >
+            {inventory ? 'Update Product' : 'Add Product'}
+          </LoadingButton>
+        </div>
+      )}
     </form>
   );
 };
