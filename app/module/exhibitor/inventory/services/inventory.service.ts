@@ -19,9 +19,7 @@ interface IMutateInventory {
 export const inventoryService = {
   getProducts: (filter: Record<string, string> = {}) => {
     const queryParams = buildQueryParams({
-      params: filter,
-      //TODO: REMOVE THIS WHEN API IS FIXED
-      appendDefaultLimit: false
+      params: filter
     });
     return {
       url: `/exhibitor/products${queryParams ? `?${queryParams}` : ''}`,
@@ -37,6 +35,17 @@ export const inventoryService = {
   createInventory: (data: IMutateInventory): AxiosRequestConfig => ({
     url: `/exhibitor/products/manual-upload`,
     method: 'POST',
+    data,
+    headers: {
+      'Content-Type': 'multipart/form-data'
+    }
+  }),
+  updateInventory: (
+    productId: string,
+    data: IMutateInventory
+  ): AxiosRequestConfig => ({
+    url: `/exhibitor/products/${productId}`,
+    method: 'PATCH',
     data,
     headers: {
       'Content-Type': 'multipart/form-data'

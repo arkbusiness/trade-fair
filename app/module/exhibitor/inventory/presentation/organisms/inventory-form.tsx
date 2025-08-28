@@ -55,6 +55,7 @@ const validationSchema = yup.object().shape({
       }
     ),
   images: yup.array<File>().min(1, 'Images are required'),
+
   quantity: yup
     .number()
     .required('Quantity is required')
@@ -209,7 +210,7 @@ export const InventoryForm = ({ isReadOnly, inventory }: InventoryForm) => {
     formState: { errors }
   } = form;
 
-  const onSubmit = (data: InventoryFormValues) => {
+  const handleCreateProduct = (data: InventoryFormValues) => {
     const formValues = {
       ...data,
       customAttrs: (() => {
@@ -237,6 +238,48 @@ export const InventoryForm = ({ isReadOnly, inventory }: InventoryForm) => {
         router.push(EXHIBITOR_APP_ROUTES.inventory.root());
       }
     });
+  };
+
+  const handleUpdateProduct = (data: InventoryFormValues) => {
+    if (!inventory?.id) return;
+    const formValues = {
+      ...data,
+      customAttrs: (() => {
+        const validAttrs = (data.customAttrs ?? []).filter(
+          (attr): attr is { key: string; value: string } =>
+            attr?.key !== undefined && attr?.value !== undefined
+        );
+        return validAttrs.length > 0 ? validAttrs : null;
+      })(),
+      images: data.images ?? [],
+      tags: (data.tags ?? []).map((tag) => tag.value),
+      productCategoryId: data.productCategoryId?.id ?? null,
+      availableFrom: formatISO(data.availableFrom!),
+      availableTo: formatISO(data.availableTo!)
+    };
+
+    mutation.mutate(
+      inventoryService.updateInventory(inventory.id, formValues),
+      {
+        onError(error) {
+          const errorMessage = errorHandler(error);
+          toast.error(errorMessage);
+        },
+        onSuccess() {
+          toast.success('Product updated successfully');
+          refetchInventory();
+          router.push(EXHIBITOR_APP_ROUTES.inventory.root());
+        }
+      }
+    );
+  };
+
+  const onSubmit = (data: InventoryFormValues) => {
+    if (!inventory) {
+      handleCreateProduct(data);
+    } else {
+      handleUpdateProduct(data);
+    }
   };
 
   const handleAddNewCustomAttr = () => {
@@ -419,8 +462,14 @@ export const InventoryForm = ({ isReadOnly, inventory }: InventoryForm) => {
 
           {/* Custom Attributes */}
           <div className="flex flex-col gap-x-[1.86rem] gap-y-2 w-full text-left">
-            <p className="text-foreground font-bold">
-              Custom Attribute(Optional)
+            <p
+              className={
+                isReadOnly && !hasMoreThanOneCustomAttr
+                  ? 'hidden'
+                  : 'text-foreground font-bold'
+              }
+            >
+              Custom Attributes(Optional)
             </p>
             <div className="grid gap-x-4 gap-y-[1.86rem]">
               {fields.map((field, index) => {
@@ -575,50 +624,66 @@ export const InventoryForm = ({ isReadOnly, inventory }: InventoryForm) => {
             {/* Product Image */}
             <div className="flex flex-col gap-[0.5rem] w-full">
               <p className="text-[0.75rem] font-medium">Product Images</p>
-              <FileUploader
-                maxFiles={maxFiles}
-                showPreview={true}
-                placeholder="SVG, PNG, JPEG, JPG"
-                isDisabled={isReadOnly}
-                type="image"
-                getInputProps={getInputProps}
-                getRootProps={getRootProps}
-                files={files}
-                isDragActive={isDragActive}
-                removeFile={(key) => onRemove(key)}
-                maxSize={maxSize}
-              />
+              {isReadOnly && !hasUploadedImages && (
+                <p className="text-sm h-14 w-full flex items-center justify-center">
+                  No images uploaded
+                </p>
+              )}
+              {!isReadOnly && (
+                <FileUploader
+                  maxFiles={maxFiles}
+                  showPreview={true}
+                  placeholder="SVG, PNG, JPEG, JPG"
+                  isDisabled={isReadOnly}
+                  type="image"
+                  getInputProps={getInputProps}
+                  getRootProps={getRootProps}
+                  files={files}
+                  isDragActive={isDragActive}
+                  removeFile={(key) => onRemove(key)}
+                  maxSize={maxSize}
+                />
+              )}
               {hasUploadedImages && (
                 <>
-                  <div className="flex flex-col gap-4 mt-4">
-                    <Separator />
-                    <p className="text-sm font-medium">Uploaded images</p>
-                    <Separator />
-                  </div>
-                  {uploadedImages.map((image) => (
-                    <div
-                      key={image}
-                      className="relative flex justify-between items-center border border-input rounded-[8px] py-2 px-3"
-                    >
-                      <div className="flex flex-1 items-center gap-2">
-                        <Image
-                          src={image}
-                          alt="Product image"
-                          width={50}
-                          height={50}
-                          loading="lazy"
-                          className="aspect-square shrink-0 rounded-[4px] object-contain"
-                        />
-
-                        <div className="flex flex-col gap-1 max-w-[168px] w-full">
-                          <p className="text-sm  font-medium text-foreground truncate">
-                            {/* {file.name} */}
-                          </p>
-                          {/* <p className="text-xs font-normal">{formatBytes(file.size)}</p> */}
-                        </div>
-                      </div>
+                  {!isReadOnly && (
+                    <div className="flex flex-col gap-4 mt-4">
+                      <Separator />
+                      <p className="text-sm font-medium">Uploaded images</p>
+                      <Separator />
                     </div>
-                  ))}
+                  )}
+                  <div className="flex flex-wrap gap-2 mt-2">
+                    {uploadedImages.map((image) => (
+                      <div
+                        key={image}
+                        className="relative flex justify-center items-center border border-input rounded-[8px] py-2 px-1 w-20 h-20"
+                      >
+                        <div className="flex flex-1 items-center gap-2 relative">
+                          <Image
+                            src={image}
+                            alt="Product image"
+                            width={80}
+                            height={80}
+                            loading="lazy"
+                            className="aspect-square shrink-0 rounded-[4px] object-cover"
+                          />
+                        </div>
+
+                        {!isReadOnly && (
+                          <button
+                            type="button"
+                            className="absolute -top-4  bg-tertiary rounded-full text-background w-6 h-6 flex items-center justify-center cursor-pointer self-center"
+                            aria-label="Remove file"
+                            // onClick={onRemove}
+                          >
+                            <TrashIcon size={14} aria-hidden="true" />
+                            <span className="sr-only">Remove file</span>
+                          </button>
+                        )}
+                      </div>
+                    ))}
+                  </div>
                 </>
               )}
               <ErrorText message={imagesError?.message} />
