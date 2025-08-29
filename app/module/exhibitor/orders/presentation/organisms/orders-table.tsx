@@ -71,8 +71,8 @@ export const ORDER_STATUS_MAP = {
   [OrderStatus.CONFIRMED]: {
     label: 'Confirmed',
     style: {
-      bg: 'bg-green-600',
-      text: 'text-white'
+      bg: 'bg-green-100/50 border-green-600 border-1',
+      text: 'text-green-600'
     }
   },
   [OrderStatus.CANCELLED]: {
