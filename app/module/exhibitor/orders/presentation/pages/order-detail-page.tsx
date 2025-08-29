@@ -5,7 +5,11 @@ import { IOrderItem } from '../../hooks';
 import { orderService } from '../../services';
 import { OrderDetailHeader } from '../atoms';
 import { OrderItems } from '../organisms';
-import { OrderAttendeeInfo } from '../molecules';
+import {
+  OrderAttendeeInfo,
+  OrderInformation,
+  OrderTimeline
+} from '../molecules';
 
 interface OrderDetailsPageProps {
   id: string;
@@ -37,22 +41,32 @@ export const OrderDetailsPage = async ({ id }: OrderDetailsPageProps) => {
     email: 'N/A',
     phone: 'N/A'
   };
+  const orderTimeline = order?.OrderTimeLine ?? [];
 
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
-      <div className="flex flex-col gap-5">
+      <div className="flex flex-col">
         <OrderDetailHeader
           orderId={id}
           status={order.status}
           productName={productName}
         />
-        <OrderItems items={order.items} />
+        <div className="mt-5">
+          <OrderItems items={order.items} />
+        </div>
         <OrderAttendeeInfo
           name={attendee.contactName}
           email={attendee.email}
           phone={attendee.phone ?? 'N/A'}
           paymentSlip={order.payment_slip}
         />
+        <OrderInformation
+          orderDate={order.createdAt}
+          //TODO: REMOVE HARD CODED
+          address="15 Victoria Island, Lagos, Nigeria"
+          paymentMethod={order.payment_method ?? 'N/A'}
+        />
+        <OrderTimeline orderTimeline={orderTimeline} />
       </div>
     </HydrationBoundary>
   );

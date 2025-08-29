@@ -12,6 +12,20 @@ export enum OrderStatus {
   INVOICE = 'INVOICE' // Invoice Requested
 }
 
+export enum OrderTimelineEnum {
+  CREATED = 'CREATED',
+  PAYMENT_CONFIRMED = 'PAYMENT_CONFIRMED',
+  SHIPPED = 'SHIPPED',
+  DELIVERED = 'DELIVERED'
+}
+
+export interface IOrderTimeline {
+  id: string;
+  orderId: string;
+  status: OrderTimelineEnum;
+  createdAt: string;
+}
+
 export interface IProduct {
   id: string;
   exhibitorId: string;
@@ -45,6 +59,7 @@ export interface IOrderItem {
   updatedAt: string;
   currency: string;
   createdAt: string;
+  OrderTimeLine: IOrderTimeline[];
   attendee: {
     id: string;
     username: string;

@@ -16,8 +16,8 @@ export const OrderAttendeeInfo = ({
 }: OrderAttendeeInfoProps) => {
   const hasPaymentSlip = !!paymentSlip;
   return (
-    <div className="mt-8">
-      <h4 className="font-semibold text-xs uppercase text-foreground">
+    <div className="py-5">
+      <h4 className="font-semibold text-xs uppercase text-foreground underline">
         Attendee Information
       </h4>
       <div className="flex gap-2 text-sm flex-col mt-2">
