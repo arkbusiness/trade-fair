@@ -3,7 +3,7 @@
 import { formatDate } from '@/app/core/shared/lib';
 import { cn } from '@/app/core/shared/utils';
 import { Banknote, Check, PackageOpen, Truck } from 'lucide-react';
-import { IOrderTimeline, OrderTimelineEnum } from '../../hooks';
+import { OrderTimelineEnum, useOrderById } from '../../hooks';
 
 const TIMELINE_ITEMS = [
   {
@@ -33,7 +33,7 @@ const TIMELINE_ITEMS = [
 ];
 
 interface OrderTimelineProps {
-  orderTimeline: IOrderTimeline[];
+  orderId: string;
 }
 
 interface TimelineItemProps {
@@ -91,7 +91,11 @@ const TimelineItem = ({
   );
 };
 
-export const OrderTimeline = ({ orderTimeline }: OrderTimelineProps) => {
+export const OrderTimeline = ({ orderId }: OrderTimelineProps) => {
+  const { order } = useOrderById(orderId);
+
+  const orderTimeline = order?.OrderTimeLine ?? [];
+
   const getTimelineItemData = (status: OrderTimelineEnum) => {
     return orderTimeline.find((item) => item.status === status);
   };
@@ -101,7 +105,7 @@ export const OrderTimeline = ({ orderTimeline }: OrderTimelineProps) => {
   };
 
   return (
-    <div className="py-5 border-t">
+    <div className="py-5 border-y">
       <h4 className="font-semibold text-xs uppercase text-foreground underline mb-4">
         Order Timeline
       </h4>

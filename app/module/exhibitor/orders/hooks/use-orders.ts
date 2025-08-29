@@ -4,12 +4,12 @@ import { extractPaginationMeta } from '@/app/core/shared/utils';
 import { orderService } from '../services';
 
 export enum OrderStatus {
-  PENDING = 'PENDING', //1
-  CONFIRMED = 'CONFIRMED', //2
-  CANCELLED = 'CANCELLED', // 2 - Only cancelled orders
-  COMPLETED = 'COMPLETED', //6
-  SHIPPED = 'SHIPPED', // 3
-  INVOICE = 'INVOICE' // Invoice Requested
+  PENDING = 'PENDING',
+  CONFIRMED = 'CONFIRMED',
+  CANCELLED = 'CANCELLED',
+  COMPLETED = 'COMPLETED',
+  SHIPPED = 'SHIPPED',
+  INVOICE = 'INVOICE'
 }
 
 export enum OrderTimelineEnum {
@@ -59,6 +59,14 @@ export interface IOrderItem {
   updatedAt: string;
   currency: string;
   createdAt: string;
+  tracking: {
+    orderId: string;
+    courier: string;
+    name: string | null;
+    code: string | null;
+    phone: string | null;
+    note: string | null;
+  };
   OrderTimeLine: IOrderTimeline[];
   attendee: {
     id: string;
@@ -131,5 +139,25 @@ export const useOrders = (filter: Record<string, string> = {}) => {
     isRefetchingOrders,
     paginationMeta: extractPaginationMeta(data?.orders),
     refetchOrders: refetch
+  };
+};
+
+export const useOrderById = (orderId: string) => {
+  const {
+    data,
+    isLoading: isLoadingOrder,
+    isRefetching: isRefetchingOrder,
+    refetch
+  } = useCustomQuery<IOrderItem>({
+    ...orderService.getById(orderId),
+    options: {
+      enabled: !!orderId
+    }
+  });
+  return {
+    order: data,
+    isLoadingOrder,
+    isRefetchingOrder,
+    refetchOrder: refetch
   };
 };

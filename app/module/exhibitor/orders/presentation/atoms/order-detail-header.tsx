@@ -5,20 +5,19 @@ import { ExportButton } from '@/app/core/shared/components/organisms/export-butt
 import { EXHIBITOR_APP_ROUTES } from '@/app/core/shared/constants';
 import { cn } from '@/app/core/shared/utils';
 import { MessageCircleMore } from 'lucide-react';
-import { OrderStatus } from '../../hooks';
+import { OrderStatus, useOrderById } from '../../hooks';
 import { ORDER_STATUS_MAP } from '../organisms/orders-table';
 
 interface OrderDetailHeaderProps {
   orderId: string;
-  productName: string;
-  status: OrderStatus;
 }
 
-export const OrderDetailHeader = ({
-  orderId,
-  productName,
-  status
-}: OrderDetailHeaderProps) => {
+export const OrderDetailHeader = ({ orderId }: OrderDetailHeaderProps) => {
+  const { order } = useOrderById(orderId);
+
+  const productName = order ? order.items[0].product?.name : '';
+  const status = order ? order.status : '';
+
   const orderStatus = status?.toUpperCase() as OrderStatus;
   const statusMap = ORDER_STATUS_MAP[orderStatus];
 

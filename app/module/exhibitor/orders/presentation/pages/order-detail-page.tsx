@@ -8,6 +8,7 @@ import { OrderItems } from '../organisms';
 import {
   OrderAttendeeInfo,
   OrderInformation,
+  OrderStatusControl,
   OrderTimeline
 } from '../molecules';
 
@@ -35,38 +36,24 @@ export const OrderDetailsPage = async ({ id }: OrderDetailsPageProps) => {
     return notFound();
   }
 
-  const productName = order.items[0].product?.name;
-  const attendee = order?.attendee ?? {
-    contactName: 'N/A',
-    email: 'N/A',
-    phone: 'N/A'
-  };
-  const orderTimeline = order?.OrderTimeLine ?? [];
-
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
       <div className="flex flex-col">
-        <OrderDetailHeader
-          orderId={id}
-          status={order.status}
-          productName={productName}
-        />
+        <OrderDetailHeader orderId={id} />
         <div className="mt-5">
           <OrderItems items={order.items} />
         </div>
-        <OrderAttendeeInfo
-          name={attendee.contactName}
-          email={attendee.email}
-          phone={attendee.phone ?? 'N/A'}
-          paymentSlip={order.payment_slip}
-        />
+        <OrderAttendeeInfo orderId={id} />
         <OrderInformation
           orderDate={order.createdAt}
           //TODO: REMOVE HARD CODED
           address="15 Victoria Island, Lagos, Nigeria"
           paymentMethod={order.payment_method ?? 'N/A'}
         />
-        <OrderTimeline orderTimeline={orderTimeline} />
+        <OrderTimeline orderId={id} />
+        <div className="mt-5">
+          <OrderStatusControl orderId={id} />
+        </div>
       </div>
     </HydrationBoundary>
   );
