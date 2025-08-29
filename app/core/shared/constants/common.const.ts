@@ -49,8 +49,8 @@ export const EXHIBITOR_APP_ROUTES = {
 };
 
 export const APP_NAME = 'Ark';
-export const CURRENCY = 'NGN';
-export const CURRENCY_SYMBOL = '₦';
+export const DEFAULT_CURRENCY = 'NGN';
+export const DEFAULT_CURRENCY_SYMBOL = '₦';
 
 export const ARK_META = {
   title: 'Gopher | All-in-One Event Platform for Trade Shows & Exhibitions',

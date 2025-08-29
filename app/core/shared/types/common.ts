@@ -16,7 +16,7 @@ export interface IPaginatedMeta {
 
 export interface IPaginatedResponse<T> extends IPaginatedMeta {
   data: T[];
-  items: T[];
+  items?: T[];
 }
 
 export interface CustomIconProps extends SVGProps<SVGSVGElement> {

@@ -6,7 +6,7 @@ export const orderService = {
       params: filter
     });
     return {
-      url: `/exhibitor/orders${queryParams ? `?${queryParams}` : ''}`,
+      url: `/exhibitor/orders/dashboard${queryParams ? `?${queryParams}` : ''}`,
       queryKey: ['exhibitor-orders', queryParams]
     };
   },

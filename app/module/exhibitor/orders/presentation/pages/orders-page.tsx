@@ -1,9 +1,5 @@
-import { ExhibitorOrdersStat } from '../molecules';
+import { OrdersTable } from '../organisms/orders-table';
 
 export const OrdersPage = () => {
-  return (
-    <div className="flex flex-col gap-6">
-      <ExhibitorOrdersStat />
-    </div>
-  );
+  return <OrdersTable />;
 };
