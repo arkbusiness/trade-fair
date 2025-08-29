@@ -31,15 +31,5 @@ export const organizerExhibitorsService = {
   deactivateExhibitor: (id: string): AxiosRequestConfig => ({
     url: `/organizer/invites-exhibitors/${id}/deactivate`,
     method: 'PATCH'
-  }),
-  /**
-   * Exports an exhibitor with the given ID.
-   *
-   * @param {string[]} [data] - An optional array of exhibitor IDs to export.
-   */
-  exportExhibitor: (data?: string[]): AxiosRequestConfig => ({
-    url: `/organizer/invites-exhibitors/export`,
-    method: 'POST',
-    data
   })
 };

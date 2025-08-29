@@ -27,7 +27,7 @@ export const InventoryHeader = () => {
             sampleFileUrl="/csv-sample/product-sample.csv"
           />
           <ExportButton
-            apiRoute={inventoryService.exportProducts().url as string}
+            apiRoute="/exhibitor/products/export"
             exportName="product"
           />
 

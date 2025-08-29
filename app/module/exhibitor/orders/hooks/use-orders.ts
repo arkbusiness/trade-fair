@@ -4,12 +4,12 @@ import { extractPaginationMeta } from '@/app/core/shared/utils';
 import { orderService } from '../services';
 
 export enum OrderStatus {
-  PENDING = 'PENDING',
-  CONFIRMED = 'CONFIRMED',
-  CANCELLED = 'CANCELLED',
-  COMPLETED = 'COMPLETED',
-  SHIPPED = 'SHIPPED',
-  INVOICE = 'INVOICE'
+  PENDING = 'PENDING', //1
+  CONFIRMED = 'CONFIRMED', //2
+  CANCELLED = 'CANCELLED', // 2 - Only cancelled orders
+  COMPLETED = 'COMPLETED', //6
+  SHIPPED = 'SHIPPED', // 3
+  INVOICE = 'INVOICE' // Invoice Requested
 }
 
 export interface IProduct {

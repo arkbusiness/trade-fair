@@ -5,6 +5,8 @@ import { notFound } from 'next/navigation';
 import { dehydrate, HydrationBoundary } from '@tanstack/react-query';
 import { DashboardToolbar } from '@/app/core/shared/components/molecules';
 import { InventoryForm } from '../organisms';
+import { GoBackButton } from '@/app/core/shared/components/atoms';
+import { EXHIBITOR_APP_ROUTES } from '@/app/core/shared/constants';
 
 interface InventoryDetailsPageProps {
   id: string;
@@ -35,10 +37,14 @@ export const InventoryDetailsPage = async ({
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
       <div className="flex flex-col gap-5">
-        <DashboardToolbar
-          title={inventory?.name || 'Product'}
-          description="View product information."
-        />
+        <div>
+          <GoBackButton route={EXHIBITOR_APP_ROUTES.inventory.root()} />
+          <DashboardToolbar
+            title={inventory?.name || 'Product'}
+            description="View product information."
+          />
+        </div>
+
         <InventoryForm inventory={inventory} isReadOnly />
       </div>
     </HydrationBoundary>

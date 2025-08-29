@@ -28,7 +28,7 @@ const ORDER_TAB_LIST = [
     value: 'all'
   },
   {
-    label: 'Requested Invoice',
+    label: 'Invoice Requested',
     value: OrderStatus.INVOICE
   },
   {
@@ -58,6 +58,51 @@ const INVENTORY_FILTER_LABEL_MAP = {
   currency: 'Currency',
   from: 'From',
   to: 'To'
+};
+
+export const ORDER_STATUS_MAP = {
+  [OrderStatus.PENDING]: {
+    label: 'Pending',
+    style: {
+      bg: 'bg-yellow-500',
+      text: 'text-white'
+    }
+  },
+  [OrderStatus.CONFIRMED]: {
+    label: 'Confirmed',
+    style: {
+      bg: 'bg-green-600',
+      text: 'text-white'
+    }
+  },
+  [OrderStatus.CANCELLED]: {
+    label: 'Cancelled',
+    style: {
+      bg: 'bg-red-600',
+      text: 'text-white'
+    }
+  },
+  [OrderStatus.COMPLETED]: {
+    label: 'Completed',
+    style: {
+      bg: 'bg-green-600',
+      text: 'text-white'
+    }
+  },
+  [OrderStatus.SHIPPED]: {
+    label: 'Shipped',
+    style: {
+      bg: 'bg-blue-600',
+      text: 'text-white'
+    }
+  },
+  [OrderStatus.INVOICE]: {
+    label: 'Invoice Requested',
+    style: {
+      bg: 'bg-gray-600',
+      text: 'text-white'
+    }
+  }
 };
 
 export const OrdersTable = () => {
@@ -185,53 +230,7 @@ export const OrdersTable = () => {
       header: 'Status',
       cell: ({ row }) => {
         const status = row.original?.status?.toUpperCase() as OrderStatus;
-
-        const mapStatus = {
-          [OrderStatus.PENDING]: {
-            label: 'Pending',
-            style: {
-              bg: 'bg-green-600',
-              text: 'text-white'
-            }
-          },
-          [OrderStatus.CONFIRMED]: {
-            label: 'Confirmed',
-            style: {
-              bg: 'bg-green-600',
-              text: 'text-white'
-            }
-          },
-          [OrderStatus.CANCELLED]: {
-            label: 'Cancelled',
-            style: {
-              bg: 'bg-red-600',
-              text: 'text-white'
-            }
-          },
-          [OrderStatus.COMPLETED]: {
-            label: 'Completed',
-            style: {
-              bg: 'bg-green-600',
-              text: 'text-white'
-            }
-          },
-          [OrderStatus.SHIPPED]: {
-            label: 'Shipped',
-            style: {
-              bg: 'bg-blue-600',
-              text: 'text-white'
-            }
-          },
-          [OrderStatus.INVOICE]: {
-            label: 'Invoice',
-            style: {
-              bg: 'bg-gray-600',
-              text: 'text-white'
-            }
-          }
-        };
-
-        const content = mapStatus[status];
+        const content = ORDER_STATUS_MAP[status];
 
         return (
           <span

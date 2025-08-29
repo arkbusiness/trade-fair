@@ -24,15 +24,5 @@ export const organizerAttendeesService = {
   deleteAttendee: (id: string): AxiosRequestConfig => ({
     url: `/organizer/invites-attendees/${id}`,
     method: 'DELETE'
-  }),
-  /**
-   * Exports attendees with the given IDs.
-   *
-   * @param {string[]} [data] - An optional array of attendee IDs to export.
-   */
-  exportAttendee: (data?: string[]): AxiosRequestConfig => ({
-    url: `/organizer/invites-attendees/export`,
-    method: 'POST',
-    data
   })
 };

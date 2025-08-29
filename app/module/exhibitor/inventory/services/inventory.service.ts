@@ -46,10 +46,5 @@ export const inventoryService = {
     headers: {
       'Content-Type': 'multipart/form-data'
     }
-  }),
-  exportProducts: (data?: string[]): AxiosRequestConfig => ({
-    url: `/exhibitor/products/export`,
-    method: 'POST',
-    data
   })
 };

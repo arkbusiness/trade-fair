@@ -55,16 +55,6 @@ export const boothsService = {
     method: 'PUT',
     data
   }),
-  /**
-   * Exports a booth with the given ID.
-   *
-   * @param {string[]} [data] - An optional array of booth IDs to export.
-   */
-  exportBooth: (data?: string[]): AxiosRequestConfig => ({
-    url: `/organizer/booths/export`,
-    method: 'POST',
-    data
-  }),
   importFile: (data: { file: File }): AxiosRequestConfig => ({
     url: `/organizer/booths/import`,
     method: 'POST',

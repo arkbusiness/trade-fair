@@ -8,13 +8,17 @@ import { clientFetcher } from '../../lib';
 import { errorHandler } from '../../utils';
 import { IconButton, OverlaySpinner } from '../molecules';
 
+interface ExportButtonProps {
+  apiRoute: string;
+  data?: string[];
+  exportName: string;
+}
+
 export const ExportButton = ({
   apiRoute,
+  data,
   exportName
-}: {
-  apiRoute: string;
-  exportName: string;
-}) => {
+}: ExportButtonProps) => {
   const [isLoading, setIsLoading] = useState(false);
 
   const handleExport = async () => {
@@ -23,7 +27,8 @@ export const ExportButton = ({
       const response = await clientFetcher({
         method: 'POST',
         url: apiRoute,
-        responseType: 'blob'
+        responseType: 'blob',
+        data
       });
 
       const blob = new Blob([response as Blob], {
