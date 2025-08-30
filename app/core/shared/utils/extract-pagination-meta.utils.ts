@@ -12,6 +12,6 @@ export function extractPaginationMeta<T>(
     };
   }
 
-  const { total, page, limit, pages } = response;
-  return { total, page, limit: Number(limit), pages };
+  const { total, page, limit, pages, totalPages } = response;
+  return { total, page, limit: Number(limit), pages: pages || totalPages || 0 };
 }

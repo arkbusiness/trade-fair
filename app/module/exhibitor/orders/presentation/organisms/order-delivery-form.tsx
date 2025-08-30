@@ -3,9 +3,14 @@ import {
   Button,
   ErrorText,
   Input,
+  SelectItem,
   Textarea
 } from '@/app/core/shared/components/atoms';
-import { LoadingButton, Modal } from '@/app/core/shared/components/molecules';
+import {
+  CustomSelect,
+  LoadingButton,
+  Modal
+} from '@/app/core/shared/components/molecules';
 import { useCustomMutation } from '@/app/core/shared/hooks/use-mutate';
 import { errorHandler } from '@/app/core/shared/utils';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -16,7 +21,7 @@ import {
   parsePhoneNumber
 } from 'react-phone-number-input';
 import * as yup from 'yup';
-import { IOrderItem, useOrderById } from '../../hooks';
+import { IOrderItem, OrderStatus } from '../../hooks';
 import { orderService } from '../../services';
 
 interface OrderDeliveryFormProps {
@@ -29,7 +34,8 @@ interface OrderDeliveryFormProps {
 const validationSchema = yup.object().shape({
   courier: yup.string().required('Courier name is required'),
   name: yup.string().required('Dispatcher name is required'),
-  code: yup.string(),
+  code: yup.string().required('Tracking code is required'),
+  status: yup.string(),
   phone: yup
     .string()
     .trim()
@@ -52,19 +58,34 @@ const validationSchema = yup.object().shape({
 
 type OrderDeliveryFormType = yup.InferType<typeof validationSchema>;
 
+const STATUS_OPTIONS = [
+  {
+    value: OrderStatus.SHIPPED,
+    label: 'Shipped'
+  },
+  {
+    value: OrderStatus.COMPLETED,
+    label: 'Delivered'
+  },
+  {
+    value: OrderStatus.CANCELLED,
+    label: 'Cancelled'
+  }
+];
+
 export const OrderDeliveryForm = ({
   isOpen,
   selectedOrderTracking,
   orderId,
   onClose
 }: OrderDeliveryFormProps) => {
-  const { refetchOrder } = useOrderById(orderId);
   const mutation = useCustomMutation();
 
   const form = useForm<OrderDeliveryFormType>({
     resolver: yupResolver(validationSchema),
     values: {
       courier: selectedOrderTracking?.courier || '',
+      status: selectedOrderTracking?.status || '',
       name: selectedOrderTracking?.name || '',
       code: selectedOrderTracking?.code || '',
       phone: selectedOrderTracking?.phone || '',
@@ -75,6 +96,8 @@ export const OrderDeliveryForm = ({
 
   const {
     register,
+    setValue,
+    watch,
     reset,
     handleSubmit,
     formState: { errors }
@@ -83,7 +106,6 @@ export const OrderDeliveryForm = ({
   const handleCloseModal = () => {
     if (mutation.isPending) return;
     reset();
-    refetchOrder();
     onClose();
   };
 
@@ -93,6 +115,7 @@ export const OrderDeliveryForm = ({
     const formValues = {
       ...data,
       note: data.note || '',
+      status: data.status || OrderStatus.SHIPPED,
       phone: parsePhoneNumber(data.phone)?.number as string
     };
 
@@ -108,12 +131,15 @@ export const OrderDeliveryForm = ({
     });
   };
 
+  const watchedStatus = watch('status');
+
   const {
     courier: courierError,
     name: nameError,
     code: codeError,
     phone: phoneError,
-    note: noteError
+    note: noteError,
+    status: statusError
   } = errors;
 
   return (
@@ -179,6 +205,34 @@ export const OrderDeliveryForm = ({
             <ErrorText message={phoneError?.message} />
           </div>
 
+          {/* Status */}
+          <div className="w-full">
+            <CustomSelect
+              label="Status"
+              placeholder="Select status"
+              value={watchedStatus}
+              hasError={!!statusError?.message?.length}
+              onChange={(value) => {
+                setValue('status', value, {
+                  shouldValidate: true,
+                  shouldDirty: true,
+                  shouldTouch: true
+                });
+              }}
+            >
+              {STATUS_OPTIONS.map((status) => (
+                <SelectItem
+                  key={status.value}
+                  value={status.value}
+                  className="capitalize"
+                >
+                  {status.label}
+                </SelectItem>
+              ))}
+            </CustomSelect>
+            <ErrorText message={statusError?.message} />
+          </div>
+
           {/* Dispatcher Note */}
           <div>
             <Textarea
@@ -190,7 +244,7 @@ export const OrderDeliveryForm = ({
             <ErrorText message={noteError?.message} />
           </div>
         </fieldset>
-        <div className="mt-[5.19rem] w-full flex justify-between bg-gray-light-3 py-5 px-6">
+        <div className="mt-[2.19rem] w-full flex justify-between bg-gray-light-3 py-5 px-6">
           <Button
             variant="outline"
             className="gap-[0.5rem] flex items-center h-8"

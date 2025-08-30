@@ -4,12 +4,12 @@ import { Button } from '@/app/core/shared/components/atoms';
 import { Modal } from '@/app/core/shared/components/molecules';
 import { formatDate } from '@/app/core/shared/lib';
 import { cn } from '@/app/core/shared/utils';
-import { IOrganizerExhibitor } from '../../hooks';
+import { IExhibitor } from '../../hooks';
 
 interface BoothDetailsProps {
   isOpen: boolean;
   handleClose: () => void;
-  members: IOrganizerExhibitor['boothMembersList'];
+  members: IExhibitor['boothMembersList'];
 }
 
 const MAX_ITEMS_TO_SHOW = 5;

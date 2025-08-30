@@ -28,7 +28,7 @@ import { MoreHorizontal } from 'lucide-react';
 import Image from 'next/image';
 import { useState } from 'react';
 import toast from 'react-hot-toast';
-import { IOrganizerExhibitor, useOrganizerExhibitors } from '../../hooks';
+import { IExhibitor, useOrganizerExhibitors } from '../../hooks';
 import { organizerExhibitorsService } from '../../services';
 import { BoothMembers } from '../molecules';
 import { ORGANIZER_APP_ROUTES } from '@/app/core/shared/constants';
@@ -66,8 +66,9 @@ export const ExhibitorTable = () => {
     'page'
   ]);
 
-  const [selectedExhibitor, setSelectedExhibitor] =
-    useState<IOrganizerExhibitor | null>(null);
+  const [selectedExhibitor, setSelectedExhibitor] = useState<IExhibitor | null>(
+    null
+  );
   const {
     exhibitors,
     isLoadingExhibitors,
@@ -78,7 +79,7 @@ export const ExhibitorTable = () => {
 
   const [activeModal, setActiveModal] = useState<ModalType>(ModalType.NONE);
 
-  const columns: ColumnDef<IOrganizerExhibitor>[] = [
+  const columns: ColumnDef<IExhibitor>[] = [
     {
       id: 'exhibitor',
       header: 'Exhibitor',

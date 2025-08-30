@@ -26,7 +26,7 @@ import { ColumnDef } from '@tanstack/react-table';
 import { MoreHorizontal } from 'lucide-react';
 import Image from 'next/image';
 import { useRouter } from 'nextjs-toploader/app';
-import { IOrganizerAttendee, useOrganizerAttendees } from '../../hooks';
+import { IAttendee, useOrganizerAttendees } from '../../hooks';
 
 const TABLE_TABS = [
   {
@@ -58,7 +58,7 @@ export const AttendeesTable = () => {
     paginationMeta
   } = useOrganizerAttendees(filter);
 
-  const columns: ColumnDef<IOrganizerAttendee>[] = [
+  const columns: ColumnDef<IAttendee>[] = [
     {
       id: 'attendee',
       header: 'Attendee',

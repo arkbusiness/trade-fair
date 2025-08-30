@@ -4,7 +4,7 @@ import { extractPaginationMeta } from '@/app/core/shared/utils';
 import { EMPTY_ARRAY } from '@/app/core/shared/constants';
 import { organizerExhibitorsService } from '../services';
 
-export interface IOrganizerExhibitor {
+export interface IExhibitor {
   id: string;
   email: string;
   boothNumber: string;
@@ -43,7 +43,7 @@ export const useOrganizerExhibitors = (filter: Record<string, string> = {}) => {
     isLoading: isLoadingExhibitors,
     isRefetching: isRefetchingExhibitors,
     refetch
-  } = useCustomQuery<IPaginatedResponse<IOrganizerExhibitor>>({
+  } = useCustomQuery<IPaginatedResponse<IExhibitor>>({
     ...organizerExhibitorsService.getExhibitors(filter)
   });
   return {
@@ -61,7 +61,7 @@ export const useOrganizerExhibitorById = (id: string) => {
     isLoading: isLoadingExhibitor,
     isRefetching: isRefetchingExhibitor,
     refetch
-  } = useCustomQuery<IOrganizerExhibitor>({
+  } = useCustomQuery<IExhibitor>({
     ...organizerExhibitorsService.getExhibitorById(id)
   });
   return {

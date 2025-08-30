@@ -2,6 +2,7 @@ import { EMPTY_ARRAY } from '@/app/core/shared/constants';
 import { useCustomQuery } from '@/app/core/shared/hooks';
 import { extractPaginationMeta } from '@/app/core/shared/utils';
 import { orderService } from '../services';
+import { IAttendee } from '@/app/module/organizer/attendees/hooks';
 
 export enum OrderStatus {
   PENDING = 'PENDING',
@@ -63,28 +64,13 @@ export interface IOrderItem {
     orderId: string;
     courier: string;
     name: string | null;
+    status: string | null;
     code: string | null;
     phone: string | null;
     note: string | null;
   };
   OrderTimeLine: IOrderTimeline[];
-  attendee: {
-    id: string;
-    username: string;
-    email: string;
-    lastLogin: string;
-    contactName: string;
-    address: string | null;
-    phone: string | null;
-    logoUrl: string | null;
-    createdAt: string;
-    updatedAt: string;
-    pin: string;
-    interests: string[];
-    currency: string;
-    exhibitorInviteId: string | null;
-    organizerId: string;
-  };
+  attendee: IAttendee;
   items: {
     id: string;
     orderId: string;

@@ -1,5 +1,6 @@
 'use client';
 
+import { cn } from '../../utils';
 import {
   Select,
   SelectContent,
@@ -14,17 +15,22 @@ import {
 interface TableTabsProps {
   tabs: IBorderTabItem[];
   defaultValue: string;
+  showCount?: boolean;
+  selectedValue?: string;
   handleSelectedTab(value: IBorderTabItem): void;
 }
 
 export interface IBorderTabItem {
   value: string;
   label: string;
+  count?: number;
 }
 
 export const BorderTab = ({
   tabs,
   defaultValue,
+  selectedValue,
+  showCount = false,
   handleSelectedTab
 }: TableTabsProps) => {
   return (
@@ -73,7 +79,20 @@ export const BorderTab = ({
                   className="px-[10px] cursor-pointer border-b rounded-none bg-transparent data-[state=active]:rounded-none data-[state=active]:bg-transparent data-[state=active]:border-b-tertiary data-[state=active]:border-3 data-[state=active]:text-tertiary  data-[state=active]:shadow-none self-start max-w-min w-full py-4.5"
                   onClick={() => handleSelectedTab(tab)}
                 >
-                  {tab.label}
+                  <span>{tab.label}</span>
+                  {showCount && tab?.count !== undefined && (
+                    <span
+                      className={cn(
+                        'flex items-center justify-center w-[26px] h-[26px] rounded-[4px] text-[10px] font-semibold bg-gray-light-4 text-foreground',
+                        {
+                          'bg-tertiary text-background':
+                            tab.value === selectedValue
+                        }
+                      )}
+                    >
+                      {tab?.count || 0}
+                    </span>
+                  )}
                 </TabsTrigger>
               );
             })}

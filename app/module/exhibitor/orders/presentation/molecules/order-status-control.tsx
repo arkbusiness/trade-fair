@@ -137,7 +137,7 @@ export const OrderStatusControl = ({ orderId }: OrderStatusControlProps) => {
         isOpen={activeModal === ModalType.ADD_DELIVERY_DETAILS}
         orderId={orderId}
         selectedOrderTracking={selectedOrderTracking}
-        onClose={() => setActiveModal(ModalType.NONE)}
+        onClose={handleCloseModal}
       />
 
       <div className="py-9 px-10 border bg-background flex justify-between items-center gap-4 flex-wrap">
@@ -147,9 +147,7 @@ export const OrderStatusControl = ({ orderId }: OrderStatusControlProps) => {
             variant="outline"
             className="h-8.5 flex gap-x-1"
             onClick={() => {
-              if (order?.tracking) {
-                setSelectedOrderTracking(order.tracking);
-              }
+              setSelectedOrderTracking(order?.tracking || null);
               setActiveModal(ModalType.ADD_DELIVERY_DETAILS);
             }}
           >

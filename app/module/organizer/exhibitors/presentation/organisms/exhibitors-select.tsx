@@ -7,7 +7,7 @@ import { IPaginatedResponse } from '@/app/core/shared/types';
 import { buildQueryParams } from '@/app/core/shared/utils';
 import { useQueryClient } from '@tanstack/react-query';
 import { UseFormReturn } from 'react-hook-form';
-import { IOrganizerExhibitor } from '../../hooks';
+import { IExhibitor } from '../../hooks';
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 interface ExhibitorsSelectProps {
@@ -46,16 +46,16 @@ export const ExhibitorsSelect = ({
       appendDefaultLimit: false
     });
 
-    const result = await queryClient.fetchQuery<
-      IPaginatedResponse<IOrganizerExhibitor>
-    >({
-      queryKey,
-      queryFn: async () =>
-        clientFetcher({
-          url: `/organizer/invites-exhibitors${queryParams ? `?${queryParams}` : ''}`,
-          method: 'GET'
-        })
-    });
+    const result = await queryClient.fetchQuery<IPaginatedResponse<IExhibitor>>(
+      {
+        queryKey,
+        queryFn: async () =>
+          clientFetcher({
+            url: `/organizer/invites-exhibitors${queryParams ? `?${queryParams}` : ''}`,
+            method: 'GET'
+          })
+      }
+    );
 
     const { data, pages } = result ?? {};
     const hasMore = page < pages;

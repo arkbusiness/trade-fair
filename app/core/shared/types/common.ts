@@ -12,6 +12,7 @@ export interface IPaginatedMeta {
   page: number;
   limit: number;
   pages: number;
+  totalPages?: number;
 }
 
 export interface IPaginatedResponse<T> extends IPaginatedMeta {
