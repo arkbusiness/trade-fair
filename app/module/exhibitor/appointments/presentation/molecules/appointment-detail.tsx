@@ -1,6 +1,5 @@
 'use client';
 
-import { Button } from '@/app/core/shared/components/atoms';
 import {
   ConfirmationModal,
   LoadingButton,
@@ -8,14 +7,14 @@ import {
 } from '@/app/core/shared/components/molecules';
 import { useCustomMutation } from '@/app/core/shared/hooks/use-mutate';
 import { formatDate, formatSchedule, formatTime } from '@/app/core/shared/lib';
-import { Calendar, Clock } from 'lucide-react';
-import { IAppointmentSlot } from '../../hooks';
-import { AppointmentStatusBadge } from './appointment-status-badge';
-import { AppointmentAvatar } from './appointment-avatar';
-import { useState } from 'react';
-import { appointmentsService } from '../../services/appointments.service';
 import { errorHandler } from '@/app/core/shared/utils';
+import { Calendar, Clock } from 'lucide-react';
+import { useState } from 'react';
 import toast from 'react-hot-toast';
+import { IAppointmentSlot, SlotStatus } from '../../hooks';
+import { appointmentsService } from '../../services/appointments.service';
+import { AppointmentAvatar } from './appointment-avatar';
+import { AppointmentStatusBadge } from './appointment-status-badge';
 
 interface AppointmentDetailProps {
   isOpen: boolean;
@@ -80,15 +79,37 @@ export const AppointmentDetail = ({
     });
   };
 
+  const handleCompleteSlot = () => {
+    if (!appointment?.id) return;
+    // mutation.mutate(appointmentsService.cancelAppointment(appointment?.id), {
+    //   onError(error) {
+    //     const errorMessage = errorHandler(error);
+    //     toast.error(errorMessage);
+    //   },
+    //   onSuccess() {
+    //     toast.success('Appointment cancelled successfully.');
+    //     handleCloseModal();
+    //   }
+    // });
+  };
+
   const handleConfirm = () => {
     switch (activeModal) {
       case ModalType.MARK_AS_CANCELLED:
         handleCancelSlot();
         break;
+      case ModalType.MARK_AS_COMPLETED:
+        handleCompleteSlot();
+        break;
       default:
         break;
     }
   };
+
+  const isDisableButtons =
+    mutation.isPending ||
+    status === SlotStatus.COMPLETED ||
+    status === SlotStatus.CANCELLED;
 
   return (
     <>
@@ -161,20 +182,21 @@ export const AppointmentDetail = ({
             className="gap-[0.5rem] flex items-center h-8"
             type="submit"
             isLoading={mutation.isPending}
-            disabled={mutation.isPending}
+            disabled={isDisableButtons}
           >
             <span>Mark as completed</span>
           </LoadingButton>
 
-          <Button
+          <LoadingButton
             variant="outline"
             className="gap-[0.5rem] flex items-center h-8"
             type="button"
             onClick={() => setActiveModal(ModalType.MARK_AS_CANCELLED)}
-            disabled={mutation.isPending}
+            isLoading={mutation.isPending}
+            disabled={isDisableButtons}
           >
             <span>Cancel meeting</span>
-          </Button>
+          </LoadingButton>
         </div>
       </Modal>
     </>
