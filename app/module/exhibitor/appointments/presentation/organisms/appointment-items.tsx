@@ -72,7 +72,10 @@ export const AppointmentItems = () => {
 
   return (
     <>
-      <AppointmentsTabs totalAppointments={total} />
+      <AppointmentsTabs
+        totalAppointments={total}
+        isLoading={isLoadingAppointments}
+      />
       {isLoadingAppointments && (
         <div className="flex flex-col items-center justify-center py-8 text-center">
           <Spinner />

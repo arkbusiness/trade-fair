@@ -14,10 +14,12 @@ enum AppointmentStatusEnum {
 
 interface AppointmentsTabsProps {
   totalAppointments: number;
+  isLoading: boolean;
 }
 
 export const AppointmentsTabs = ({
-  totalAppointments
+  totalAppointments,
+  isLoading
 }: AppointmentsTabsProps) => {
   const { searchParamsObject, setMultipleParam } = useSetParams();
   const { appointmentsStats } = useAppointmentsStats();
@@ -55,27 +57,30 @@ export const AppointmentsTabs = ({
     {
       label: 'All Appointments',
       value: AppointmentStatusEnum.ALL,
-      count: totalAppointments
+      count:
+        isLoading || status !== AppointmentStatusEnum.ALL
+          ? undefined
+          : totalAppointments
     },
     {
       label: 'Today',
       value: AppointmentStatusEnum.TODAY,
-      count: isToday ? totalAppointments : undefined
+      count: isLoading ? undefined : isToday ? totalAppointments : undefined
     },
     {
       label: 'Cancelled',
       value: AppointmentStatusEnum.CANCELLED,
-      count: appointmentsStats?.cancelledCount ?? 0
+      count: isLoading ? undefined : appointmentsStats?.cancelledCount || 0
     },
     {
       label: 'Completed',
       value: AppointmentStatusEnum.COMPLETED,
-      count: appointmentsStats?.completedCount ?? 0
+      count: isLoading ? undefined : appointmentsStats?.completedCount || 0
     },
     {
       label: 'Waitlist',
       value: AppointmentStatusEnum.WAITLIST,
-      count: appointmentsStats?.waitlistedCount ?? 0
+      count: isLoading ? undefined : appointmentsStats?.waitlistedCount || 0
     }
   ];
 
