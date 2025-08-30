@@ -38,7 +38,7 @@ export const orderService = {
     tracking: {
       courier: string;
       name: string;
-      code: string;
+      code?: string;
       phone: string;
       note: string;
     }

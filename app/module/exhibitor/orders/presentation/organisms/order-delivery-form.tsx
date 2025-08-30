@@ -29,7 +29,7 @@ interface OrderDeliveryFormProps {
 const validationSchema = yup.object().shape({
   courier: yup.string().required('Courier name is required'),
   name: yup.string().required('Dispatcher name is required'),
-  code: yup.string().required('Dispatcher code is required'),
+  code: yup.string(),
   phone: yup
     .string()
     .trim()
@@ -75,12 +75,14 @@ export const OrderDeliveryForm = ({
 
   const {
     register,
+    reset,
     handleSubmit,
     formState: { errors }
   } = form;
 
   const handleCloseModal = () => {
     if (mutation.isPending) return;
+    reset();
     refetchOrder();
     onClose();
   };
