@@ -84,8 +84,7 @@ export const COOKIE_OPTIONS = {
 
 export const COOKIE_KEYS = {
   auth: {
-    token: 'gopher_access_token',
-    inviteToken: 'gopher_invite_token'
+    token: 'gopher_access_token'
   }
 };
 
