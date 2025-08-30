@@ -23,7 +23,6 @@ enum ModalType {
   MARK_AS_CONFIRMED = OrderStatus.CONFIRMED,
   MARK_AS_CANCELLED = OrderStatus.CANCELLED,
   MARK_AS_COMPLETED = OrderStatus.COMPLETED,
-  SEND_INVOICE = OrderStatus.INVOICE,
   ADD_DELIVERY_DETAILS = 'ADD_DELIVERY_DETAILS',
   NONE = 'NONE'
 }
@@ -65,10 +64,6 @@ export const OrderStatusControl = ({ orderId }: OrderStatusControlProps) => {
       title: 'Mark as Completed',
       description: 'Are you sure you want to mark this order as completed?'
     },
-    [ModalType.SEND_INVOICE]: {
-      title: 'Send Invoice',
-      description: 'Are you sure you want to send this order invoice?'
-    },
     [ModalType.NONE]: {
       title: '',
       description: ''
@@ -109,9 +104,6 @@ export const OrderStatusControl = ({ orderId }: OrderStatusControlProps) => {
       case ModalType.MARK_AS_COMPLETED:
         handleUpdateStatus(OrderStatus.COMPLETED);
         break;
-      case ModalType.SEND_INVOICE:
-        handleUpdateStatus(OrderStatus.INVOICE);
-        break;
       default:
         break;
     }
@@ -125,7 +117,6 @@ export const OrderStatusControl = ({ orderId }: OrderStatusControlProps) => {
     OrderStatus.INVOICE,
     OrderStatus.CONFIRMED
   ].includes(status as never);
-  const isDisabledSendInvoiceButton = status === OrderStatus.CANCELLED;
 
   return (
     <>
@@ -167,7 +158,7 @@ export const OrderStatusControl = ({ orderId }: OrderStatusControlProps) => {
           </Button>
         </div>
 
-        <div className="max-w-[46.63rem] w-full flex items-center flex-wrap gap-4">
+        <div className="max-w-[46.63rem] w-full flex items-center justify-end flex-wrap gap-4">
           {/* Mark as Confirmed */}
           <Button
             variant="outline"
@@ -196,16 +187,6 @@ export const OrderStatusControl = ({ orderId }: OrderStatusControlProps) => {
             onClick={() => setActiveModal(ModalType.MARK_AS_CANCELLED)}
           >
             <span>Mark as Cancelled</span>
-          </Button>
-
-          {/* Send Invoice */}
-          <Button
-            variant="outline"
-            className="text-gray-600 h-8.5"
-            disabled={isDisabledSendInvoiceButton}
-            onClick={() => setActiveModal(ModalType.SEND_INVOICE)}
-          >
-            <span>Send Invoice</span>
           </Button>
 
           {/* Mark as Completed */}

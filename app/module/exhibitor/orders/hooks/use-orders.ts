@@ -74,6 +74,7 @@ export interface IOrderItem {
     email: string;
     lastLogin: string;
     contactName: string;
+    address: string | null;
     phone: string | null;
     logoUrl: string | null;
     createdAt: string;

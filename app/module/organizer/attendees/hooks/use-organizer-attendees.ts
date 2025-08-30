@@ -11,6 +11,7 @@ export interface IOrganizerAttendee {
   used: boolean;
   status: string;
   expiresAt: string;
+  address: string | null;
   createdAt: string;
   updatedAt: string;
   logoUrl: string;

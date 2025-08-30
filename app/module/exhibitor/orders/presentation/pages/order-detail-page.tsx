@@ -46,8 +46,7 @@ export const OrderDetailsPage = async ({ id }: OrderDetailsPageProps) => {
         <OrderAttendeeInfo orderId={id} />
         <OrderInformation
           orderDate={order.createdAt}
-          //TODO: REMOVE HARD CODED
-          address="15 Victoria Island, Lagos, Nigeria"
+          address={order.attendee?.address ?? 'N/A'}
           paymentMethod={order.payment_method ?? 'N/A'}
         />
         <OrderTimeline orderId={id} />
