@@ -1,4 +1,5 @@
 import { buildQueryParams } from '@/app/core/shared/utils';
+import { AxiosRequestConfig } from 'axios';
 
 export const appointmentsService = {
   getAppointmentSlots: (filter: Record<string, string> = {}) => {
@@ -14,6 +15,12 @@ export const appointmentsService = {
     return {
       url: `/exhibitor/appointments/dashboard`,
       queryKey: ['exhibitor-appointments-stats']
+    };
+  },
+  cancelAppointment: (id: string): AxiosRequestConfig => {
+    return {
+      url: `/exhibitor/appointments/${id}/cancel`,
+      method: 'PATCH'
     };
   }
 };

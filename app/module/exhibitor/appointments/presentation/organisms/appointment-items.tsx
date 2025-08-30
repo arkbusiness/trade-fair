@@ -2,10 +2,11 @@
 
 import { Pagination } from '@/app/core/shared/components/molecules';
 import { useSetParams } from '@/app/core/shared/hooks';
-import { SlotStatus, useAppointmentSlot } from '../../hooks';
-import { AppointmentItem } from '../molecules';
+import { IAppointmentSlot, SlotStatus, useAppointmentSlot } from '../../hooks';
+import { AppointmentDetail, AppointmentItem } from '../molecules';
 import { AppointmentsTabs } from './appointments-tabs';
 import { Spinner } from '@/app/core/shared/components/atoms';
+import { useState } from 'react';
 
 export const APPOINTMENT_STATUS_MAP = {
   [SlotStatus.AVAILABLE]: {
@@ -48,13 +49,16 @@ export const APPOINTMENT_STATUS_MAP = {
 const LIMIT = 5;
 
 export const AppointmentItems = () => {
+  const [selectedAppointment, setSelectedAppointment] =
+    useState<IAppointmentSlot | null>(null);
   const { setMultipleParam, searchParamsObject } = useSetParams();
 
-  const { slots, isLoadingAppointments, paginationMeta } = useAppointmentSlot({
-    ...searchParamsObject,
-    page: searchParamsObject.page ?? '1',
-    limit: LIMIT.toString()
-  });
+  const { slots, isLoadingAppointments, paginationMeta, refetchAppointments } =
+    useAppointmentSlot({
+      ...searchParamsObject,
+      page: searchParamsObject.page ?? '1',
+      limit: LIMIT.toString()
+    });
 
   const { page, total, pages: pagecount } = paginationMeta;
 
@@ -70,8 +74,22 @@ export const AppointmentItems = () => {
     window?.scrollTo({ top: 20, behavior: 'smooth' });
   };
 
+  const handleView = (appointment: IAppointmentSlot) => {
+    setSelectedAppointment(appointment);
+  };
+
+  const handleClose = () => {
+    setSelectedAppointment(null);
+    refetchAppointments();
+  };
+
   return (
     <>
+      <AppointmentDetail
+        isOpen={!!selectedAppointment}
+        appointment={selectedAppointment}
+        onClose={handleClose}
+      />
       <AppointmentsTabs
         totalAppointments={total}
         isLoading={isLoadingAppointments}
@@ -88,7 +106,11 @@ export const AppointmentItems = () => {
       )}
       <div className="flex flex-col gap-2">
         {appointments.map((appointment) => (
-          <AppointmentItem key={appointment.id} appointment={appointment} />
+          <AppointmentItem
+            key={appointment.id}
+            appointment={appointment}
+            handleView={handleView}
+          />
         ))}
         <div className="flex justify-center mt-5">
           <Pagination

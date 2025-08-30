@@ -17,11 +17,11 @@ export const AppointmentStatusBadge = ({
     <span
       className={cn(
         'px-2 h-[32px] max-w-min rounded-[4px] text-xs flex justify-center items-center relative font-medium',
-        statusConfig.style.bg,
-        statusConfig.style.text
+        statusConfig?.style?.bg,
+        statusConfig?.style?.text
       )}
     >
-      <span>{statusConfig.label}</span>
+      <span>{statusConfig?.label}</span>
     </span>
   );
 };

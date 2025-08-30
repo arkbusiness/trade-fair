@@ -94,17 +94,34 @@ export function formatTime(date: string): string {
  *
  * @param startTime - The start time of the event.
  * @param endTime - The end time of the event.
- * @returns A formatted string including day, time, and duration in minutes or hours.
  */
-export function formatSchedule(startTime: Date, endTime: Date): string {
+export function formatSchedule(
+  startTime: Date,
+  endTime: Date
+): {
+  dayLabel: string;
+  timeLabel: string;
+  durationLabel: string;
+  fullLabel: string;
+} {
   // Validate dates
   if (!isValid(startTime) || !isValid(endTime)) {
-    return '';
+    return {
+      dayLabel: '',
+      timeLabel: '',
+      durationLabel: '',
+      fullLabel: ''
+    };
   }
 
   // Check invalid range
   if (endTime < startTime) {
-    return 'Invalid time range';
+    return {
+      dayLabel: '',
+      timeLabel: '',
+      durationLabel: '',
+      fullLabel: 'Invalid time range'
+    };
   }
 
   // Calculate duration
@@ -135,5 +152,10 @@ export function formatSchedule(startTime: Date, endTime: Date): string {
   // Format time
   const timeLabel = format(startTime, 'h:mm a');
 
-  return `${dayLabel}, ${timeLabel}  (${durationLabel})`;
+  return {
+    dayLabel,
+    timeLabel,
+    durationLabel,
+    fullLabel: `${dayLabel}, ${timeLabel}  (${durationLabel})`
+  };
 }

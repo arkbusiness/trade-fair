@@ -39,10 +39,12 @@ export const RecentAppointments = () => {
                         {item.attendee.email}
                       </p>
                       <p className="text-xs">
-                        {formatSchedule(
-                          new Date(item.startTime),
-                          new Date(item.endTime)
-                        )}
+                        {
+                          formatSchedule(
+                            new Date(item.startTime),
+                            new Date(item.endTime)
+                          ).fullLabel
+                        }
                       </p>
                     </div>
                   </div>
