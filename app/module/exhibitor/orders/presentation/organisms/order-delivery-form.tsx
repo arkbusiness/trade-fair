@@ -21,13 +21,13 @@ import {
   parsePhoneNumber
 } from 'react-phone-number-input';
 import * as yup from 'yup';
-import { IOrderItem, OrderStatus } from '../../hooks';
+import { IOrderTracking, OrderStatus } from '../../hooks';
 import { orderService } from '../../services';
 
 interface OrderDeliveryFormProps {
   isOpen: boolean;
   orderId: string;
-  selectedOrderTracking: IOrderItem['tracking'] | null;
+  selectedOrderTracking: IOrderTracking | null;
   onClose: () => void;
 }
 

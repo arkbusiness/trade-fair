@@ -1,17 +1,22 @@
 'use client';
 
-import { useCustomMutation } from '@/app/core/shared/hooks/use-mutate';
-import { useState } from 'react';
-import { IOrderItem, OrderStatus, useOrderById, useOrders } from '../../hooks';
+import { Button } from '@/app/core/shared/components/atoms';
 import {
   ConfirmationModal,
   OverlaySpinner
 } from '@/app/core/shared/components/molecules';
-import toast from 'react-hot-toast';
+import { useCustomMutation } from '@/app/core/shared/hooks/use-mutate';
 import { errorHandler } from '@/app/core/shared/utils';
-import { orderService } from '../../services';
-import { Button } from '@/app/core/shared/components/atoms';
 import { FileUp } from 'lucide-react';
+import { useState } from 'react';
+import toast from 'react-hot-toast';
+import {
+  IOrderTracking,
+  OrderStatus,
+  useOrderById,
+  useOrders
+} from '../../hooks';
+import { orderService } from '../../services';
 import { OrderDeliveryForm } from '../organisms';
 
 interface OrderStatusControlProps {
@@ -31,9 +36,8 @@ export const OrderStatusControl = ({ orderId }: OrderStatusControlProps) => {
   const { refetchOrder, isRefetchingOrder, order } = useOrderById(orderId);
   const { refetchOrders, isRefetchingOrders } = useOrders({});
 
-  const [selectedOrderTracking, setSelectedOrderTracking] = useState<
-    IOrderItem['tracking'] | null
-  >(null);
+  const [selectedOrderTracking, setSelectedOrderTracking] =
+    useState<IOrderTracking | null>(null);
   const [activeModal, setActiveModal] = useState<ModalType>(ModalType.NONE);
   const mutation = useCustomMutation();
 
@@ -147,12 +151,16 @@ export const OrderStatusControl = ({ orderId }: OrderStatusControlProps) => {
             variant="outline"
             className="h-8.5 flex gap-x-1"
             onClick={() => {
-              setSelectedOrderTracking(order?.tracking || null);
+              setSelectedOrderTracking(order?.tracking?.[0] || null);
               setActiveModal(ModalType.ADD_DELIVERY_DETAILS);
             }}
           >
             <FileUp size={16} />
-            <span>Add Delivery Details</span>
+            <span>
+              {order?.tracking?.[0]
+                ? 'Update Delivery Details'
+                : 'Add Delivery Details'}
+            </span>
           </Button>
         </div>
 

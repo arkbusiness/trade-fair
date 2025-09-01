@@ -47,6 +47,16 @@ export interface IProduct {
   productCategoryId: string | null;
 }
 
+export interface IOrderTracking {
+  orderId: string;
+  courier: string;
+  name: string | null;
+  status: string | null;
+  code: string | null;
+  phone: string | null;
+  note: string | null;
+}
+
 export interface IOrderItem {
   id: string;
   attendeeId: string;
@@ -60,15 +70,7 @@ export interface IOrderItem {
   updatedAt: string;
   currency: string;
   createdAt: string;
-  tracking: {
-    orderId: string;
-    courier: string;
-    name: string | null;
-    status: string | null;
-    code: string | null;
-    phone: string | null;
-    note: string | null;
-  };
+  tracking: IOrderTracking[] | null;
   OrderTimeLine: IOrderTimeline[];
   attendee: IAttendee;
   items: {

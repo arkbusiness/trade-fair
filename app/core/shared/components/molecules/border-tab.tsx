@@ -16,6 +16,7 @@ interface TableTabsProps {
   tabs: IBorderTabItem[];
   defaultValue: string;
   showCount?: boolean;
+  children?: React.ReactNode;
   selectedValue?: string;
   handleSelectedTab(value: IBorderTabItem): void;
 }

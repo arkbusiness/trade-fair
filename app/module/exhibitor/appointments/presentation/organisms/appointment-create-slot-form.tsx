@@ -101,6 +101,7 @@ export const AppointmentCreateSlotForm = ({
       },
       onSuccess() {
         toast.success('Time slot created successfully');
+        form.reset();
         handleCloseModal();
       }
     });

@@ -4,6 +4,8 @@ import { usePathname } from 'next/navigation';
 import { useExhibitorUser } from '../../hooks/api/use-exhibitor-user';
 import { AvatarMenu } from './avatar-menu';
 import { useExhibitorAuthStore } from '@/app/module/auth/store';
+import { EXHIBITOR_APP_ROUTES } from '../../constants';
+import { ExhibitorSettingsPageEnum } from '../../types';
 
 const DASHBOARD_TITLES = {
   '/inventory': 'Inventory',
@@ -71,9 +73,12 @@ export const ExhibitorSecondaryHeader = () => {
           className="border-none"
           userName={user?.contactName ?? ''}
           handleLogout={handleLogOut}
-          // TODO: add profile and password page href
-          profilePageHref={'#'}
-          passwordPageHref={'#'}
+          profilePageHref={EXHIBITOR_APP_ROUTES.settings(
+            ExhibitorSettingsPageEnum.MY_PROFILE
+          )}
+          passwordPageHref={EXHIBITOR_APP_ROUTES.settings(
+            ExhibitorSettingsPageEnum.CHANGE_PASSWORD
+          )}
           logo={user?.logoUrl ?? undefined}
         />
       </div>

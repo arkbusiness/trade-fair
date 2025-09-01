@@ -89,6 +89,7 @@ export const AppointmentUpdateSlotForm = ({
         },
         onSuccess() {
           toast.success('Time slot updated successfully');
+          form.reset();
           handleCloseModal();
         }
       }
