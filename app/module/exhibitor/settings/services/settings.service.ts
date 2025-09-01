@@ -10,7 +10,10 @@ export const exhibitorSettingsService = {
     return {
       url: `/exhibitor/business-info`,
       method: 'PATCH',
-      data
+      data,
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      }
     };
   },
   updateProfile: (data: {

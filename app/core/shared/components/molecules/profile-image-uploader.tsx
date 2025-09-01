@@ -12,6 +12,7 @@ interface ProfileImageUploaderProps {
   acceptedFormats?: string[];
   className?: string;
   avatarPlaceholder?: string;
+  imageClassName?: string;
   user?: {
     photoUrl?: string;
     name?: string;
@@ -24,6 +25,7 @@ export const ProfileImageUploader: React.FC<ProfileImageUploaderProps> = ({
   acceptedFormats = ['image/jpeg', 'image/png'],
   className = '',
   avatarPlaceholder = '/images/avatar.png',
+  imageClassName = '',
   user
 }) => {
   const [previewImage, setPreviewImage] = useState<string | null>(null);
@@ -129,7 +131,7 @@ export const ProfileImageUploader: React.FC<ProfileImageUploaderProps> = ({
           width={160}
           height={160}
           src={previewImage}
-          className="w-full h-full mx-auto object-cover"
+          className={cn('w-full h-full mx-auto object-cover', imageClassName)}
           alt="Image preview"
         />
       ) : (
@@ -140,7 +142,10 @@ export const ProfileImageUploader: React.FC<ProfileImageUploaderProps> = ({
               height={160}
               src={user?.photoUrl || avatarPlaceholder}
               alt={user?.name || 'User avatar'}
-              className="w-full h-full mx-auto object-cover"
+              className={cn(
+                'w-full h-full mx-auto object-cover',
+                imageClassName
+              )}
             />
           ) : (
             <ImagePlaceholder />

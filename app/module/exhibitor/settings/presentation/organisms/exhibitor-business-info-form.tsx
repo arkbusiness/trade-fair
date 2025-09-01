@@ -1,22 +1,24 @@
+import { ErrorText, Input, Textarea } from '@/app/core/shared/components/atoms';
 import {
   CountrySelector,
-  LoadingButton
+  LoadingButton,
+  ProfileImageUploader
 } from '@/app/core/shared/components/molecules';
-import * as yup from 'yup';
-import { yupResolver } from '@hookform/resolvers/yup';
-import { ErrorText, Input, Textarea } from '@/app/core/shared/components/atoms';
-import { useForm } from 'react-hook-form';
-import { useCustomMutation } from '@/app/core/shared/hooks/use-mutate';
 import { useExhibitorUser } from '@/app/core/shared/hooks/api/use-exhibitor-user';
-import { exhibitorSettingsService } from '../../services';
+import { useCustomMutation } from '@/app/core/shared/hooks/use-mutate';
 import { errorHandler } from '@/app/core/shared/utils';
+import { yupResolver } from '@hookform/resolvers/yup';
+import { useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
+import * as yup from 'yup';
+import { exhibitorSettingsService } from '../../services';
 
 const validationSchema = yup.object().shape({
   publicDescription: yup.string(),
   companyName: yup.string().trim(),
   country: yup.string().trim(),
-  websiteUrl: yup.string().url('Invalid URL')
+  websiteUrl: yup.string().url('Invalid URL'),
+  file: yup.mixed().nullable()
 });
 
 type IExhibitorBusinessInfoFormValues = yup.InferType<typeof validationSchema>;
@@ -46,7 +48,8 @@ export const ExhibitorBusinessInfoForm = () => {
       publicDescription: data.publicDescription ?? '',
       websiteUrl: data.websiteUrl ?? '',
       companyName: data.companyName ?? '',
-      country: data.country ?? ''
+      country: data.country ?? '',
+      file: data.file as File | null
     };
 
     mutation.mutate(exhibitorSettingsService.updateBusinessInfo(formValues), {
@@ -91,6 +94,22 @@ export const ExhibitorBusinessInfoForm = () => {
         className="w-full px-8 flex flex-col gap-6 mt-6"
         disabled={mutation.isPending}
       >
+        <div className="flex flex-col gap-1 items-center">
+          <p className="text-sm font-semibold mb-2">Company logo</p>
+          <ProfileImageUploader
+            onImageUpload={(file: File | null) => {
+              setValue('file', file);
+            }}
+            avatarPlaceholder="/images/empty-image.svg"
+            user={{
+              photoUrl: user?.logoUrl ?? '',
+              name: user?.companyName ?? ''
+            }}
+            className="rounded-lg border-input"
+            imageClassName="rounded-lg"
+          />
+        </div>
+
         {/* Email */}
         <div className="grid md:grid-cols-[12.5rem_1fr] gap-x-8 w-full border-y py-6">
           <div className="hidden md:block">
