@@ -1,18 +1,15 @@
 'use client';
 
 import { Button } from '@/app/core/shared/components/atoms';
+import { useSetParams } from '@/app/core/shared/hooks';
 import { Clock3 } from 'lucide-react';
 
 export const AppointmentsHeader = () => {
-  // const [showModal, setShowModal] = useState(false);
+  const { setParam } = useSetParams();
 
-  // const handleCloseModal = () => {
-  //   setShowModal(false);
-  // };
-
-  // const handleOpenModal = () => {
-  //   setShowModal(true);
-  // };
+  const handleOpenModal = () => {
+    setParam('createSlot', '1');
+  };
 
   return (
     <>
@@ -20,7 +17,7 @@ export const AppointmentsHeader = () => {
         <Button
           variant="tertiary"
           className="flex gap-x-[0.63rem]"
-          // onClick={handleOpenModal}
+          onClick={handleOpenModal}
         >
           <Clock3 size={16} />
           <span>Create time slot</span>

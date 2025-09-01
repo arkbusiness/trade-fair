@@ -1,9 +1,16 @@
 'use client';
 
 import {
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger
+} from '@/app/core/shared/components/atoms';
+import {
   EXHIBITOR_APP_ROUTES,
   ORGANIZER_APP_ROUTES
 } from '@/app/core/shared/constants';
+import { useSetParams } from '@/app/core/shared/hooks';
 import { useCustomMutation } from '@/app/core/shared/hooks/use-mutate';
 import { errorHandler } from '@/app/core/shared/utils';
 import { AuthCard, AuthContainer } from '@/app/module/auth/components';
@@ -15,20 +22,13 @@ import {
   useExhibitorAuthStore,
   useOrganizerAuthStore
 } from '@/app/module/auth/store';
+import Image from 'next/image';
+import Link from 'next/link';
 import { useRouter } from 'nextjs-toploader/app';
+import { useState } from 'react';
 import toast from 'react-hot-toast';
 import { SigninForm } from '../organisms';
 import { ISigninFormValues } from '../organisms/sign-in-form';
-import {
-  Tabs,
-  TabsContent,
-  TabsList,
-  TabsTrigger
-} from '@/app/core/shared/components/atoms';
-import { useState } from 'react';
-import { useSetParams } from '@/app/core/shared/hooks';
-import Link from 'next/link';
-import Image from 'next/image';
 
 enum TABS_ITEMS_ENUM {
   ORGANIZER = 'organizer',
@@ -51,15 +51,9 @@ export const SigninPage = () => {
   const queryTab = searchParamsObject?.['tab'] ?? TABS_ITEMS_ENUM.ORGANIZER;
   const [selectedTab, setSelectedTab] = useState(queryTab);
   const router = useRouter();
-  const {
-    handleSaveToken: handleOrganizerSaveToken,
-    handleLogOut: handleOrganizerLogOut
-  } = useOrganizerAuthStore();
+  const { handleSaveToken: handleOrganizerSaveToken } = useOrganizerAuthStore();
 
-  const {
-    handleSaveToken: handleExhibitorSaveToken,
-    handleLogOut: handleExhibitorLogOut
-  } = useExhibitorAuthStore();
+  const { handleSaveToken: handleExhibitorSaveToken } = useExhibitorAuthStore();
   const mutation = useCustomMutation<{
     accessToken: string;
   }>();
@@ -71,7 +65,6 @@ export const SigninPage = () => {
   const handleOrganizerSubmit = (values: ISigninFormValues) => {
     mutation.mutate(organizerAuthService.signin(values), {
       onError(error) {
-        handleOrganizerLogOut();
         const errorMessage = errorHandler(error);
         toast.error(errorMessage);
       },
@@ -90,7 +83,6 @@ export const SigninPage = () => {
   const handleExhibitorSubmit = (values: ISigninFormValues) => {
     mutation.mutate(exhibitorAuthService.signin(values), {
       onError(error) {
-        handleExhibitorLogOut();
         const errorMessage = errorHandler(error);
         toast.error(errorMessage);
       },

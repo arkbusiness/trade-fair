@@ -27,10 +27,17 @@ export const AppointmentsStat = () => {
     completedCount: 0
   };
 
+  const totalAppointments =
+    availableCount +
+    bookedCount +
+    waitlistedCount +
+    cancelledCount +
+    completedCount;
+
   const STATS = [
     {
       title: 'Total Appointments',
-      value: availableCount?.toLocaleString() || 0,
+      value: totalAppointments?.toLocaleString() || 0,
       icon: (
         <div className="w-6 h-6 rounded-[4px] flex items-center justify-center bg-[#D3A32B] text-background">
           <Users size={16} />

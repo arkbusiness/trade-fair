@@ -1,5 +1,6 @@
 import { buildQueryParams } from '@/app/core/shared/utils';
 import { AxiosRequestConfig } from 'axios';
+import { SlotStatus } from '../hooks';
 
 export const appointmentsService = {
   getAppointmentSlots: (filter: Record<string, string> = {}) => {
@@ -17,10 +18,52 @@ export const appointmentsService = {
       queryKey: ['exhibitor-appointments-stats']
     };
   },
-  cancelAppointment: (id: string): AxiosRequestConfig => {
+  cancelAppointmentSlot: (id: string): AxiosRequestConfig => {
     return {
-      url: `/exhibitor/appointments/${id}/cancel`,
+      url: `/exhibitor/appointments/slots/${id}/cancel`,
       method: 'PATCH'
+    };
+  },
+  completeAppointmentSlot: (id: string): AxiosRequestConfig => {
+    return {
+      url: `/exhibitor/appointments/slots/${id}`,
+      method: 'PATCH',
+      data: {
+        status: SlotStatus.COMPLETED
+      }
+    };
+  },
+  deleteAppointmentSlot: (id: string): AxiosRequestConfig => {
+    return {
+      url: `/exhibitor/appointments/slots/${id}`,
+      method: 'DELETE'
+    };
+  },
+  createSlot: (
+    data: {
+      startTime: string;
+      endTime: string;
+    }[]
+  ): AxiosRequestConfig => {
+    return {
+      url: `/exhibitor/appointments/slots`,
+      method: 'POST',
+      data: {
+        slots: data
+      }
+    };
+  },
+  updateSlot: (
+    id: string,
+    data: {
+      startTime: string;
+      endTime: string;
+    }
+  ): AxiosRequestConfig => {
+    return {
+      url: `/exhibitor/appointments/slots/${id}`,
+      method: 'PATCH',
+      data
     };
   }
 };

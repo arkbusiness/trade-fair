@@ -13,30 +13,34 @@ import { useState } from 'react';
 import toast from 'react-hot-toast';
 import { IAppointmentSlot, SlotStatus } from '../../hooks';
 import { appointmentsService } from '../../services/appointments.service';
-import { AppointmentAvatar } from './appointment-avatar';
 import { AppointmentStatusBadge } from './appointment-status-badge';
 
 interface AppointmentDetailProps {
   isOpen: boolean;
   appointment: IAppointmentSlot | null;
+  handleEdit?: () => void;
   onClose: () => void;
 }
 
 enum ModalType {
   MARK_AS_COMPLETED = 'MARK_AS_COMPLETED',
   MARK_AS_CANCELLED = 'MARK_AS_CANCELLED',
+  DELETE_SLOT = 'DELETE_SLOT',
   NONE = 'NONE'
 }
 
 export const AppointmentDetail = ({
   isOpen,
   appointment,
-  onClose
+  onClose,
+  handleEdit
 }: AppointmentDetailProps) => {
   const [activeModal, setActiveModal] = useState<ModalType>(ModalType.NONE);
   const mutation = useCustomMutation();
 
   const { attendee, status, startTime, endTime } = appointment || {};
+  const isBooked = status === SlotStatus.BOOKED;
+  const isAvailable = status === SlotStatus.AVAILABLE;
 
   const handleCloseModal = () => {
     if (mutation.isPending) return;
@@ -53,6 +57,10 @@ export const AppointmentDetail = ({
       title: 'Mark as Cancelled',
       description: 'Are you sure you want to mark this order as paid?'
     },
+    [ModalType.DELETE_SLOT]: {
+      title: 'Delete Slot',
+      description: 'Are you sure you want to delete this slot?'
+    },
     [ModalType.NONE]: {
       title: 'NONE',
       description: ''
@@ -67,30 +75,53 @@ export const AppointmentDetail = ({
 
   const handleCancelSlot = () => {
     if (!appointment?.id) return;
-    mutation.mutate(appointmentsService.cancelAppointment(appointment?.id), {
-      onError(error) {
-        const errorMessage = errorHandler(error);
-        toast.error(errorMessage);
-      },
-      onSuccess() {
-        toast.success('Appointment cancelled successfully.');
-        handleCloseModal();
+    mutation.mutate(
+      appointmentsService.cancelAppointmentSlot(appointment?.id),
+      {
+        onError(error) {
+          const errorMessage = errorHandler(error);
+          toast.error(errorMessage);
+        },
+        onSuccess() {
+          toast.success('Appointment cancelled successfully.');
+          handleCloseModal();
+        }
       }
-    });
+    );
   };
 
   const handleCompleteSlot = () => {
     if (!appointment?.id) return;
-    // mutation.mutate(appointmentsService.cancelAppointment(appointment?.id), {
-    //   onError(error) {
-    //     const errorMessage = errorHandler(error);
-    //     toast.error(errorMessage);
-    //   },
-    //   onSuccess() {
-    //     toast.success('Appointment cancelled successfully.');
-    //     handleCloseModal();
-    //   }
-    // });
+    mutation.mutate(
+      appointmentsService.completeAppointmentSlot(appointment?.id),
+      {
+        onError(error) {
+          const errorMessage = errorHandler(error);
+          toast.error(errorMessage);
+        },
+        onSuccess() {
+          toast.success('Appointment completed successfully.');
+          handleCloseModal();
+        }
+      }
+    );
+  };
+
+  const handleDeleteSlot = () => {
+    if (!appointment?.id) return;
+    mutation.mutate(
+      appointmentsService.deleteAppointmentSlot(appointment?.id),
+      {
+        onError(error) {
+          const errorMessage = errorHandler(error);
+          toast.error(errorMessage);
+        },
+        onSuccess() {
+          toast.success('Appointment deleted successfully.');
+          handleCloseModal();
+        }
+      }
+    );
   };
 
   const handleConfirm = () => {
@@ -100,6 +131,9 @@ export const AppointmentDetail = ({
         break;
       case ModalType.MARK_AS_COMPLETED:
         handleCompleteSlot();
+        break;
+      case ModalType.DELETE_SLOT:
+        handleDeleteSlot();
         break;
       default:
         break;
@@ -132,9 +166,9 @@ export const AppointmentDetail = ({
       >
         <div className="px-6">
           <div className="flex mb-12 items-center justify-start gap-2">
-            <AppointmentAvatar attendee={attendee} />
+            {/* <AppointmentAvatar attendee={attendee} /> */}
             <h4 className="text-lg font-semibold text-foreground ">
-              {attendee?.contactName || 'Unknown'}
+              {attendee?.contactName || `Slot-#${appointment?.id?.slice(0, 5)}`}
             </h4>
             <AppointmentStatusBadge status={status as never} />
           </div>
@@ -163,40 +197,60 @@ export const AppointmentDetail = ({
             </div>
 
             {/* Attendee */}
-            <div className="flex flex-col gap-1">
-              <p className="uppercase text-[13px] font-normal">Contact Info</p>
-              <p className="text-xs font-semibold text-light-blue-2">
-                {attendee?.email || 'N/A'}
-              </p>
-              <p className="text-xs opacity-80">
-                Phone: {attendee?.phone || 'N/A'}
-              </p>
-            </div>
+            {isBooked && (
+              <div className="flex flex-col gap-1">
+                <p className="uppercase text-[13px] font-normal">
+                  Contact Info
+                </p>
+                <p className="text-xs font-semibold text-light-blue-2">
+                  Email: {attendee?.email || 'N/A'}
+                </p>
+                <p className="text-xs opacity-80">
+                  Phone: {attendee?.phone || 'N/A'}
+                </p>
+              </div>
+            )}
             <div></div>
           </div>
           <div></div>
         </div>
-        <div className="mt-[2.19rem] w-full flex  gap-2.5 bg-gray-light-3 py-5 px-6">
-          <LoadingButton
-            variant="tertiary"
-            className="gap-[0.5rem] flex items-center h-8"
-            type="submit"
-            isLoading={mutation.isPending}
-            disabled={isDisableButtons}
-          >
-            <span>Mark as completed</span>
-          </LoadingButton>
+        <div className="mt-[2.19rem] w-full flex gap-2.5 bg-gray-light-3 py-5 px-6">
+          {isBooked && (
+            <LoadingButton
+              variant="tertiary"
+              className="gap-[0.5rem] flex items-center h-8"
+              type="submit"
+              isLoading={mutation.isPending}
+              disabled={isDisableButtons}
+              onClick={() => setActiveModal(ModalType.MARK_AS_COMPLETED)}
+            >
+              <span>Mark as completed</span>
+            </LoadingButton>
+          )}
 
-          <LoadingButton
-            variant="outline"
-            className="gap-[0.5rem] flex items-center h-8"
-            type="button"
-            onClick={() => setActiveModal(ModalType.MARK_AS_CANCELLED)}
-            isLoading={mutation.isPending}
-            disabled={isDisableButtons}
-          >
-            <span>Cancel meeting</span>
-          </LoadingButton>
+          {isAvailable && (
+            <LoadingButton
+              variant="tertiary"
+              className="gap-[0.5rem] flex items-center h-8"
+              type="submit"
+              isLoading={mutation.isPending}
+              onClick={() => setActiveModal(ModalType.DELETE_SLOT)}
+            >
+              <span>Delete slot</span>
+            </LoadingButton>
+          )}
+
+          {isAvailable && (
+            <LoadingButton
+              variant="outline"
+              className="gap-[0.5rem] flex items-center h-8"
+              type="submit"
+              isLoading={mutation.isPending}
+              onClick={handleEdit}
+            >
+              <span>Edit slot</span>
+            </LoadingButton>
+          )}
         </div>
       </Modal>
     </>

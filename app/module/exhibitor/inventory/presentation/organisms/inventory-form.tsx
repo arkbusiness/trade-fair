@@ -618,7 +618,7 @@ export const InventoryForm = ({ isReadOnly, inventory }: InventoryForm) => {
                       value={watchedAvailableFrom}
                       name="availableFrom"
                       label="From"
-                      className="rounded-[4px]"
+                      rootClassName="rounded-[4px]"
                       placeholderText="mm/dd/yyyy"
                       showTimeSelect={true}
                       max={watchedAvailableTo}
@@ -642,7 +642,7 @@ export const InventoryForm = ({ isReadOnly, inventory }: InventoryForm) => {
                       label="To"
                       showTimeSelect={true}
                       placeholderText="mm/dd/yyyy"
-                      className="rounded-[4px]"
+                      rootClassName="rounded-[4px]"
                       min={watchedAvailableFrom}
                       isDisabled={isReadOnly}
                       handleChange={({ value }) => {

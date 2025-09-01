@@ -1,18 +1,23 @@
 'use client';
 
-import { Pagination } from '@/app/core/shared/components/molecules';
+import { Spinner } from '@/app/core/shared/components/atoms';
+import {
+  OverlaySpinner,
+  Pagination
+} from '@/app/core/shared/components/molecules';
 import { useSetParams } from '@/app/core/shared/hooks';
+import { useState } from 'react';
 import { IAppointmentSlot, SlotStatus, useAppointmentSlot } from '../../hooks';
 import { AppointmentDetail, AppointmentItem } from '../molecules';
+import { AppointmentCreateSlotForm } from './appointment-create-slot-form';
 import { AppointmentsTabs } from './appointments-tabs';
-import { Spinner } from '@/app/core/shared/components/atoms';
-import { useState } from 'react';
+import { AppointmentUpdateSlotForm } from './appointment-update-slot-form';
 
 export const APPOINTMENT_STATUS_MAP = {
   [SlotStatus.AVAILABLE]: {
     label: 'Available',
     style: {
-      bg: 'bg-yellow-500',
+      bg: 'bg-yellow-700',
       text: 'text-white'
     }
   },
@@ -46,21 +51,39 @@ export const APPOINTMENT_STATUS_MAP = {
   }
 };
 
-const LIMIT = 5;
+enum ModalType {
+  CREATE_SLOT = 'CREATE_SLOT',
+  EDIT_SLOT = 'EDIT_SLOT',
+  VIEW_SLOT = 'VIEW_SLOT',
+  NONE = 'NONE'
+}
 
 export const AppointmentItems = () => {
+  const [activeModal, setActiveModal] = useState<ModalType>(ModalType.NONE);
   const [selectedAppointment, setSelectedAppointment] =
     useState<IAppointmentSlot | null>(null);
-  const { setMultipleParam, searchParamsObject } = useSetParams();
+  const { setMultipleParam, searchParamsObject, removeQueryParam } =
+    useSetParams();
 
-  const { slots, isLoadingAppointments, paginationMeta, refetchAppointments } =
-    useAppointmentSlot({
-      ...searchParamsObject,
-      page: searchParamsObject.page ?? '1',
-      limit: LIMIT.toString()
-    });
+  const appointmentsQuery = {
+    status: searchParamsObject.status ?? '',
+    today: searchParamsObject.today ?? '',
+    page: searchParamsObject.page ?? '1'
+  };
+
+  const {
+    slots,
+    isLoadingAppointments,
+    paginationMeta,
+    isRefetchingAppointments,
+    refetchAppointments
+  } = useAppointmentSlot({
+    ...appointmentsQuery
+  });
 
   const { page, total, pages: pagecount } = paginationMeta;
+
+  const isCreateSlot = searchParamsObject.createSlot === '1';
 
   const appointments = slots;
 
@@ -74,21 +97,43 @@ export const AppointmentItems = () => {
     window?.scrollTo({ top: 20, behavior: 'smooth' });
   };
 
-  const handleView = (appointment: IAppointmentSlot) => {
+  const handleViewSlot = (appointment: IAppointmentSlot) => {
+    setActiveModal(ModalType.VIEW_SLOT);
     setSelectedAppointment(appointment);
   };
 
   const handleClose = () => {
-    setSelectedAppointment(null);
     refetchAppointments();
+    setActiveModal(ModalType.NONE);
+    removeQueryParam('createSlot');
+    setSelectedAppointment(null);
+  };
+
+  const handleEdit = () => {
+    setSelectedAppointment(selectedAppointment);
+    setActiveModal(ModalType.EDIT_SLOT);
   };
 
   return (
     <>
-      <AppointmentDetail
-        isOpen={!!selectedAppointment}
+      {isRefetchingAppointments && <OverlaySpinner />}
+
+      <AppointmentCreateSlotForm
+        isOpen={isCreateSlot || activeModal === ModalType.CREATE_SLOT}
+        onClose={handleClose}
+      />
+
+      <AppointmentUpdateSlotForm
+        isOpen={activeModal === ModalType.EDIT_SLOT}
         appointment={selectedAppointment}
         onClose={handleClose}
+      />
+
+      <AppointmentDetail
+        isOpen={!!selectedAppointment && activeModal === ModalType.VIEW_SLOT}
+        appointment={selectedAppointment}
+        onClose={handleClose}
+        handleEdit={handleEdit}
       />
       <AppointmentsTabs
         totalAppointments={total}
@@ -101,7 +146,7 @@ export const AppointmentItems = () => {
       )}
       {!isLoadingAppointments && appointments && appointments?.length === 0 && (
         <div className="flex flex-col items-center justify-center py-8 text-center">
-          <p className="text-gray-500 text-lg">No appointments found</p>
+          <p className="text-gray-500 text-lg">No slots found</p>
         </div>
       )}
       <div className="flex flex-col gap-2">
@@ -109,7 +154,7 @@ export const AppointmentItems = () => {
           <AppointmentItem
             key={appointment.id}
             appointment={appointment}
-            handleView={handleView}
+            handleView={() => handleViewSlot(appointment)}
           />
         ))}
         <div className="flex justify-center mt-5">

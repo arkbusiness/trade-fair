@@ -35,6 +35,8 @@ interface AppointmentStats {
   completedCount: number;
 }
 
+export const APPOINTMENT_LIMIT = 5;
+
 export const useAppointmentSlot = (filter: Record<string, string> = {}) => {
   const {
     data: slots,
@@ -42,7 +44,10 @@ export const useAppointmentSlot = (filter: Record<string, string> = {}) => {
     isRefetching: isRefetchingAppointments,
     refetch
   } = useCustomQuery<IPaginatedResponse<IAppointmentSlot>>({
-    ...appointmentsService.getAppointmentSlots(filter)
+    ...appointmentsService.getAppointmentSlots({
+      ...filter,
+      limit: APPOINTMENT_LIMIT.toString()
+    })
   });
   return {
     slots: slots?.data ?? EMPTY_ARRAY,
