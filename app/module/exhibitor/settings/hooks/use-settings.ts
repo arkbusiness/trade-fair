@@ -34,3 +34,22 @@ export const useExhibitorBoothMembers = (
     refetchBoothMembers: refetch
   };
 };
+
+export const useInvoiceTemplateById = (id: string) => {
+  const {
+    data: invoiceTemplate,
+    isLoading: isLoadingInvoiceTemplate,
+    isRefetching: isRefetchingInvoiceTemplate,
+    refetch
+  } = useCustomQuery<IPaginatedResponse<IExhibitorBoothMembers>>({
+    ...exhibitorSettingsService.getInvoiceTemplateById(id)
+  });
+
+  return {
+    invoiceTemplate: invoiceTemplate?.data ?? EMPTY_ARRAY,
+    isLoadingInvoiceTemplate,
+    isRefetchingInvoiceTemplate,
+    paginationMeta: extractPaginationMeta(invoiceTemplate),
+    refetchInvoiceTemplate: refetch
+  };
+};

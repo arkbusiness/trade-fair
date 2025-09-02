@@ -16,6 +16,7 @@ import {
   DataTable,
   TableSearchInput
 } from '@/app/core/shared/components/molecules';
+import { EXHIBITOR_APP_ROUTES } from '@/app/core/shared/constants';
 import {
   useQueryFilters,
   useTable,
@@ -27,13 +28,12 @@ import { errorHandler, formatCurrency } from '@/app/core/shared/utils';
 import { ColumnDef } from '@tanstack/react-table';
 import { MoreHorizontal } from 'lucide-react';
 import Image from 'next/image';
+import { useRouter } from 'nextjs-toploader/app';
 import { useState } from 'react';
 import toast from 'react-hot-toast';
 import { Inventory, useInventory } from '../../hooks';
 import { inventoryService } from '../../services';
 import { InventoryTableFilter } from '../molecules';
-import { useRouter } from 'nextjs-toploader/app';
-import { EXHIBITOR_APP_ROUTES } from '@/app/core/shared/constants';
 
 enum ModalType {
   NONE = 'NONE',

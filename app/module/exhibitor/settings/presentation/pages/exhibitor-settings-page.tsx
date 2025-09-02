@@ -13,6 +13,7 @@ import {
   ExhibitorBoothMembers,
   ExhibitorBusinessInfoForm,
   ExhibitorChangePasswordForm,
+  ExhibitorInvoiceInfoForm,
   ExhibitorProfileForm
 } from '../organisms';
 
@@ -109,6 +110,14 @@ export const ExhibitorSettingsPage = () => {
         >
           <div className="mt-1">
             <ExhibitorBoothMembers />
+          </div>
+        </TabsContent>
+        <TabsContent
+          value={ExhibitorSettingsPageEnum.INVOICE_INFORMATION}
+          className="p-0 md:px-3 m-0"
+        >
+          <div className="mt-1">
+            <ExhibitorInvoiceInfoForm />
           </div>
         </TabsContent>
       </Tabs>

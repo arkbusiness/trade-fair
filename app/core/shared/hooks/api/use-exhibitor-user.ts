@@ -6,6 +6,7 @@ import { useQuery } from '@tanstack/react-query';
 import { AxiosError } from 'axios';
 import { clientAxios } from '../../lib';
 import { exhibitorUserService } from '../../services';
+import { DEFAULT_CURRENCY } from '../../constants';
 
 export const useExhibitorUser = () => {
   const { accessToken, handleLogOut } = useExhibitorAuthStore();
@@ -51,6 +52,7 @@ export const useExhibitorUser = () => {
 
   return {
     user,
+    currency: user?.currency || DEFAULT_CURRENCY,
     isLoadingUser,
     refetchUser,
     ...queryMeta

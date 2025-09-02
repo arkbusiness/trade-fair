@@ -11,6 +11,12 @@ export const exhibitorSettingsService = {
       queryKey: ['exhibitor-booth-members', queryParams]
     };
   },
+  getInvoiceTemplateById: (id: string) => {
+    return {
+      url: `/exhibitor/templates/${id}`,
+      queryKey: ['exhibitor-invoice-template', id]
+    };
+  },
   deleteBoothMember: (id: string) => {
     return {
       url: `/exhibitor/users/${id}`,
@@ -27,7 +33,30 @@ export const exhibitorSettingsService = {
       data
     };
   },
-
+  createInvoiceTemplate: (data: {
+    additionalInformation?: string;
+  }): AxiosRequestConfig => {
+    return {
+      url: `/exhibitor/invoice-template`,
+      method: 'POST',
+      data,
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      }
+    };
+  },
+  updateInvoiceTemplate: (
+    id: string,
+    data: {
+      additionalInformation?: string;
+    }
+  ): AxiosRequestConfig => {
+    return {
+      url: `/exhibitor/templates/${id}`,
+      method: 'PATCH',
+      data
+    };
+  },
   updateBusinessInfo: (data: {
     boothName?: string;
     standNumber?: string;

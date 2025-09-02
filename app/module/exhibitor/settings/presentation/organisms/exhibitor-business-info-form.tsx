@@ -97,7 +97,7 @@ export const ExhibitorBusinessInfoForm = () => {
         </div>
       </div>
       <fieldset
-        className="w-full px-8 flex flex-col gap-6 mt-6"
+        className="w-full px-3 flex flex-col gap-6 mt-6"
         disabled={mutation.isPending}
       >
         <div className="flex flex-col gap-1 items-center">
@@ -265,7 +265,8 @@ export const ExhibitorBusinessInfoForm = () => {
             <div className="max-w-[32rem] w-full">
               <Textarea
                 label="Description"
-                placeholder="Enter product description"
+                labelClassName="md:hidden"
+                placeholder="Enter description"
                 rows={8}
                 {...register('publicDescription')}
               />

@@ -9,12 +9,15 @@ import {
 import { Bar, BarChart, XAxis, YAxis } from 'recharts';
 import { useExhibitorOverview } from '../../hooks';
 import { formatCurrency } from '@/app/core/shared/utils';
+import { useExhibitorUser } from '@/app/core/shared/hooks/api/use-exhibitor-user';
 
-const CurrencyFormatter = (value: number) => {
-  return formatCurrency({ amount: value, currency: 'NGN' });
+const currencyFormatter = (value: number, currency: string) => {
+  return formatCurrency({ amount: value, currency });
 };
 
 export const ExhibitorOverviewChart = () => {
+  const { currency } = useExhibitorUser();
+
   const { overviewStats, isLoadingOverviewStats, isRefetchingOverviewStats } =
     useExhibitorOverview();
 
@@ -54,7 +57,7 @@ export const ExhibitorOverviewChart = () => {
           <h3 className="text-foreground font-semibold text-xl">
             {formatCurrency({
               amount: totalAmount,
-              currency: 'NGN',
+              currency,
               compactThreshold: 0
             })}
           </h3>
@@ -62,7 +65,7 @@ export const ExhibitorOverviewChart = () => {
             <span className="text-green-600 font-semibold">
               {formatCurrency({
                 amount: orderComparison.difference,
-                currency: 'NGN',
+                currency,
                 compactThreshold: 0
               })}
             </span>
@@ -83,7 +86,7 @@ export const ExhibitorOverviewChart = () => {
               />
 
               <YAxis
-                tickFormatter={CurrencyFormatter}
+                tickFormatter={(value) => currencyFormatter(value, currency)}
                 tick={{ fontSize: 12 }}
                 domain={[0, 'dataMax']}
                 scale="linear"
@@ -91,7 +94,7 @@ export const ExhibitorOverviewChart = () => {
               <ChartTooltip
                 content={<ChartTooltipContent />}
                 formatter={(value) => {
-                  return `Amount: ${formatCurrency({ amount: (value as number) ?? 0, currency: 'NGN', compactThreshold: 0 })}`;
+                  return `Amount: ${formatCurrency({ amount: (value as number) ?? 0, currency, compactThreshold: 0 })}`;
                 }}
               />
 
