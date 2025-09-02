@@ -10,6 +10,7 @@ import { useSetParams } from '@/app/core/shared/hooks';
 import { ExhibitorSettingsPageEnum } from '@/app/core/shared/types';
 import { useEffect, useState } from 'react';
 import {
+  ExhibitorBoothMembers,
   ExhibitorBusinessInfoForm,
   ExhibitorChangePasswordForm,
   ExhibitorProfileForm
@@ -100,6 +101,14 @@ export const ExhibitorSettingsPage = () => {
         >
           <div className="mt-1">
             <ExhibitorChangePasswordForm />
+          </div>
+        </TabsContent>
+        <TabsContent
+          value={ExhibitorSettingsPageEnum.BOOTH_MEMBERS}
+          className="p-0 md:px-3 m-0"
+        >
+          <div className="mt-1">
+            <ExhibitorBoothMembers />
           </div>
         </TabsContent>
       </Tabs>
