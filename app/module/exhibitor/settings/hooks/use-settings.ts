@@ -14,6 +14,14 @@ export interface IExhibitorBoothMembers {
   createdAt: string;
 }
 
+export interface InvoiceTemplate {
+  id: string;
+  exhibitorId: string;
+  htmlTemplate: string | null;
+  createdAt: string;
+  additionalInformation: string;
+}
+
 export const useExhibitorBoothMembers = (
   filter: Record<string, string> = {}
 ) => {
@@ -35,21 +43,22 @@ export const useExhibitorBoothMembers = (
   };
 };
 
-export const useInvoiceTemplateById = (id: string) => {
+export const useInvoiceTemplates = () => {
   const {
     data: invoiceTemplate,
-    isLoading: isLoadingInvoiceTemplate,
-    isRefetching: isRefetchingInvoiceTemplate,
+    isLoading: isLoadingInvoiceTemplates,
+    isRefetching: isRefetchingInvoiceTemplates,
     refetch
-  } = useCustomQuery<IPaginatedResponse<IExhibitorBoothMembers>>({
-    ...exhibitorSettingsService.getInvoiceTemplateById(id)
+  } = useCustomQuery<IPaginatedResponse<InvoiceTemplate>>({
+    ...exhibitorSettingsService.getInvoiceTemplates()
   });
 
   return {
-    invoiceTemplate: invoiceTemplate?.data ?? EMPTY_ARRAY,
-    isLoadingInvoiceTemplate,
-    isRefetchingInvoiceTemplate,
-    paginationMeta: extractPaginationMeta(invoiceTemplate),
-    refetchInvoiceTemplate: refetch
+    invoiceTemplates: invoiceTemplate?.data
+      ? invoiceTemplate?.data?.[0]
+      : undefined,
+    isLoadingInvoiceTemplates,
+    isRefetchingInvoiceTemplates,
+    refetchInvoiceTemplates: refetch
   };
 };

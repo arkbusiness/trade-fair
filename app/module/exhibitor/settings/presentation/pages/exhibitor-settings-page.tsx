@@ -64,13 +64,13 @@ export const ExhibitorSettingsPage = () => {
         defaultValue={selectedTab}
         className="flex w-full flex-col justify-start gap-6"
       >
-        <TabsList className="flex bg-transparent h-[2.7rem] px-[1rem] py-0  gap-x-4 border-b-1 border-b-input rounded-none w-full justify-start">
+        <TabsList className="flex bg-transparent h-auto min-[50.63rem]:h-[2.7rem] px-[1rem] py-0  gap-x-4 border-b-1 border-b-input rounded-none w-full justify-start overflow-x-auto overflow-y-hidden">
           {TABS_ITEMS.map((tab) => {
             return (
               <TabsTrigger
                 value={tab.value}
                 key={tab.label}
-                className="px-[10px] cursor-pointer border-b rounded-none bg-transparent data-[state=active]:rounded-none data-[state=active]:bg-transparent data-[state=active]:border-b-tertiary data-[state=active]:border-3 data-[state=active]:text-tertiary  data-[state=active]:shadow-none self-start max-w-min w-full py-4.5"
+                className="px-[10px] cursor-pointer border-b  data-[state=active]:text-background   data-[state=active]:min-[50.63rem]:text-tertiary data-[state=active]:bg-destructive  data-[state=active]:min-[50.63rem]:bg-transparent data-[state=active]:min-[50.63rem]:rounded-none data-[state=active]:min-[50.63rem]:border-b-tertiary data-[state=active]:min-[50.63rem]:border-3   data-[state=active]:shadow-none self-start max-w-min w-full py-3 min-[50.63rem]:py-4.5"
                 onClick={() => handleSelectedTab(tab.value)}
               >
                 <span>{tab.label}</span>

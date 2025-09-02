@@ -11,10 +11,10 @@ export const exhibitorSettingsService = {
       queryKey: ['exhibitor-booth-members', queryParams]
     };
   },
-  getInvoiceTemplateById: (id: string) => {
+  getInvoiceTemplates: () => {
     return {
-      url: `/exhibitor/templates/${id}`,
-      queryKey: ['exhibitor-invoice-template', id]
+      url: `/exhibitor/templates`,
+      queryKey: ['exhibitor-templates']
     };
   },
   deleteBoothMember: (id: string) => {

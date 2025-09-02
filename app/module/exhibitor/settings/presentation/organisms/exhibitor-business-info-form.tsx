@@ -5,6 +5,7 @@ import {
   LoadingButton,
   ProfileImageUploader
 } from '@/app/core/shared/components/molecules';
+import { COUNTRY_DETAILS } from '@/app/core/shared/constants';
 import { useExhibitorUser } from '@/app/core/shared/hooks/api/use-exhibitor-user';
 import { useCustomMutation } from '@/app/core/shared/hooks/use-mutate';
 import { errorHandler } from '@/app/core/shared/utils';
@@ -13,7 +14,6 @@ import { useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import * as yup from 'yup';
 import { exhibitorSettingsService } from '../../services';
-import { COUNTRY_DETAILS } from '@/app/core/shared/constants';
 
 const validationSchema = yup.object().shape({
   publicDescription: yup.string(),
