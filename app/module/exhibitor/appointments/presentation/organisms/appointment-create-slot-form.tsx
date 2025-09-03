@@ -19,6 +19,7 @@ import { useFieldArray, useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import * as yup from 'yup';
 import { appointmentsService } from '../../services/appointments.service';
+import { useAppointmentEvent } from '../../hooks';
 
 interface AppointmentSlotFormProps {
   isOpen: boolean;
@@ -58,6 +59,9 @@ export const AppointmentCreateSlotForm = ({
   isOpen,
   onClose
 }: AppointmentSlotFormProps) => {
+  const { eventStartDate, eventEndDate, isLoadingAppointmentEvent } =
+    useAppointmentEvent();
+
   const mutation = useCustomMutation();
   const form = useForm<AppointmentSlotFormValues>({
     values: {
@@ -162,7 +166,10 @@ export const AppointmentCreateSlotForm = ({
                         showTimeSelect
                         timeIntervals={5}
                         inputClassName="text-xs!"
-                        isDisabled={mutation.isPending}
+                        min={eventStartDate}
+                        isDisabled={
+                          mutation.isPending || isLoadingAppointmentEvent
+                        }
                         handleChange={({ value }) => {
                           setValue(`slots.${index}.startDate`, value as Date, {
                             shouldValidate: true,
@@ -184,7 +191,10 @@ export const AppointmentCreateSlotForm = ({
                         showTimeSelect
                         timeIntervals={5}
                         inputClassName="text-xs!"
-                        isDisabled={mutation.isPending}
+                        isDisabled={
+                          mutation.isPending || isLoadingAppointmentEvent
+                        }
+                        max={eventEndDate}
                         handleChange={({ value }) => {
                           setValue(`slots.${index}.endDate`, value as Date, {
                             shouldValidate: true,
@@ -222,7 +232,7 @@ export const AppointmentCreateSlotForm = ({
               onClick={handleAddNewItem}
               variant="outline"
               type="button"
-              disabled={mutation.isPending}
+              disabled={mutation.isPending || isLoadingAppointmentEvent}
               className="text-foreground h-[33px]"
             >
               <span>Add slot</span>
@@ -237,7 +247,7 @@ export const AppointmentCreateSlotForm = ({
             className="gap-[0.5rem] flex items-center h-8"
             type="button"
             onClick={handleCloseModal}
-            disabled={mutation.isPending}
+            disabled={mutation.isPending || isLoadingAppointmentEvent}
           >
             <span>Cancel</span>
           </Button>
@@ -247,7 +257,7 @@ export const AppointmentCreateSlotForm = ({
             className="gap-[0.5rem] flex items-center h-8"
             type="submit"
             isLoading={mutation.isPending}
-            disabled={mutation.isPending}
+            disabled={mutation.isPending || isLoadingAppointmentEvent}
           >
             <span>Save changes</span>
           </LoadingButton>

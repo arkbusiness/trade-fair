@@ -12,6 +12,12 @@ export const appointmentsService = {
       queryKey: ['exhibitor-appointments', queryParams]
     };
   },
+  getEvent: () => {
+    return {
+      url: `/exhibitor/organizer-event-info`,
+      queryKey: ['exhibitor-event-info']
+    };
+  },
   getStats: () => {
     return {
       url: `/exhibitor/appointments/dashboard`,

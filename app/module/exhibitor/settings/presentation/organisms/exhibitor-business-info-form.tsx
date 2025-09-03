@@ -1,9 +1,11 @@
 import { ErrorText, Input, Textarea } from '@/app/core/shared/components/atoms';
 import {
   CountrySelector,
+  CurrencySelector,
   LoadingButton,
   ProfileImageUploader
 } from '@/app/core/shared/components/molecules';
+import { COUNTRY_DETAILS } from '@/app/core/shared/constants';
 import { useExhibitorUser } from '@/app/core/shared/hooks/api/use-exhibitor-user';
 import { useCustomMutation } from '@/app/core/shared/hooks/use-mutate';
 import { errorHandler } from '@/app/core/shared/utils';
@@ -17,6 +19,7 @@ const validationSchema = yup.object().shape({
   publicDescription: yup.string(),
   companyName: yup.string().trim(),
   country: yup.string().trim(),
+  currency: yup.string().trim(),
   websiteUrl: yup.string().url('Invalid URL'),
   file: yup.mixed().nullable()
 });
@@ -38,6 +41,7 @@ export const ExhibitorBusinessInfoForm = () => {
       publicDescription: user?.publicDescription ?? '',
       companyName: user?.companyName ?? '',
       country: user?.country ?? '',
+      currency: user?.currency ?? '',
       websiteUrl: user?.websiteUrl ?? ''
     },
     resolver: yupResolver(validationSchema)
@@ -45,10 +49,11 @@ export const ExhibitorBusinessInfoForm = () => {
 
   const onSubmit = (data: IExhibitorBusinessInfoFormValues) => {
     const formValues = {
-      publicDescription: data.publicDescription ?? '',
-      websiteUrl: data.websiteUrl ?? '',
-      companyName: data.companyName ?? '',
-      country: data.country ?? '',
+      publicDescription: data.publicDescription || '',
+      websiteUrl: data.websiteUrl || '',
+      companyName: data.companyName || '',
+      country: data.country || null,
+      currency: data.currency || null,
       file: data.file as File | null
     };
 
@@ -64,6 +69,7 @@ export const ExhibitorBusinessInfoForm = () => {
     });
   };
 
+  const watchedCurrency = watch('currency') ?? '';
   const watchedCountry = watch('country') ?? '';
 
   return (
@@ -91,7 +97,7 @@ export const ExhibitorBusinessInfoForm = () => {
         </div>
       </div>
       <fieldset
-        className="w-full px-8 flex flex-col gap-6 mt-6"
+        className="w-full px-3 flex flex-col gap-6 mt-6"
         disabled={mutation.isPending}
       >
         <div className="flex flex-col gap-1 items-center">
@@ -186,6 +192,16 @@ export const ExhibitorBusinessInfoForm = () => {
               value={watchedCountry}
               onChange={(value) => {
                 if (value) {
+                  const country = value.toLowerCase();
+                  const countryDetails =
+                    COUNTRY_DETAILS[country as keyof typeof COUNTRY_DETAILS];
+
+                  if (countryDetails && countryDetails.currency) {
+                    setValue('currency', countryDetails.currency, {
+                      shouldValidate: true
+                    });
+                  }
+
                   setValue('country', value, {
                     shouldValidate: true
                   });
@@ -193,6 +209,29 @@ export const ExhibitorBusinessInfoForm = () => {
               }}
               hasError={!!errors.country?.message?.length}
               label="Country"
+            />
+          </div>
+        </div>
+
+        {/* Currency */}
+        <div className="grid md:grid-cols-[12.5rem_1fr] gap-x-8 w-full py-6 border-y">
+          <div className="hidden md:block">
+            <p className="text-sm font-semibold">Currency</p>
+          </div>
+          <div className="max-w-[32rem] w-full">
+            <CurrencySelector
+              name="currency"
+              labelClassName="md:hidden"
+              value={watchedCurrency}
+              onChange={(value) => {
+                if (value) {
+                  setValue('currency', value, {
+                    shouldValidate: true
+                  });
+                }
+              }}
+              hasError={!!errors.currency?.message?.length}
+              label="Currency"
             />
           </div>
         </div>
@@ -226,7 +265,8 @@ export const ExhibitorBusinessInfoForm = () => {
             <div className="max-w-[32rem] w-full">
               <Textarea
                 label="Description"
-                placeholder="Enter product description"
+                labelClassName="md:hidden"
+                placeholder="Enter description"
                 rows={8}
                 {...register('publicDescription')}
               />

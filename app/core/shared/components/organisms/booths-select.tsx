@@ -74,9 +74,7 @@ export const BoothsSelect = ({
         label="Booth"
         placeholder="Select booth"
         value={watchedValue}
-        getOptionLabel={(option) =>
-          `${option?.number}(${option?.status} - ${option?.categoryName})`
-        }
+        getOptionLabel={(option) => `${option?.number}(${option?.status})`}
         getOptionValue={(option) => option?.id?.toString()}
         hasError={!!boothsError?.length}
         loadOptions={loadOptions as never}

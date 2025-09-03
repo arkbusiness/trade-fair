@@ -17,9 +17,10 @@ import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { Bar, BarChart, XAxis, YAxis } from 'recharts';
 import { useOrganizerOverview } from '../../hooks';
+import { DEFAULT_CURRENCY } from '@/app/core/shared/constants';
 
-const CurrencyFormatter = (value: number) => {
-  return formatCurrency({ amount: value, currency: 'NGN' });
+const currencyFormatter = (value: number, currency: string) => {
+  return formatCurrency({ amount: value, currency });
 };
 
 export const OrganizerRevenueChart = () => {
@@ -129,7 +130,9 @@ export const OrganizerRevenueChart = () => {
                   />
 
                   <YAxis
-                    tickFormatter={CurrencyFormatter}
+                    tickFormatter={(value) =>
+                      currencyFormatter(value, DEFAULT_CURRENCY)
+                    }
                     tick={{ fontSize: 12 }}
                     domain={[0, 'dataMax']}
                     scale="linear"

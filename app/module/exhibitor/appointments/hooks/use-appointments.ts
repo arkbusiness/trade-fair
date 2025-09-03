@@ -1,10 +1,11 @@
+import { EMPTY_ARRAY } from '@/app/core/shared/constants';
 import { useCustomQuery } from '@/app/core/shared/hooks';
-import { appointmentsService } from '../services/appointments.service';
+import { IPaginatedResponse } from '@/app/core/shared/types';
+import { extractPaginationMeta } from '@/app/core/shared/utils';
 import { IAttendee } from '@/app/module/organizer/attendees/hooks';
 import { IExhibitor } from '@/app/module/organizer/exhibitors/hooks';
-import { extractPaginationMeta } from '@/app/core/shared/utils';
-import { EMPTY_ARRAY } from '@/app/core/shared/constants';
-import { IPaginatedResponse } from '@/app/core/shared/types';
+import { appointmentsService } from '../services/appointments.service';
+import { isAfter } from 'date-fns';
 
 export enum SlotStatus {
   AVAILABLE = 'AVAILABLE',
@@ -33,6 +34,13 @@ interface AppointmentStats {
   waitlistedCount: number;
   cancelledCount: number;
   completedCount: number;
+}
+
+export interface IAppointmentEvent {
+  eventName: string;
+  eventStartDate: string;
+  eventEndDate: string;
+  venueName: string;
 }
 
 export const APPOINTMENT_LIMIT = 5;
@@ -73,5 +81,34 @@ export const useAppointmentsStats = () => {
     isLoadingAppointmentsStats,
     isRefetchingAppointmentsStats,
     refetchAppointmentsStats: refetch
+  };
+};
+
+export const useAppointmentEvent = () => {
+  const {
+    data,
+    isLoading: isLoadingAppointmentEvent,
+    isRefetching: isRefetchingAppointmentEvent,
+    refetch
+  } = useCustomQuery<IAppointmentEvent>({
+    ...appointmentsService.getEvent()
+  });
+
+  const isEventExpired = data ? isAfter(new Date(), data?.eventEndDate) : false;
+
+  return {
+    event: data,
+    eventStartDate:
+      !isEventExpired && data?.eventStartDate
+        ? new Date(data.eventStartDate)
+        : undefined,
+    eventEndDate:
+      !isEventExpired && data?.eventEndDate
+        ? new Date(data.eventEndDate)
+        : undefined,
+    isEventExpired,
+    isLoadingAppointmentEvent,
+    isRefetchingAppointmentEvent,
+    refetchAppointmentEvent: refetch
   };
 };

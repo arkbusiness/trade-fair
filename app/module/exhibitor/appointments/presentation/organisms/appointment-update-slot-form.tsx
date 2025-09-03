@@ -13,7 +13,7 @@ import { formatISO } from 'date-fns';
 import { useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import * as yup from 'yup';
-import { IAppointmentSlot } from '../../hooks';
+import { IAppointmentSlot, useAppointmentEvent } from '../../hooks';
 import { appointmentsService } from '../../services/appointments.service';
 
 interface AppointmentSlotFormProps {
@@ -48,6 +48,9 @@ export const AppointmentUpdateSlotForm = ({
   appointment,
   onClose
 }: AppointmentSlotFormProps) => {
+  const { eventStartDate, eventEndDate, isLoadingAppointmentEvent } =
+    useAppointmentEvent();
+
   const mutation = useCustomMutation();
   const form = useForm<AppointmentSlotFormValues>({
     values: {
@@ -130,7 +133,8 @@ export const AppointmentUpdateSlotForm = ({
                 showTimeSelect
                 timeIntervals={5}
                 inputClassName="text-xs!"
-                isDisabled={mutation.isPending}
+                isDisabled={mutation.isPending || isLoadingAppointmentEvent}
+                min={eventStartDate}
                 handleChange={({ value }) => {
                   setValue('startDate', value as Date, {
                     shouldValidate: true,
@@ -152,7 +156,8 @@ export const AppointmentUpdateSlotForm = ({
                 showTimeSelect
                 timeIntervals={5}
                 inputClassName="text-xs!"
-                isDisabled={mutation.isPending}
+                max={eventEndDate}
+                isDisabled={mutation.isPending || isLoadingAppointmentEvent}
                 handleChange={({ value }) => {
                   setValue('endDate', value as Date, {
                     shouldValidate: true,
@@ -172,7 +177,7 @@ export const AppointmentUpdateSlotForm = ({
             className="gap-[0.5rem] flex items-center h-8"
             type="button"
             onClick={handleCloseModal}
-            disabled={mutation.isPending}
+            disabled={mutation.isPending || isLoadingAppointmentEvent}
           >
             <span>Cancel</span>
           </Button>
@@ -182,7 +187,7 @@ export const AppointmentUpdateSlotForm = ({
             className="gap-[0.5rem] flex items-center h-8"
             type="submit"
             isLoading={mutation.isPending}
-            disabled={mutation.isPending}
+            disabled={mutation.isPending || isLoadingAppointmentEvent}
           >
             <span>Save changes</span>
           </LoadingButton>

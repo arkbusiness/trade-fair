@@ -25,6 +25,7 @@ export interface IExhibitorAuthUser {
   fcmToken: string | null;
   deactivated: boolean;
   country: string | null;
+  currency: string | null;
   organizeId: string | null;
   invitedId: string;
 }

@@ -7,6 +7,7 @@ import {
   Skeleton
 } from '@/app/core/shared/components/atoms';
 import { DEFAULT_CURRENCY } from '@/app/core/shared/constants';
+import { useExhibitorUser } from '@/app/core/shared/hooks/api/use-exhibitor-user';
 import { formatCurrency } from '@/app/core/shared/utils';
 import { ShoppingCart, Users, Wallet } from 'lucide-react';
 
@@ -23,15 +24,16 @@ export const ExhibitorOrdersStat = ({
   invoiceRequested = 0,
   totalCustomers = 0
 }: ExhibitorOrdersStatProps) => {
-  //TODO: USE CURRENCY FROM PROFILE
-  const totalSaleValue = totalSale?.[DEFAULT_CURRENCY as string] ?? 0;
+  const { user } = useExhibitorUser();
+  const currency = user?.currency || DEFAULT_CURRENCY;
+  const totalSaleValue = totalSale?.[currency as string] ?? 0;
 
   const STATS = [
     {
       title: 'Total Sales',
       value: formatCurrency({
         amount: totalSaleValue,
-        currency: DEFAULT_CURRENCY
+        currency: currency
       }),
       icon: (
         <div className="w-6 h-6 rounded-[2px] flex items-center justify-center bg-[#DCF2E6] text-foreground/60">

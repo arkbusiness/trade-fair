@@ -74,10 +74,10 @@ export const DatePicker = <T extends FieldValues>({
             dateFormat={format}
             showTimeSelect={showTimeSelect}
             timeIntervals={timeIntervals}
-            className={cn('h-full', inputClassName)}
+            className={cn('h-full min-h-9.5!', inputClassName)}
           />
         </div>
-        <div className="w-10 flex h-full  justify-center items-center border-l border-border">
+        <div className="w-10 flex h-full justify-center items-center border-l border-border">
           <CalendarIcon size={16} />
         </div>
       </div>

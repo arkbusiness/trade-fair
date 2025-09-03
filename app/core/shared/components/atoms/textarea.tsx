@@ -3,16 +3,20 @@ import { cn } from '../../utils';
 
 interface InputProps extends React.ComponentProps<'textarea'> {
   label?: string;
+  labelClassName?: string;
   hasError?: boolean;
 }
 
 const Textarea = forwardRef<HTMLTextAreaElement, InputProps>(
-  ({ className, hasError, ...props }, ref) => {
+  ({ className, hasError, labelClassName, ...props }, ref) => {
     const { name, label } = props;
     return (
       <div className="flex flex-col gap-[0.5rem] w-full">
         {label && (
-          <label htmlFor={name} className="text-[0.75rem] font-medium">
+          <label
+            htmlFor={name}
+            className={cn('text-[0.75rem] font-medium', labelClassName)}
+          >
             {label}
           </label>
         )}
