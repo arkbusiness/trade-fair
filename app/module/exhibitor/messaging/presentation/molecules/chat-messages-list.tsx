@@ -95,7 +95,9 @@ export const ChatMessagesList = () => {
               message={msg.content}
               timestamp={msg.createdAt}
               isOwn={isOwn}
-              senderName={!isOwn ? attendee?.name : undefined}
+              attendeeName={!isOwn ? attendee?.name : undefined}
+              ownerAvatar={user?.logoUrl ?? ''}
+              attendeeAvatar={attendee?.avatar}
             />
           );
         })}
