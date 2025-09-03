@@ -38,6 +38,7 @@ export const ChatPreview = () => {
           id={chatPreview.attendeeId}
           avatar={chatPreview?.attendeeLogoUrl ?? ''}
           name={chatPreview.attendeeName}
+          // TODO: LOOK INTO THIS(IT should display the latest message)
           message={chatPreview.messages[0].content}
           // date={chatPreview.messages[0].createdAt}
           handleSelect={() => handleSelect(chatPreview.attendeeId)}
