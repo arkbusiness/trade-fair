@@ -18,6 +18,7 @@ interface TableTabsProps {
   showCount?: boolean;
   children?: React.ReactNode;
   selectedValue?: string;
+  variant?: 'default' | 'chat';
   handleSelectedTab(value: IBorderTabItem): void;
 }
 
@@ -32,8 +33,18 @@ export const BorderTab = ({
   defaultValue,
   selectedValue,
   showCount = false,
+  variant = 'default',
   handleSelectedTab
 }: TableTabsProps) => {
+  const isDefaultVariant = variant === 'default';
+
+  const renderCountLabel = (count: number) => {
+    if (variant === 'chat') {
+      return `(${count || 0})`;
+    }
+    return count || 0;
+  };
+
   return (
     <Tabs
       defaultValue={defaultValue}
@@ -87,11 +98,13 @@ export const BorderTab = ({
                         'flex items-center justify-center w-[26px] h-[26px] rounded-[4px] text-[10px] font-semibold bg-gray-light-4 text-foreground',
                         {
                           'bg-tertiary text-background':
-                            tab.value === selectedValue
+                            tab.value === selectedValue && isDefaultVariant,
+                          'text-tertiary w-auto h-auto text-xs':
+                            tab.value === selectedValue && !isDefaultVariant
                         }
                       )}
                     >
-                      {tab?.count || 0}
+                      {renderCountLabel(tab?.count)}
                     </span>
                   )}
                 </TabsTrigger>
