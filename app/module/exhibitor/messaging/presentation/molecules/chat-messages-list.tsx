@@ -2,27 +2,28 @@
 
 import { useEffect, useRef } from 'react';
 import { ChatMessageBubble } from '../atoms';
+import { useInView } from 'react-intersection-observer';
+import { useAttendeeMessages } from '../../hooks/use-messages';
+import { useExhibitorUser } from '@/app/core/shared/hooks/api/use-exhibitor-user';
+import { useSetParams } from '@/app/core/shared/hooks';
+import { Spinner } from '@/app/core/shared/components/atoms';
 
-interface Message {
-  id: string;
-  content: string;
-  timestamp: string;
-  senderId: string;
-  senderName: string;
-  isOwn: boolean;
-}
+export const ChatMessagesList = () => {
+  const { searchParamsObject } = useSetParams();
+  const { user } = useExhibitorUser();
 
-interface ChatMessagesListProps {
-  messages: Message[];
-  currentUserId: string;
-}
+  const attendeeId = searchParamsObject?.['attendeeId'] ?? '';
 
-export const ChatMessagesList = ({
-  messages,
-  currentUserId
-}: ChatMessagesListProps) => {
-  //TODO: REMOV
-  console.log(currentUserId);
+  const {
+    messages,
+    attendee,
+    handleFetchNextPage,
+    handleFetchPreviousPage,
+    isLoading
+  } = useAttendeeMessages(attendeeId);
+  const { ref: endRef, inView: endInView } = useInView();
+  const { ref: startRef, inView: startInView } = useInView();
+
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const scrollToBottom = () => {
@@ -33,7 +34,21 @@ export const ChatMessagesList = ({
     scrollToBottom();
   }, [messages]);
 
-  if (messages.length === 0) {
+  useEffect(() => {
+    if (endInView) {
+      console.log({ end: 'Ending' });
+      handleFetchNextPage();
+    }
+  }, [endInView, handleFetchNextPage]);
+
+  useEffect(() => {
+    if (startInView) {
+      console.log({ start: 'Starting' });
+      handleFetchPreviousPage();
+    }
+  }, [startInView, handleFetchPreviousPage]);
+
+  if (!isLoading && messages?.length === 0) {
     return (
       <div className="flex-1 flex items-center justify-center p-8">
         <div className="text-center">
@@ -63,19 +78,31 @@ export const ChatMessagesList = ({
   }
 
   return (
-    <div className="flex-1 overflow-y-auto p-4 bg-gray-50">
+    <div className="flex-1 overflow-y-auto p-4 bg-gray-50 relative">
+      <div ref={startRef} />
+      {isLoading && (
+        <div className="flex items-center justify-center h-full absolute top-0 left-0 w-full bg-white/70">
+          <Spinner />
+        </div>
+      )}
       <div className="space-y-1">
-        {messages.map((message) => (
-          <ChatMessageBubble
-            key={message.id}
-            message={message.content}
-            timestamp={message.timestamp}
-            isOwn={message.isOwn}
-            senderName={!message.isOwn ? message.senderName : undefined}
-          />
-        ))}
+        {messages?.map((msg) => {
+          const isOwn = msg.senderId === user?.id;
+
+          return (
+            <ChatMessageBubble
+              key={msg.id}
+              message={msg.content}
+              timestamp={msg.createdAt}
+              isOwn={isOwn}
+              senderName={!isOwn ? attendee?.name : undefined}
+            />
+          );
+        })}
       </div>
+
       <div ref={messagesEndRef} />
+      <div ref={endRef} />
     </div>
   );
 };

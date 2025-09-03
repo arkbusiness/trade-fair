@@ -28,8 +28,6 @@ export const ChatTabs = () => {
     setParam('chat', value);
   };
 
-  console.log(searchParamsObject);
-
   return (
     <div>
       <BorderTab

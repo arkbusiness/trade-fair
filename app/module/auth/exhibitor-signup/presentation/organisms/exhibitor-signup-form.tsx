@@ -311,8 +311,8 @@ export const ExhibitorSignupForm = () => {
             <div>
               <CurrencySelector
                 name="currency"
-                labelClassName="md:hidden"
                 value={watchedCurrency}
+                isDisabled={!!watchedCountry}
                 onChange={(value) => {
                   if (value) {
                     setValue('currency', value, {

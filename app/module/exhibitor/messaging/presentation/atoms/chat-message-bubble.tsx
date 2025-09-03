@@ -38,7 +38,7 @@ export const ChatMessageBubble = ({
         {!isOwn && senderName && (
           <p className="text-xs font-medium text-gray-600 mb-1">{senderName}</p>
         )}
-        <p className="text-sm">{message}</p>
+        <p className="text-sm px-2 whitespace-normal break-words">{message}</p>
         <p
           className={cn('text-xs mt-1', {
             'text-white/70': isOwn,

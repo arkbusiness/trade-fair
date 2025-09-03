@@ -22,7 +22,7 @@ interface ProfileImageUploaderProps {
 
 export const ProfileImageUploader: React.FC<ProfileImageUploaderProps> = ({
   onImageUpload,
-  maxSizeMB = 6,
+  maxSizeMB = 15,
   acceptedFormats = ['image/jpeg', 'image/png'],
   className = '',
   avatarPlaceholder = '/images/avatar.png',

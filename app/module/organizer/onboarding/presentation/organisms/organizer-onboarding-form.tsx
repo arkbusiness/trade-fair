@@ -95,6 +95,7 @@ export const OrganizerOnboardingForm = () => {
     <form
       className="flex flex-col gap-[1.86rem]"
       onSubmit={handleSubmit(onSubmit)}
+      autoComplete="off"
     >
       <fieldset
         className="flex flex-col gap-[1.86rem] w-full"

@@ -6,16 +6,9 @@ import Image from 'next/image';
 interface ChatHeaderProps {
   contactName: string;
   contactAvatar?: string;
-  isOnline?: boolean;
-  lastSeen?: string;
 }
 
-export const ChatHeader = ({
-  contactName,
-  contactAvatar,
-  isOnline = false,
-  lastSeen
-}: ChatHeaderProps) => {
+export const ChatHeader = ({ contactName, contactAvatar }: ChatHeaderProps) => {
   const hasImage = !!contactAvatar;
 
   return (
@@ -40,19 +33,9 @@ export const ChatHeader = ({
               />
             </div>
           )}
-          {isOnline && (
-            <div className="absolute -bottom-0.5 -right-0.5 w-3 h-3 bg-green-500 border-2 border-white rounded-full"></div>
-          )}
         </div>
         <div className="flex-1">
           <h3 className="font-medium text-foreground">{contactName}</h3>
-          <p className="text-xs text-gray-500">
-            {isOnline
-              ? 'Online'
-              : lastSeen
-                ? `Last seen ${lastSeen}`
-                : 'Offline'}
-          </p>
         </div>
       </div>
     </div>

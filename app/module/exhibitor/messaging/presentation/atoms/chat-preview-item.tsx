@@ -1,30 +1,41 @@
 'use client';
 
 import { ImagePlaceholder } from '@/app/core/shared/components/atoms/image-placeholder';
-import { distanceFormat } from '@/app/core/shared/lib';
+import { useSetParams } from '@/app/core/shared/hooks';
 import { cn } from '@/app/core/shared/utils';
 import Image from 'next/image';
 
 interface ChatPreviewItemProps {
+  id: string;
   avatar: string;
   name: string;
   message: string;
-  date: string;
+  // date: string;
   handleSelect: () => void;
 }
 
 export const ChatPreviewItem = ({
+  id,
   avatar,
   name,
   message,
-  date,
+  // date,
   handleSelect
 }: ChatPreviewItemProps) => {
+  const { searchParamsObject } = useSetParams();
+
+  const attendeeId = searchParamsObject?.['attendeeId'] ?? '';
+
   const hasImage = !!avatar;
 
   return (
     <div
-      className="py-5 px-2 rounded-[8px] flex gap-2 items-center hover:bg-highlight cursor-pointer"
+      className={cn(
+        'py-5 px-2 rounded-[8px] flex gap-2 items-center hover:bg-highlight cursor-pointer',
+        {
+          'bg-highlight': id === attendeeId
+        }
+      )}
       onClick={handleSelect}
     >
       <div>
@@ -55,9 +66,9 @@ export const ChatPreviewItem = ({
             <p className="text-sm font-medium text-foreground line-clamp-1 flex-1 ">
               {name}
             </p>
-            <p className="text-[10px] font-normal text-foreground  w-24 text-right">
+            {/* <p className="text-[10px] font-normal text-foreground  w-24 text-right">
               {distanceFormat(date)}
-            </p>
+            </p> */}
           </div>
           <p className="text-[10px] font-normal line-clamp-1">{message}</p>
         </div>

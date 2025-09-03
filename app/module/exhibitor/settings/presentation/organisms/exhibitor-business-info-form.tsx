@@ -27,7 +27,7 @@ const validationSchema = yup.object().shape({
 type IExhibitorBusinessInfoFormValues = yup.InferType<typeof validationSchema>;
 
 export const ExhibitorBusinessInfoForm = () => {
-  const { user, refetchUser } = useExhibitorUser();
+  const { user, currency, refetchUser } = useExhibitorUser();
 
   const mutation = useCustomMutation();
   const {
@@ -41,7 +41,7 @@ export const ExhibitorBusinessInfoForm = () => {
       publicDescription: user?.publicDescription ?? '',
       companyName: user?.companyName ?? '',
       country: user?.country ?? '',
-      currency: user?.currency ?? '',
+      currency: currency,
       websiteUrl: user?.websiteUrl ?? ''
     },
     resolver: yupResolver(validationSchema)
@@ -223,6 +223,7 @@ export const ExhibitorBusinessInfoForm = () => {
               name="currency"
               labelClassName="md:hidden"
               value={watchedCurrency}
+              isDisabled={!!watchedCountry}
               onChange={(value) => {
                 if (value) {
                   setValue('currency', value, {
