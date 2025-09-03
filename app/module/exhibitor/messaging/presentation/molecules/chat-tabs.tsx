@@ -15,12 +15,12 @@ export const ChatTabs = () => {
     {
       label: 'All',
       value: CHAT_TAB.ALL,
-      count: 10
+      count: undefined
     },
     {
       label: 'Unread',
       value: CHAT_TAB.UNREAD,
-      count: 5
+      count: undefined
     }
   ];
 
