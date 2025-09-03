@@ -12,12 +12,15 @@ const MAX_CHAT_PREVIEW = 6;
 export const ChatPreview = () => {
   const { ref: endRef, inView: endInView } = useInView();
   const { data, handleFetchNextPage } = useAllMessages();
-  const { setParam } = useSetParams();
+  const { setMultipleParam } = useSetParams();
 
   const isChatPreviewOverflow = (data?.length || 0) > MAX_CHAT_PREVIEW;
 
   const handleSelect = (attendeeId: string) => {
-    setParam('attendeeId', attendeeId);
+    setMultipleParam({
+      'chat-drawer': '',
+      attendeeId: attendeeId
+    });
   };
 
   useEffect(() => {

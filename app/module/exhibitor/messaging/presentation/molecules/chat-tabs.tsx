@@ -29,7 +29,7 @@ export const ChatTabs = () => {
   };
 
   return (
-    <div>
+    <div className="px-3 lg:px-0">
       <BorderTab
         tabs={CHAT_TAB_LIST}
         defaultValue={tab}

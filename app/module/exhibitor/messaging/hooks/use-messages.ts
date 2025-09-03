@@ -162,6 +162,8 @@ export const useAttendeeMessages = (attendeeId: string) => {
     queryFn: fetchMessages,
     initialPageParam: 1,
     enabled: !!attendeeId,
+    refetchInterval: 60000, // Refetch every 60 seconds (1 minute)
+    // refetchIntervalInBackground: true, // Continue refetching even when tab is not active
     getNextPageParam: (lastPage) => {
       // Check if there are more pages available
       if (lastPage.page < lastPage.pages) {

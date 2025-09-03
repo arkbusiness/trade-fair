@@ -1,12 +1,12 @@
 'use client';
 
+import { Spinner } from '@/app/core/shared/components/atoms';
+import { useSetParams } from '@/app/core/shared/hooks';
+import { useExhibitorUser } from '@/app/core/shared/hooks/api/use-exhibitor-user';
 import { useEffect, useRef } from 'react';
-import { ChatMessageBubble } from '../atoms';
 import { useInView } from 'react-intersection-observer';
 import { useAttendeeMessages } from '../../hooks/use-messages';
-import { useExhibitorUser } from '@/app/core/shared/hooks/api/use-exhibitor-user';
-import { useSetParams } from '@/app/core/shared/hooks';
-import { Spinner } from '@/app/core/shared/components/atoms';
+import { ChatMessageBubble } from '../atoms';
 
 export const ChatMessagesList = () => {
   const { searchParamsObject } = useSetParams();
@@ -50,7 +50,7 @@ export const ChatMessagesList = () => {
 
   if (!isLoading && messages?.length === 0) {
     return (
-      <div className="flex-1 flex items-center justify-center p-8">
+      <div className="flex-1 flex items-center justify-center p-8 relative">
         <div className="text-center">
           <div className="mb-4">
             <svg
