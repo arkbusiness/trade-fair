@@ -34,19 +34,19 @@ const chatPreviews = [
     name: 'Elena Torres',
     message: 'Let’s catch up soon!',
     date: new Date('2025-08-31T20:30:00Z').toISOString()
-  },
-  {
-    avatar: 'https://avatar.iran.liara.run/public/13',
-    name: 'Franklin Yu',
-    message: 'Got it. I’ll review and reply shortly.',
-    date: new Date('2025-09-02T11:00:00Z').toISOString()
-  },
-  {
-    avatar: '',
-    name: 'Grace Park',
-    message: 'Happy birthday! 🎉',
-    date: new Date('2025-09-03T06:30:00Z').toISOString()
   }
+  //   {
+  //     avatar: 'https://avatar.iran.liara.run/public/13',
+  //     name: 'Franklin Yu',
+  //     message: 'Got it. I’ll review and reply shortly.',
+  //     date: new Date('2025-09-02T11:00:00Z').toISOString()
+  //   },
+  //   {
+  //     avatar: '',
+  //     name: 'Grace Park',
+  //     message: 'Happy birthday! 🎉',
+  //     date: new Date('2025-09-03T06:30:00Z').toISOString()
+  //   }
 ];
 
 const MAX_CHAT_PREVIEW = 6;

@@ -50,12 +50,12 @@ export const ChatPreviewItem = ({
       </div>
 
       <div className="flex justify-between gap-2 items-center">
-        <div className="flex flex-col gap-1 flex-1">
+        <div className="flex flex-col justify-between gap-1 flex-1">
           <div className="flex gap-2 justify-between items-center">
-            <p className="text-sm font-medium text-foreground line-clamp-1">
+            <p className="text-sm font-medium text-foreground line-clamp-1 flex-1 ">
               {name}
             </p>
-            <p className="text-[10px] font-normal text-foreground">
+            <p className="text-[10px] font-normal text-foreground  w-24 text-right">
               {distanceFormat(date)}
             </p>
           </div>
