@@ -32,17 +32,20 @@ export const ChatInput = ({
   };
 
   return (
-    <div className="border-t bg-white p-4">
-      <form onSubmit={handleSubmit} className="flex items-center gap-2">
+    <div className="bg-gray-light-4 border-t p-4 h-[5.13rem] flex items-center justify-center">
+      <form
+        onSubmit={handleSubmit}
+        className="flex items-center gap-2 w-full h-12"
+      >
         <input
           type="text"
           value={message}
           onChange={(e) => setMessage(e.target.value)}
-          onKeyPress={handleKeyPress}
+          onKeyDown={handleKeyPress}
           placeholder={placeholder}
           disabled={disabled}
           className={cn(
-            'flex-1 px-4 py-2 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-tertiary focus:border-transparent',
+            'flex-1 px-4 py-2 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-tertiary focus:border-transparent h-full block',
             {
               'opacity-50 cursor-not-allowed': disabled
             }

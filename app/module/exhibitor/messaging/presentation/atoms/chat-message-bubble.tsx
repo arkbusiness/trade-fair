@@ -2,6 +2,7 @@
 
 import { cn } from '@/app/core/shared/utils';
 import { distanceFormat } from '@/app/core/shared/lib';
+import { ImagePlaceholder } from '@/app/core/shared/components/atoms/image-placeholder';
 
 interface ChatMessageBubbleProps {
   message: string;
@@ -23,6 +24,11 @@ export const ChatMessageBubble = ({
         'justify-start': !isOwn
       })}
     >
+      {!isOwn && (
+        <div className="w-8 h-8 rounded-full mr-3">
+          <ImagePlaceholder className="w-full h-full rounded-full" />
+        </div>
+      )}
       <div
         className={cn('max-w-xs lg:max-w-md px-4 py-2 rounded-lg', {
           'bg-tertiary text-white': isOwn,
@@ -42,6 +48,12 @@ export const ChatMessageBubble = ({
           {distanceFormat(timestamp)}
         </p>
       </div>
+
+      {isOwn && (
+        <div className="w-8 h-8 rounded-full ml-3">
+          <ImagePlaceholder className="w-full h-full rounded-full" />
+        </div>
+      )}
     </div>
   );
 };
