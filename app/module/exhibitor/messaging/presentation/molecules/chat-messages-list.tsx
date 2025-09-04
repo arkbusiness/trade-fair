@@ -36,14 +36,12 @@ export const ChatMessagesList = () => {
 
   useEffect(() => {
     if (endInView) {
-      console.log({ end: 'Ending' });
       handleFetchNextPage();
     }
   }, [endInView, handleFetchNextPage]);
 
   useEffect(() => {
     if (startInView) {
-      console.log({ start: 'Starting' });
       handleFetchPreviousPage();
     }
   }, [startInView, handleFetchPreviousPage]);

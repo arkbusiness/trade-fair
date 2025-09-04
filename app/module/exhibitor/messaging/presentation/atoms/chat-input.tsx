@@ -6,7 +6,6 @@ import { useCustomMutation } from '@/app/core/shared/hooks/use-mutate';
 import toast from 'react-hot-toast';
 import { messagingService } from '../../services/messaging.service';
 import { useSetParams } from '@/app/core/shared/hooks';
-import { useAttendeeMessages } from '../../hooks/use-messages';
 
 interface ChatInputProps {
   placeholder?: string;
@@ -19,9 +18,6 @@ export const ChatInput = ({
 
   const attendeeId = searchParamsObject?.['attendeeId'] || '';
 
-  const { addOptimisticMessage, removeOptimisticMessage } =
-    useAttendeeMessages(attendeeId);
-
   const mutation = useCustomMutation();
   const [message, setMessage] = useState('');
 
@@ -30,17 +26,12 @@ export const ChatInput = ({
     if (message.trim()) {
       const messageContent = message.trim();
 
-      // Add optimistic message immediately
-      const tempId = addOptimisticMessage(messageContent);
-
       mutation.mutate(
         messagingService.postMessage(attendeeId, {
           content: messageContent
         }),
         {
           onError(error) {
-            // Remove optimistic message on error
-            removeOptimisticMessage(tempId);
             const errorMessage = errorHandler(error);
             toast.error(errorMessage);
           }

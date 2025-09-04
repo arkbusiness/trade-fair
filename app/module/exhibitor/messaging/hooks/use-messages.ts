@@ -1,9 +1,8 @@
 import { EMPTY_ARRAY } from '@/app/core/shared/constants';
 import { clientAxios } from '@/app/core/shared/lib';
 import { extractPaginationMeta } from '@/app/core/shared/utils';
-import { useInfiniteQuery, useQueryClient } from '@tanstack/react-query';
+import { useInfiniteQuery } from '@tanstack/react-query';
 import { messagingService } from '../services/messaging.service';
-import { useExhibitorUser } from '@/app/core/shared/hooks/api/use-exhibitor-user';
 
 interface IMessage {
   id: string;
@@ -124,9 +123,6 @@ export const useAllMessages = (filter: Record<string, string> = {}) => {
 };
 
 export const useAttendeeMessages = (attendeeId: string) => {
-  const { user } = useExhibitorUser();
-  const queryClient = useQueryClient();
-
   const fetchMessages = async ({
     pageParam = 1
   }: {
@@ -138,7 +134,7 @@ export const useAttendeeMessages = (attendeeId: string) => {
         url: messagingService.getAllMessages({
           attendeeId,
           page: pageParam.toString(),
-          limit: '20'
+          limit: '5'
         }).url
       });
       const responseData = response.data as IMessagesResponse;
@@ -183,97 +179,22 @@ export const useAttendeeMessages = (attendeeId: string) => {
     }
   });
 
-  const addOptimisticMessage = (content: string) => {
-    const queryKey = messagingService.getAttendeeMessages({
-      attendeeId
-    }).queryKey;
-
-    // Create optimistic message
-    const optimisticMessage: IMessage = {
-      id: `temp-${Date.now()}`,
-      senderType: 'EXHIBITOR',
-      senderId: user?.id || '',
-      receiverType: 'ATTENDEE',
-      receiverId: attendeeId,
-      content,
-      createdAt: new Date().toISOString(),
-      read: false,
-      readAt: null,
-      attachmentUrl: null,
-      attachmentType: null
-    };
-
-    // Update the cache optimistically
-    // eslint-disable-next-line
-    queryClient.setQueryData(queryKey, (oldData: any) => {
-      if (!oldData) return oldData;
-
-      const newData = { ...oldData };
-      const firstPage = newData.pages?.[0];
-
-      if (firstPage?.data?.[0]) {
-        // Add the optimistic message to the first attendee's messages
-        const updatedAttendee = {
-          ...firstPage.data[0],
-          messages: [optimisticMessage, ...firstPage.data[0].messages]
-        };
-
-        newData.pages[0] = {
-          ...firstPage,
-          data: [updatedAttendee, ...firstPage.data.slice(1)]
-        };
-      }
-
-      return newData;
-    });
-
-    return optimisticMessage.id; // Return temp ID for potential rollback
-  };
-
-  const removeOptimisticMessage = (tempId: string) => {
-    const queryKey = messagingService.getAttendeeMessages({
-      attendeeId
-    }).queryKey;
-
-    // eslint-disable-next-line
-    queryClient.setQueryData(queryKey, (oldData: any) => {
-      if (!oldData) return oldData;
-
-      const newData = { ...oldData };
-      const firstPage = newData.pages?.[0];
-
-      if (firstPage?.data?.[0]) {
-        // Remove the optimistic message with the temp ID
-        const updatedAttendee = {
-          ...firstPage.data[0],
-          messages: firstPage.data[0].messages.filter(
-            (msg: IMessage) => msg.id !== tempId
-          )
-        };
-
-        newData.pages[0] = {
-          ...firstPage,
-          data: [updatedAttendee, ...firstPage.data.slice(1)]
-        };
-      }
-
-      return newData;
-    });
-  };
-
   const chats = data?.pages?.[0];
   const chatsData = chats?.data ?? [];
 
   const paginationMeta = extractPaginationMeta(chats);
 
   const handleFetchNextPage = () => {
+    console.log(paginationMeta);
     if (paginationMeta.hasNext) {
+      console.log('Fetching next page');
       fetchNextPage();
     }
   };
 
   const handleFetchPreviousPage = () => {
     if (paginationMeta.hasPrev) {
+      console.log('Fetching previous page');
       fetchPreviousPage();
     }
   };
@@ -301,8 +222,6 @@ export const useAttendeeMessages = (attendeeId: string) => {
           id: attendeeId
         }
       : undefined,
-    paginationMeta,
-    addOptimisticMessage,
-    removeOptimisticMessage
+    paginationMeta
   };
 };
