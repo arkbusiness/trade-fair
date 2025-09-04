@@ -9,8 +9,9 @@ export enum CHAT_TAB {
 }
 
 export const ChatTabs = () => {
-  const { searchParamsObject, setParam } = useSetParams();
-  const tab = searchParamsObject?.chat || CHAT_TAB.ALL;
+  const { searchParamsObject, setMultipleParam } = useSetParams();
+  const tab = searchParamsObject?.['chat-type'] || CHAT_TAB.ALL;
+
   const CHAT_TAB_LIST = [
     {
       label: 'All',
@@ -25,7 +26,17 @@ export const ChatTabs = () => {
   ];
 
   const handleTabChange = (value: string) => {
-    setParam('chat', value);
+    if (value === CHAT_TAB.ALL) {
+      setMultipleParam({
+        attendeeId: '',
+        'chat-type': ''
+      });
+    } else {
+      setMultipleParam({
+        attendeeId: '',
+        'chat-type': value
+      });
+    }
   };
 
   return (

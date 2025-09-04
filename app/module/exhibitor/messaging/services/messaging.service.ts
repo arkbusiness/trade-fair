@@ -22,9 +22,12 @@ export const messagingService = {
       queryKey: ['attendee-exhibitor-messages', queryParams]
     };
   },
-  postMessage: (data: { content: string }): AxiosRequestConfig => {
+  postMessage: (
+    attendeeId: string,
+    data: { content: string }
+  ): AxiosRequestConfig => {
     return {
-      url: `/exhibitor/messages`,
+      url: `/exhibitor/messages?attendeeId=${attendeeId}`,
       method: 'POST',
       data
     };

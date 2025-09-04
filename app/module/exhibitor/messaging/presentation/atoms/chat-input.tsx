@@ -1,25 +1,40 @@
 'use client';
 
 import { useState } from 'react';
-import { cn } from '@/app/core/shared/utils';
+import { cn, errorHandler } from '@/app/core/shared/utils';
+import { useCustomMutation } from '@/app/core/shared/hooks/use-mutate';
+import toast from 'react-hot-toast';
+import { messagingService } from '../../services/messaging.service';
+import { useSetParams } from '@/app/core/shared/hooks';
 
 interface ChatInputProps {
-  onSendMessage: (message: string) => void;
   placeholder?: string;
-  disabled?: boolean;
 }
 
 export const ChatInput = ({
-  onSendMessage,
-  placeholder = 'Type a message...',
-  disabled = false
+  placeholder = 'Type a message...'
 }: ChatInputProps) => {
+  const { searchParamsObject } = useSetParams();
+
+  const attendeeId = searchParamsObject?.['attendeeId'] || '';
+
+  const mutation = useCustomMutation();
   const [message, setMessage] = useState('');
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (message.trim() && !disabled) {
-      onSendMessage(message.trim());
+    if (message.trim()) {
+      mutation.mutate(
+        messagingService.postMessage(attendeeId, {
+          content: message.trim()
+        }),
+        {
+          onError(error) {
+            const errorMessage = errorHandler(error);
+            toast.error(errorMessage);
+          }
+        }
+      );
       setMessage('');
     }
   };
@@ -30,6 +45,8 @@ export const ChatInput = ({
       handleSubmit(e);
     }
   };
+
+  const isDisabled = mutation.isPending || !attendeeId;
 
   return (
     <div className="bg-gray-light-4 border-t p-4 h-[5.13rem] flex items-center justify-center">
@@ -43,21 +60,21 @@ export const ChatInput = ({
           onChange={(e) => setMessage(e.target.value)}
           onKeyDown={handleKeyPress}
           placeholder={placeholder}
-          disabled={disabled}
+          disabled={isDisabled}
           className={cn(
             'flex-1 px-4 py-2 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-tertiary focus:border-transparent h-full block',
             {
-              'opacity-50 cursor-not-allowed': disabled
+              'opacity-50 cursor-not-allowed': isDisabled
             }
           )}
         />
         <button
           type="submit"
-          disabled={!message.trim() || disabled}
+          disabled={!message.trim() || isDisabled}
           className={cn(
             'w-10 h-10 bg-tertiary text-white rounded-full flex items-center justify-center hover:bg-tertiary/90 transition-colors',
             {
-              'opacity-50 cursor-not-allowed': !message.trim() || disabled
+              'opacity-50 cursor-not-allowed': !message.trim() || isDisabled
             }
           )}
         >
