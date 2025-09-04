@@ -45,7 +45,7 @@ export const ExhibitorSecondaryHeader = () => {
       <p className="sm:text-lg font-semibold text-foreground">{title}</p>
       <div className="flex items-center gap-x-1">
         {/* Notification */}
-        <button className="cursor-pointer">
+        {/* <button className="cursor-pointer">
           <svg
             width={32}
             height={33}
@@ -68,7 +68,7 @@ export const ExhibitorSecondaryHeader = () => {
               strokeLinejoin="round"
             />
           </svg>
-        </button>
+        </button> */}
         <AvatarMenu
           className="border-none"
           userName={user?.contactName ?? ''}

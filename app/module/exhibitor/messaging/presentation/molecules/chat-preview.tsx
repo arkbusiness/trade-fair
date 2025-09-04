@@ -2,16 +2,13 @@
 
 import { useSetParams } from '@/app/core/shared/hooks';
 import { cn } from '@/app/core/shared/utils';
-import { useEffect } from 'react';
-import { useInView } from 'react-intersection-observer';
 import { useAllMessages } from '../../hooks/use-messages';
 import { ChatPreviewItem } from '../atoms';
 
 const MAX_CHAT_PREVIEW = 6;
 
 export const ChatPreview = () => {
-  const { ref: endRef, inView: endInView } = useInView();
-  const { data, handleFetchNextPage } = useAllMessages();
+  const { data } = useAllMessages();
   const { setMultipleParam } = useSetParams();
 
   const isChatPreviewOverflow = (data?.length || 0) > MAX_CHAT_PREVIEW;
@@ -22,12 +19,6 @@ export const ChatPreview = () => {
       attendeeId: attendeeId
     });
   };
-
-  useEffect(() => {
-    if (endInView) {
-      handleFetchNextPage();
-    }
-  }, [endInView, handleFetchNextPage]);
 
   return (
     <div
@@ -47,7 +38,6 @@ export const ChatPreview = () => {
           handleSelect={() => handleSelect(chatPreview.attendeeId)}
         />
       ))}
-      <div ref={endRef} />
     </div>
   );
 };

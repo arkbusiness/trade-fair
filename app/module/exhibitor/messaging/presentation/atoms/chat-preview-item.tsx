@@ -73,13 +73,13 @@ export const ChatPreviewItem = ({
           <p className="text-[10px] font-normal line-clamp-1">{message}</p>
         </div>
 
-        <div
+        {/* <div
           className={cn(
             'w-5 h-5 rounded-full bg-tertiary text-background flex items-center justify-center text-xs'
           )}
         >
           <span>5</span>
-        </div>
+        </div> */}
       </div>
     </div>
   );
