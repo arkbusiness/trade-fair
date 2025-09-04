@@ -95,13 +95,13 @@ export const useAllMessages = (filter: Record<string, string> = {}) => {
   const paginationMeta = extractPaginationMeta(chats);
 
   const handleFetchNextPage = () => {
-    if (paginationMeta.hasNext) {
+    if (hasNextPage && !isFetchingNextPage) {
       fetchNextPage();
     }
   };
 
   const handleFetchPreviousPage = () => {
-    if (paginationMeta.hasPrev) {
+    if (hasPreviousPage && !isFetchingPreviousPage) {
       fetchPreviousPage();
     }
   };
@@ -162,7 +162,7 @@ export const useAttendeeMessages = (attendeeId: string) => {
     queryFn: fetchMessages,
     initialPageParam: 1,
     enabled: !!attendeeId,
-    refetchInterval: 5000, // Refetch every 5 seconds
+    refetchInterval: 2000, // Refetch every 5 seconds
     getNextPageParam: (lastPage) => {
       // Check if there are more pages available
       if (lastPage.page < lastPage.pages) {
@@ -179,29 +179,25 @@ export const useAttendeeMessages = (attendeeId: string) => {
     }
   });
 
-  const chats = data?.pages?.[0];
-  const chatsData = chats?.data ?? [];
+  const chatsData = data?.pages?.flatMap((page) => page.data);
 
-  const paginationMeta = extractPaginationMeta(chats);
+  const paginationMeta = extractPaginationMeta(data?.pages?.[0]);
 
   const handleFetchNextPage = () => {
-    console.log(paginationMeta);
-    if (paginationMeta.hasNext) {
-      console.log('Fetching next page');
+    if (hasNextPage && !isFetchingNextPage) {
       fetchNextPage();
     }
   };
 
   const handleFetchPreviousPage = () => {
-    if (paginationMeta.hasPrev) {
-      console.log('Fetching previous page');
+    if (hasPreviousPage && !isFetchingPreviousPage) {
       fetchPreviousPage();
     }
   };
 
   const attendeeName = chatsData?.[0]?.attendeeName ?? undefined;
   const attendeeAvatar = chatsData?.[0]?.attendeeLogoUrl ?? undefined;
-  const messages = chatsData?.[0]?.messages ?? EMPTY_ARRAY;
+  const messages = chatsData?.flatMap((chat) => chat.messages) ?? EMPTY_ARRAY;
 
   return {
     handleFetchNextPage,

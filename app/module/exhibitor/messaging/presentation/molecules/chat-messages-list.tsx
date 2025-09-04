@@ -25,13 +25,35 @@ export const ChatMessagesList = () => {
   const { ref: startRef, inView: startInView } = useInView();
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
+  const prevMessagesLength = useRef(messages?.length || 0);
+  const isUserScrolling = useRef(false);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   };
 
+  const isAtBottom = () => {
+    if (!scrollContainerRef.current) return true;
+    const { scrollTop, scrollHeight, clientHeight } =
+      scrollContainerRef.current;
+    return scrollHeight - scrollTop - clientHeight < 50; // 50px threshold
+  };
+
   useEffect(() => {
-    scrollToBottom();
+    const currentLength = messages?.length || 0;
+    const wasAtBottom = isAtBottom();
+
+    // Only auto-scroll if user was already at bottom and new messages were added
+    if (
+      currentLength > prevMessagesLength.current &&
+      wasAtBottom &&
+      !isUserScrolling.current
+    ) {
+      setTimeout(scrollToBottom, 100);
+    }
+
+    prevMessagesLength.current = currentLength;
   }, [messages]);
 
   useEffect(() => {
@@ -45,6 +67,22 @@ export const ChatMessagesList = () => {
       handleFetchPreviousPage();
     }
   }, [startInView, handleFetchPreviousPage]);
+
+  useEffect(() => {
+    const container = scrollContainerRef.current;
+    if (!container) return;
+
+    const handleScroll = () => {
+      isUserScrolling.current = true;
+      // Reset the flag after a short delay
+      setTimeout(() => {
+        isUserScrolling.current = false;
+      }, 1000);
+    };
+
+    container.addEventListener('scroll', handleScroll);
+    return () => container.removeEventListener('scroll', handleScroll);
+  }, []);
 
   if (!isLoading && messages?.length === 0) {
     return (
@@ -76,7 +114,10 @@ export const ChatMessagesList = () => {
   }
 
   return (
-    <div className="flex-1 overflow-y-auto p-4 bg-gray-50 relative">
+    <div
+      ref={scrollContainerRef}
+      className="flex-1 overflow-y-auto p-4 bg-gray-50 relative"
+    >
       <div ref={startRef} />
       {isLoading && (
         <div className="flex items-center justify-center h-full absolute top-0 left-0 w-full bg-white/70">
