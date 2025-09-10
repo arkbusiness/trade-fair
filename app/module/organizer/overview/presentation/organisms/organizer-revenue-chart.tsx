@@ -11,19 +11,22 @@ import {
   Spinner
 } from '@/app/core/shared/components/atoms';
 import { BoothCategorySelect } from '@/app/core/shared/components/organisms';
-import { useBoothCategories } from '@/app/core/shared/hooks/api';
+import {
+  useBoothCategories,
+  useOrganizerUser
+} from '@/app/core/shared/hooks/api';
 import { cn, formatCurrency } from '@/app/core/shared/utils';
 import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { Bar, BarChart, XAxis, YAxis } from 'recharts';
 import { useOrganizerOverview } from '../../hooks';
-import { DEFAULT_CURRENCY } from '@/app/core/shared/constants';
 
 const currencyFormatter = (value: number, currency: string) => {
   return formatCurrency({ amount: value, currency });
 };
 
 export const OrganizerRevenueChart = () => {
+  const { currency } = useOrganizerUser();
   const { firstCategory } = useBoothCategories();
   const form = useForm<{ categoryId: { id: string; name: string } | null }>({
     values: {
@@ -131,7 +134,7 @@ export const OrganizerRevenueChart = () => {
 
                   <YAxis
                     tickFormatter={(value) =>
-                      currencyFormatter(value, DEFAULT_CURRENCY)
+                      currencyFormatter(value, currency)
                     }
                     tick={{ fontSize: 12 }}
                     domain={[0, 'dataMax']}
@@ -140,7 +143,7 @@ export const OrganizerRevenueChart = () => {
                   <ChartTooltip
                     content={<ChartTooltipContent />}
                     formatter={(value) => {
-                      return `Amount: ${formatCurrency({ amount: (value as number) ?? 0, currency: 'NGN', compactThreshold: 0 })}`;
+                      return `Amount: ${formatCurrency({ amount: (value as number) ?? 0, currency, compactThreshold: 0 })}`;
                     }}
                   />
 

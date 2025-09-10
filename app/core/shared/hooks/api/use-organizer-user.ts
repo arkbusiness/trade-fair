@@ -6,6 +6,7 @@ import {
   IOrganizerAuthUser,
   useOrganizerAuthStore
 } from '@/app/module/auth/store';
+import { COUNTRY_DETAILS, DEFAULT_CURRENCY } from '../../constants';
 
 export const useOrganizerUser = () => {
   const { accessToken, handleLogOut } = useOrganizerAuthStore();
@@ -49,9 +50,17 @@ export const useOrganizerUser = () => {
     enabled: !!accessToken
   });
 
+  const getCurrency = (country: string) => {
+    const toLowerCaseCountry = country.toLowerCase();
+    const countryDetails =
+      COUNTRY_DETAILS[toLowerCaseCountry as keyof typeof COUNTRY_DETAILS];
+    return countryDetails?.currency || DEFAULT_CURRENCY;
+  };
+
   return {
     user,
     isLoadingUser,
+    currency: getCurrency(user?.country || ''),
     refetchUser,
     ...queryMeta
   };
