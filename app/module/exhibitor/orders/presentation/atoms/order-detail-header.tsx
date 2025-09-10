@@ -34,7 +34,7 @@ export const OrderDetailHeader = ({ orderId }: OrderDetailHeaderProps) => {
         <LinkButton
           variant="tertiary"
           className="flex gap-x-[0.63rem] rounded-[6px] h-8"
-          href={`${EXHIBITOR_APP_ROUTES.attendees.messaging.root()}`}
+          href={`${EXHIBITOR_APP_ROUTES.attendees.messaging.root()}?attendeeId=${order?.attendeeId}`}
         >
           <MessageCircleMore size={16} />
           <span>Contact Attendee</span>

@@ -202,6 +202,7 @@ export const useAttendeeMessages = (attendeeId: string) => {
   return {
     handleFetchNextPage,
     handleFetchPreviousPage,
+    fetchNextPage,
     hasNextPage,
     hasPreviousPage,
     isFetching,

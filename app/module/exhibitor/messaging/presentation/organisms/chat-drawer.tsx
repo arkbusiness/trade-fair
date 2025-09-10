@@ -1,7 +1,7 @@
 'use client';
 
 import { useSetParams } from '@/app/core/shared/hooks';
-import { ChatPreview, ChatSearch, ChatTabs } from '../molecules';
+import { ChatPreview, ChatTabs } from '../molecules';
 
 import {
   Drawer,
@@ -25,7 +25,7 @@ export const ChatDrawer = () => {
           <DrawerTitle>Chat</DrawerTitle>
           <div className="flex-col overflow-hidden border border-gray-200 bg-white">
             {/* Search */}
-            <ChatSearch handleSearch={(value) => console.log(value)} />
+            {/* <ChatSearch handleSearch={(value) => console.log(value)} /> */}
 
             {/* Tabs */}
             <ChatTabs />

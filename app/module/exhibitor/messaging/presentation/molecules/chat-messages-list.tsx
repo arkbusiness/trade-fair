@@ -19,7 +19,8 @@ export const ChatMessagesList = () => {
     attendee,
     handleFetchNextPage,
     handleFetchPreviousPage,
-    isLoading
+    isLoading,
+    isFetchingNextPage
   } = useAttendeeMessages(attendeeId);
   const { ref: endRef, inView: endInView } = useInView();
   const { ref: startRef, inView: startInView } = useInView();
@@ -143,6 +144,11 @@ export const ChatMessagesList = () => {
       </div>
 
       <div ref={messagesEndRef} />
+      {isFetchingNextPage && (
+        <div className="h-10 w-full flex justify-center items-center">
+          <Spinner />
+        </div>
+      )}
       <div ref={endRef} />
     </div>
   );

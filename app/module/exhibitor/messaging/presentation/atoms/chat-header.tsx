@@ -1,6 +1,5 @@
 'use client';
 
-import { ImagePlaceholder } from '@/app/core/shared/components/atoms/image-placeholder';
 import { useSetParams } from '@/app/core/shared/hooks';
 import { AlignLeft } from 'lucide-react';
 import Image from 'next/image';
@@ -34,14 +33,7 @@ export const ChatHeader = ({ contactName, contactAvatar }: ChatHeaderProps) => {
                 className="rounded-full object-cover"
               />
             </div>
-          ) : (
-            <div className="h-10 w-10 rounded-full">
-              <ImagePlaceholder
-                label="No Image"
-                className="w-full h-full text-[10px] rounded-full"
-              />
-            </div>
-          )}
+          ) : null}
         </div>
         <div className="flex-1">
           <h3 className="font-medium text-foreground">{contactName}</h3>
