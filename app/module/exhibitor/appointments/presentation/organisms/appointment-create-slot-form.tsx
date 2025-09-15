@@ -8,7 +8,8 @@ import {
 import {
   IconButton,
   LoadingButton,
-  Modal
+  Modal,
+  OverlaySpinner
 } from '@/app/core/shared/components/molecules';
 import { useCustomMutation } from '@/app/core/shared/hooks/use-mutate';
 import { cn, errorHandler } from '@/app/core/shared/utils';
@@ -124,145 +125,152 @@ export const AppointmentCreateSlotForm = ({
   const hasMoreThanOneSlot = watchedSlots?.length > 1;
 
   return (
-    <Modal
-      isOpen={isOpen}
-      onClose={handleCloseModal}
-      title="Create time slot"
-      description="You can easily create and manage your time availability for meetings with attendees."
-      contentClassName="px-0 pb-0"
-      headerClassName="px-6 border-none"
-    >
-      <form
-        onSubmit={handleSubmit(onSubmit)}
-        className="w-full"
-        autoComplete="off"
+    <>
+      {isLoadingAppointmentEvent && <OverlaySpinner />}
+      <Modal
+        isOpen={isOpen}
+        onClose={handleCloseModal}
+        title="Create time slot"
+        description="You can easily create and manage your time availability for meetings with attendees."
+        contentClassName="px-0 pb-0"
+        headerClassName="px-6 border-none"
       >
-        {/* To focus on the first input */}
-        <input type="text" className="absolute top-0 left-0 w-0 h-0" />
+        <form
+          onSubmit={handleSubmit(onSubmit)}
+          className="w-full"
+          autoComplete="off"
+        >
+          {/* To focus on the first input */}
+          <input type="text" className="absolute top-0 left-0 w-0 h-0" />
 
-        <div className="flex flex-col gap-x-[1.86rem] gap-y-3 w-full text-left px-6 mt-3 overflow-y-auto h-[300px] py-4">
-          <div className="grid gap-x-4 gap-y-[1.86rem]">
-            {fields.map((field, index) => {
-              const slotError = slotsError?.[index];
+          <div className="flex flex-col gap-x-[1.86rem] gap-y-3 w-full text-left px-6 mt-3 overflow-y-auto h-[300px] py-4">
+            <div className="grid gap-x-4 gap-y-[1.86rem]">
+              {fields.map((field, index) => {
+                const slotError = slotsError?.[index];
 
-              return (
-                <div
-                  key={field.id}
-                  className={cn('flex flex-col w-full text-left')}
-                >
-                  <div className="flex justify-between">
-                    <div className="w-8 h-8 rounded-full bg-highlight flex items-center justify-center mb-3">
-                      <p>{index + 1}</p>
-                    </div>
-                  </div>
-                  <div className="grid sm:grid-cols-[1fr_1fr_32px] gap-x-5 gap-y-[1.86rem] items-center">
-                    {/* Start Date */}
-                    <div className="w-full flex flex-col">
-                      <DatePicker
-                        value={watchedSlots[index].startDate}
-                        name="from"
-                        label="Start time"
-                        placeholderText="mm/dd/yyyy"
-                        showTimeSelect
-                        timeIntervals={5}
-                        inputClassName="text-xs!"
-                        min={eventStartDate}
-                        isDisabled={
-                          mutation.isPending || isLoadingAppointmentEvent
-                        }
-                        handleChange={({ value }) => {
-                          setValue(`slots.${index}.startDate`, value as Date, {
-                            shouldValidate: true,
-                            shouldDirty: true,
-                            shouldTouch: true
-                          });
-                        }}
-                      />
-                      <ErrorText message={slotError?.startDate?.message} />
-                    </div>
-
-                    {/* End Date */}
-                    <div className="w-full flex flex-col">
-                      <DatePicker
-                        value={watchedSlots[index].endDate}
-                        name="to"
-                        label="End time"
-                        placeholderText="mm/dd/yyyy"
-                        showTimeSelect
-                        timeIntervals={5}
-                        inputClassName="text-xs!"
-                        isDisabled={
-                          mutation.isPending || isLoadingAppointmentEvent
-                        }
-                        max={eventEndDate}
-                        handleChange={({ value }) => {
-                          setValue(`slots.${index}.endDate`, value as Date, {
-                            shouldValidate: true,
-                            shouldDirty: true,
-                            shouldTouch: true
-                          });
-                        }}
-                      />
-                      <ErrorText message={slotError?.endDate?.message} />
-                    </div>
-
-                    {/* Remove Button */}
-                    {hasMoreThanOneSlot && (
-                      <div className="flex relative top-3">
-                        <Button
-                          type="button"
-                          variant="outline"
-                          aria-label="Remove item"
-                          className="w-8 h-8"
-                          onClick={() => remove(index)}
-                          disabled={mutation.isPending}
-                        >
-                          <TrashIcon className="size-4 text-tertiary" />
-                        </Button>
+                return (
+                  <div
+                    key={field.id}
+                    className={cn('flex flex-col w-full text-left')}
+                  >
+                    <div className="flex justify-between">
+                      <div className="w-8 h-8 rounded-full bg-highlight flex items-center justify-center mb-3">
+                        <p>{index + 1}</p>
                       </div>
-                    )}
+                    </div>
+                    <div className="grid sm:grid-cols-[1fr_1fr_32px] gap-x-5 gap-y-[1.86rem] items-center">
+                      {/* Start Date */}
+                      <div className="w-full flex flex-col">
+                        <DatePicker
+                          value={watchedSlots[index].startDate}
+                          name="from"
+                          label="Start time"
+                          placeholderText="mm/dd/yyyy"
+                          showTimeSelect
+                          timeIntervals={5}
+                          inputClassName="text-xs!"
+                          min={eventStartDate}
+                          isDisabled={
+                            mutation.isPending || isLoadingAppointmentEvent
+                          }
+                          handleChange={({ value }) => {
+                            setValue(
+                              `slots.${index}.startDate`,
+                              value as Date,
+                              {
+                                shouldValidate: true,
+                                shouldDirty: true,
+                                shouldTouch: true
+                              }
+                            );
+                          }}
+                        />
+                        <ErrorText message={slotError?.startDate?.message} />
+                      </div>
+
+                      {/* End Date */}
+                      <div className="w-full flex flex-col">
+                        <DatePicker
+                          value={watchedSlots[index].endDate}
+                          name="to"
+                          label="End time"
+                          placeholderText="mm/dd/yyyy"
+                          showTimeSelect
+                          timeIntervals={5}
+                          inputClassName="text-xs!"
+                          isDisabled={
+                            mutation.isPending || isLoadingAppointmentEvent
+                          }
+                          max={eventEndDate}
+                          handleChange={({ value }) => {
+                            setValue(`slots.${index}.endDate`, value as Date, {
+                              shouldValidate: true,
+                              shouldDirty: true,
+                              shouldTouch: true
+                            });
+                          }}
+                        />
+                        <ErrorText message={slotError?.endDate?.message} />
+                      </div>
+
+                      {/* Remove Button */}
+                      {hasMoreThanOneSlot && (
+                        <div className="flex relative top-3">
+                          <Button
+                            type="button"
+                            variant="outline"
+                            aria-label="Remove item"
+                            className="w-8 h-8"
+                            onClick={() => remove(index)}
+                            disabled={mutation.isPending}
+                          >
+                            <TrashIcon className="size-4 text-tertiary" />
+                          </Button>
+                        </div>
+                      )}
+                    </div>
                   </div>
-                </div>
-              );
-            })}
+                );
+              })}
+            </div>
+            {/* Add Button */}
+            <div className="flex">
+              <IconButton
+                onClick={handleAddNewItem}
+                variant="outline"
+                type="button"
+                disabled={mutation.isPending || isLoadingAppointmentEvent}
+                className="text-foreground h-[33px]"
+              >
+                <span>Add slot</span>
+                <PlusIcon />
+              </IconButton>
+            </div>
           </div>
-          {/* Add Button */}
-          <div className="flex">
-            <IconButton
-              onClick={handleAddNewItem}
+
+          <div className="mt-[.19rem] w-full flex justify-between bg-gray-light-3 py-5 px-6">
+            <Button
               variant="outline"
+              className="gap-[0.5rem] flex items-center h-8"
               type="button"
+              onClick={handleCloseModal}
               disabled={mutation.isPending || isLoadingAppointmentEvent}
-              className="text-foreground h-[33px]"
             >
-              <span>Add slot</span>
-              <PlusIcon />
-            </IconButton>
+              <span>Cancel</span>
+            </Button>
+
+            <LoadingButton
+              variant="tertiary"
+              className="gap-[0.5rem] flex items-center h-8"
+              type="submit"
+              isLoading={mutation.isPending}
+              disabled={mutation.isPending || isLoadingAppointmentEvent}
+            >
+              <span>Save changes</span>
+            </LoadingButton>
           </div>
-        </div>
-
-        <div className="mt-[.19rem] w-full flex justify-between bg-gray-light-3 py-5 px-6">
-          <Button
-            variant="outline"
-            className="gap-[0.5rem] flex items-center h-8"
-            type="button"
-            onClick={handleCloseModal}
-            disabled={mutation.isPending || isLoadingAppointmentEvent}
-          >
-            <span>Cancel</span>
-          </Button>
-
-          <LoadingButton
-            variant="tertiary"
-            className="gap-[0.5rem] flex items-center h-8"
-            type="submit"
-            isLoading={mutation.isPending}
-            disabled={mutation.isPending || isLoadingAppointmentEvent}
-          >
-            <span>Save changes</span>
-          </LoadingButton>
-        </div>
-      </form>
-    </Modal>
+        </form>
+      </Modal>
+    </>
   );
 };
