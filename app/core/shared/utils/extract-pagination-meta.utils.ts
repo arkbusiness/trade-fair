@@ -8,10 +8,21 @@ export function extractPaginationMeta<T>(
       total: 0,
       page: 0,
       limit: 0,
-      pages: 0
+      pages: 0,
+      hasNext: false,
+      hasPrev: false
     };
   }
 
-  const { total, page, limit, pages } = response;
-  return { total, page, limit, pages };
+  const { total, page, limit, pages, totalPages } = response;
+  const totalPagesCount = pages || totalPages || 0;
+
+  return {
+    total,
+    page,
+    limit: Number(limit),
+    pages: totalPagesCount,
+    hasNext: page < totalPagesCount,
+    hasPrev: page > 1
+  };
 }

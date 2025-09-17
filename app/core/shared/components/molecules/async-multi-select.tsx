@@ -60,7 +60,7 @@ export const AsyncMultiSelect = <T,>({
         debounceTimeout={300}
         classNames={{
           control: () =>
-            `w-full flex dark:bg-input/30 border-input min-h-[2.5rem] rounded-[4px] border bg-transparent shadow-xs transition-[color,box-shadow] outline-none disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive placeholder:text-muted-foreground/70 min-h-auto  ${controlClassName} ${
+            `w-full flex dark:bg-input/30 border-input! min-h-[2.5rem] rounded-[4px] border bg-light-gray-2 shadow-xs transition-[color,box-shadow] outline-none disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive placeholder:text-muted-foreground/70 min-h-auto  ${controlClassName} ${
               hasError ? '!bg-tertiary/20 !border-tertiary/20' : ''
             }`,
           option: () => 'w-full !placeholder:text-muted-foreground/70 !text-sm',

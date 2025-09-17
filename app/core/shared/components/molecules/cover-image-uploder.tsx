@@ -20,7 +20,7 @@ interface CoverImageUploaderProps {
 export const CoverImageUploader: React.FC<CoverImageUploaderProps> = ({
   onImageUpload,
   // onImageRemove,
-  maxSizeMB = 7,
+  maxSizeMB = 15,
   acceptedFormats = ['image/jpeg', 'image/png'],
   className = '',
   imageUrl

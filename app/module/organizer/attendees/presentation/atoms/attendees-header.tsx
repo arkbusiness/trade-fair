@@ -34,7 +34,7 @@ export const OrganizerAttendeesHeader = () => {
       <DashboardToolbar title="Attendees" description="">
         <div className="flex items-center gap-x-[7px]">
           <ExportButton
-            apiRoute={organizerAttendeesService.exportAttendee().url as string}
+            apiRoute="/organizer/invites-attendees/export"
             exportName="attendees"
           />
           <Button

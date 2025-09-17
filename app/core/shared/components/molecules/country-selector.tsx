@@ -1,5 +1,5 @@
 'use client';
-import { COUNTRIES_DATA } from '../../constants';
+import { COUNTRY_LIST } from '../../constants';
 import { cn } from '../../utils';
 import {
   Select,
@@ -7,12 +7,11 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue
-} from './select';
+} from '../atoms';
 
 interface CountrySelectorProps {
   label?: string;
   name?: string;
-  country?: string;
   value: string;
   labelClassName?: string;
   hasError?: boolean;
@@ -51,7 +50,7 @@ export const CountrySelector = ({
             <SelectValue placeholder="Select..." />
           </SelectTrigger>
           <SelectContent>
-            {COUNTRIES_DATA.map((country) => (
+            {COUNTRY_LIST.map((country) => (
               <SelectItem key={country} value={country}>
                 {country}
               </SelectItem>

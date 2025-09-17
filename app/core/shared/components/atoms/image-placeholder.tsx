@@ -18,7 +18,7 @@ export const ImagePlaceholder = ({
         className
       )}
     >
-      <p className="text-gray-600">{label}</p>
+      <p className="text-gray-600 text-center">{label}</p>
     </div>
   );
 };

@@ -66,11 +66,7 @@ export const Modal = ({
             </DialogTitle>
           )}
           {title && visuallyHiddenTitle && (
-            <DialogTitle
-              className={cn({
-                'sr-only "text-[1.25rem] font-semibold': visuallyHiddenTitle
-              })}
-            >
+            <DialogTitle className="sr-only text-[1.25rem] font-semibold">
               {title}
             </DialogTitle>
           )}

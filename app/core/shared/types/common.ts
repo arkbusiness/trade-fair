@@ -12,10 +12,12 @@ export interface IPaginatedMeta {
   page: number;
   limit: number;
   pages: number;
+  totalPages?: number;
 }
 
 export interface IPaginatedResponse<T> extends IPaginatedMeta {
   data: T[];
+  items?: T[];
 }
 
 export interface CustomIconProps extends SVGProps<SVGSVGElement> {
@@ -40,4 +42,17 @@ export enum OrganizerSettingsPage {
   PROFILE = 'profile',
   CHANGE_PASSWORD = 'change-password',
   EVENT = 'event'
+}
+
+export enum ExhibitorSettingsPageEnum {
+  BUSINESS_INFORMATION = 'business-information',
+  MY_PROFILE = 'my-profile',
+  CHANGE_PASSWORD = 'change-password',
+  BOOTH_MEMBERS = 'booth-members',
+  INVOICE_INFORMATION = 'invoice-information'
+}
+
+export enum SortOrderEnum {
+  ASC = 'asc',
+  DESC = 'desc'
 }

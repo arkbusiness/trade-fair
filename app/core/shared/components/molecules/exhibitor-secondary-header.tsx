@@ -4,9 +4,12 @@ import { usePathname } from 'next/navigation';
 import { useExhibitorUser } from '../../hooks/api/use-exhibitor-user';
 import { AvatarMenu } from './avatar-menu';
 import { useExhibitorAuthStore } from '@/app/module/auth/store';
+import { EXHIBITOR_APP_ROUTES } from '../../constants';
+import { ExhibitorSettingsPageEnum } from '../../types';
 
 const DASHBOARD_TITLES = {
   '/inventory': 'Inventory',
+  '/inventory/orders': 'Orders & Invoice',
   '/invoice': 'Invoice',
   '/appointments': 'Appointments',
   '/messaging': 'Messaging',
@@ -42,7 +45,7 @@ export const ExhibitorSecondaryHeader = () => {
       <p className="sm:text-lg font-semibold text-foreground">{title}</p>
       <div className="flex items-center gap-x-1">
         {/* Notification */}
-        <button className="cursor-pointer">
+        {/* <button className="cursor-pointer">
           <svg
             width={32}
             height={33}
@@ -65,14 +68,17 @@ export const ExhibitorSecondaryHeader = () => {
               strokeLinejoin="round"
             />
           </svg>
-        </button>
+        </button> */}
         <AvatarMenu
           className="border-none"
           userName={user?.contactName ?? ''}
           handleLogout={handleLogOut}
-          // TODO: add profile and password page href
-          profilePageHref={'#'}
-          passwordPageHref={'#'}
+          profilePageHref={EXHIBITOR_APP_ROUTES.settings(
+            ExhibitorSettingsPageEnum.MY_PROFILE
+          )}
+          passwordPageHref={EXHIBITOR_APP_ROUTES.settings(
+            ExhibitorSettingsPageEnum.CHANGE_PASSWORD
+          )}
           logo={user?.logoUrl ?? undefined}
         />
       </div>

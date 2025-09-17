@@ -25,6 +25,7 @@ export interface IExhibitorAuthUser {
   fcmToken: string | null;
   deactivated: boolean;
   country: string | null;
+  currency: string | null;
   organizeId: string | null;
   invitedId: string;
 }
@@ -32,13 +33,7 @@ interface IAuthState {
   accessToken: string;
   inviteToken: string;
   hasCheckedToken: boolean;
-  handleSaveToken({
-    accessToken,
-    inviteToken
-  }: {
-    accessToken?: string;
-    inviteToken?: string;
-  }): void;
+  handleSaveToken({ accessToken }: { accessToken?: string }): void;
   handleLoadToken(): void;
   handleLogOut(): void;
   handleRemoveToken(key: string): void;
@@ -55,19 +50,14 @@ export const useExhibitorAuthStore = create<IAuthState>()((set) => ({
   handleLoadToken: async () => {
     try {
       const accessToken = (await getCookie(COOKIE_KEYS.auth.token)) || '';
-      const inviteToken = (await getCookie(COOKIE_KEYS.auth.inviteToken)) || '';
 
-      if (!accessToken && !inviteToken) {
+      if (!accessToken) {
         useExhibitorAuthStore.getState().handleLogOut();
         return;
       }
 
       if (accessToken) {
         useExhibitorAuthStore.getState().handleSaveToken({ accessToken });
-      }
-
-      if (inviteToken) {
-        useExhibitorAuthStore.getState().handleSaveToken({ inviteToken });
       }
 
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -82,19 +72,19 @@ export const useExhibitorAuthStore = create<IAuthState>()((set) => ({
   },
   handleLogOut: async () => {
     await deleteCookie(COOKIE_KEYS.auth.token);
-    await deleteCookie(COOKIE_KEYS.auth.inviteToken);
     getQueryClient().resetQueries();
     getQueryClient().clear();
     set((state) => ({
       ...state,
       ...INITIAL_STATE
     }));
+    window.location.href = '/';
   },
   handleRemoveToken: async (key: string) => {
     if (!key) return;
     await deleteCookie(key);
   },
-  handleSaveToken({ accessToken, inviteToken }) {
+  handleSaveToken({ accessToken }) {
     const options = isDev() ? COOKIE_OPTIONS.dev(4) : COOKIE_OPTIONS.prod(24);
 
     if (accessToken) {
@@ -103,16 +93,6 @@ export const useExhibitorAuthStore = create<IAuthState>()((set) => ({
       set((state) => {
         return {
           accessToken: accessToken ?? state.accessToken
-        };
-      });
-    }
-
-    if (inviteToken) {
-      setCookie(COOKIE_KEYS.auth.inviteToken, inviteToken, options);
-
-      set((state) => {
-        return {
-          inviteToken: inviteToken ?? state.inviteToken
         };
       });
     }

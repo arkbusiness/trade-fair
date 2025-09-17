@@ -1,7 +1,10 @@
 'use client';
 
 import { ErrorText, Input } from '@/app/core/shared/components/atoms';
-import { CountrySelector } from '@/app/core/shared/components/atoms/country-selector';
+import {
+  CountrySelector,
+  CurrencySelector
+} from '@/app/core/shared/components/molecules';
 import {
   LoadingButton,
   OverlaySpinner,
@@ -22,7 +25,11 @@ import {
 import * as yup from 'yup';
 import { useExhibitorOnboarding } from '../../hooks/use-exhibitor-onboarding';
 import { useEffect } from 'react';
-import { EXHIBITOR_APP_ROUTES } from '@/app/core/shared/constants';
+import {
+  COUNTRY_DETAILS,
+  DEFAULT_CURRENCY,
+  EXHIBITOR_APP_ROUTES
+} from '@/app/core/shared/constants';
 import { exhibitorAuthService } from '../../../services';
 import { errorHandler } from '@/app/core/shared/utils';
 import toast from 'react-hot-toast';
@@ -32,6 +39,7 @@ const validationSchema = yup.object().shape({
   companyName: yup.string().trim().required('Company name is required'),
   contactName: yup.string().trim().required('Full name is required'),
   country: yup.string().trim().required('Country is required'),
+  currency: yup.string().trim().required('Currency is required'),
   contactEmail: yup.string().trim().required('Email is required'),
   boothNumber: yup.string(),
   logo: yup.mixed().nullable(),
@@ -97,6 +105,7 @@ export const ExhibitorSignupForm = () => {
       companyName: '',
       contactName: '',
       country: 'Nigeria',
+      currency: DEFAULT_CURRENCY,
       contactEmail: '',
       contactPhone: '',
       confirmPassword: '',
@@ -121,6 +130,7 @@ export const ExhibitorSignupForm = () => {
       companyName,
       contactPhone,
       country,
+      currency,
       contactEmail,
       logo,
       username
@@ -133,6 +143,7 @@ export const ExhibitorSignupForm = () => {
       companyName,
       contactName,
       country,
+      currency,
       contactEmail,
       logo: logo as File,
       password
@@ -155,6 +166,8 @@ export const ExhibitorSignupForm = () => {
 
   const watchedPhoneNo = watch('contactPhone');
   const watchedCountry = watch('country');
+  const watchedCurrency = watch('currency');
+
   const {
     contactName: contactNameError,
     contactEmail: contactEmailError,
@@ -163,7 +176,8 @@ export const ExhibitorSignupForm = () => {
     confirmPassword: confirmPasswordError,
     companyName: companyNameError,
     country: countryError,
-    username: usernameError
+    username: usernameError,
+    currency: currencyError
   } = errors;
 
   return (
@@ -271,6 +285,16 @@ export const ExhibitorSignupForm = () => {
                 value={watchedCountry}
                 onChange={(value) => {
                   if (value) {
+                    const country = value.toLowerCase();
+                    const countryDetails =
+                      COUNTRY_DETAILS[country as keyof typeof COUNTRY_DETAILS];
+
+                    if (countryDetails && countryDetails.currency) {
+                      setValue('currency', countryDetails.currency, {
+                        shouldValidate: true
+                      });
+                    }
+
                     setValue('country', value, {
                       shouldValidate: true
                     });
@@ -283,20 +307,39 @@ export const ExhibitorSignupForm = () => {
               <ErrorText message={countryError?.message} />
             </div>
 
-            {/* Phone Number */}
-            <PhoneNumberInput
-              name="contactPhone"
-              error={contactPhoneError?.message}
-              value={watchedPhoneNo}
-              onChange={(value) => {
-                if (value) {
-                  setValue('contactPhone', value, {
-                    shouldValidate: true
-                  });
-                }
-              }}
-            />
+            {/* Currency */}
+            <div>
+              <CurrencySelector
+                name="currency"
+                value={watchedCurrency}
+                isDisabled={!!watchedCountry}
+                onChange={(value) => {
+                  if (value) {
+                    setValue('currency', value, {
+                      shouldValidate: true
+                    });
+                  }
+                }}
+                hasError={!!currencyError?.message?.length}
+                label="Currency"
+              />
+              <ErrorText message={currencyError?.message} />
+            </div>
           </div>
+
+          {/* Phone Number */}
+          <PhoneNumberInput
+            name="contactPhone"
+            error={contactPhoneError?.message}
+            value={watchedPhoneNo}
+            onChange={(value) => {
+              if (value) {
+                setValue('contactPhone', value, {
+                  shouldValidate: true
+                });
+              }
+            }}
+          />
 
           {/* Password */}
           <div>

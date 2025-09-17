@@ -13,12 +13,15 @@ import './style.css';
 export interface IDatePicker<T extends FieldValues> {
   name: Path<T> | string;
   label?: string;
-  className?: string;
+  rootClassName?: string;
   labelClassName?: string;
   placeholderText?: string;
   showTimeSelect?: boolean;
+  isDisabled?: boolean;
   dateFormat?: string;
   value: Date | null;
+  timeIntervals?: number;
+  inputClassName?: string;
   handleChange: ({
     name,
     value
@@ -39,13 +42,16 @@ export const DatePicker = <T extends FieldValues>({
   max = undefined,
   value,
   handleChange,
+  timeIntervals,
   showTimeSelect = false,
-  className = ''
+  rootClassName = '',
+  isDisabled = false,
+  inputClassName = ''
 }: IDatePicker<T>) => {
   const format = showTimeSelect ? 'MMMM d, yyyy h:mm aa' : 'MMMM d, yyyy';
 
   return (
-    <div className={cn('flex flex-col gap-[0.5rem]', className)}>
+    <div className={cn('flex flex-col gap-[0.5rem]', rootClassName)}>
       {label && (
         <label
           htmlFor={name}
@@ -63,14 +69,15 @@ export const DatePicker = <T extends FieldValues>({
             placeholderText={placeholderText}
             minDate={min}
             maxDate={max}
-            className="h-full"
+            disabled={isDisabled}
             locale="en"
             dateFormat={format}
             showTimeSelect={showTimeSelect}
-            timeIntervals={10}
+            timeIntervals={timeIntervals}
+            className={cn('h-full min-h-9.5!', inputClassName)}
           />
         </div>
-        <div className="w-10 flex h-full  justify-center items-center border-l border-border">
+        <div className="w-10 flex h-full justify-center items-center border-l border-border">
           <CalendarIcon size={16} />
         </div>
       </div>

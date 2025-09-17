@@ -43,7 +43,7 @@ export const BoothsHeader = () => {
           />
 
           <ExportButton
-            apiRoute={boothsService.exportBooth().url as string}
+            apiRoute="/organizer/booths/export"
             exportName="booths"
           />
 

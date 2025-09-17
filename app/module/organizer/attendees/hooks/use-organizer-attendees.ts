@@ -4,13 +4,14 @@ import { extractPaginationMeta } from '@/app/core/shared/utils';
 import { EMPTY_ARRAY } from '@/app/core/shared/constants';
 import { organizerAttendeesService } from '../services';
 
-export interface IOrganizerAttendee {
+export interface IAttendee {
   id: string;
   email: string;
   inviteCode: string;
   used: boolean;
   status: string;
   expiresAt: string;
+  address: string | null;
   createdAt: string;
   updatedAt: string;
   logoUrl: string;
@@ -33,7 +34,7 @@ export const useOrganizerAttendees = (filter: Record<string, string> = {}) => {
     isLoading: isLoadingAttendees,
     isRefetching: isRefetchingAttendees,
     refetch
-  } = useCustomQuery<IPaginatedResponse<IOrganizerAttendee>>({
+  } = useCustomQuery<IPaginatedResponse<IAttendee>>({
     ...organizerAttendeesService.getAttendees(filter)
   });
   return {
@@ -51,7 +52,7 @@ export const useOrganizerAttendeeById = (id: string) => {
     isLoading: isLoadingAttendee,
     isRefetching: isRefetchingAttendee,
     refetch
-  } = useCustomQuery<IOrganizerAttendee>({
+  } = useCustomQuery<IAttendee>({
     ...organizerAttendeesService.getAttendeeById(id)
   });
   return {

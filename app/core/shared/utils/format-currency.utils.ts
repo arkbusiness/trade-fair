@@ -1,4 +1,7 @@
-import { CURRENCY, CURRENCY_SYMBOL } from '../constants/common.const';
+import {
+  DEFAULT_CURRENCY,
+  DEFAULT_CURRENCY_SYMBOL
+} from '../constants/common.const';
 
 type FormatCurrencyOptions = {
   locale?: string;
@@ -12,10 +15,10 @@ type FormatCurrencyOptions = {
 export const formatCurrency = ({
   amount,
   locale = 'en-US',
-  currency = CURRENCY,
+  currency = DEFAULT_CURRENCY,
   minimumFractionDigits = 0,
   maximumFractionDigits = 2,
-  compactThreshold = 100000
+  compactThreshold = 0
 }: FormatCurrencyOptions): string => {
   const useCompact =
     compactThreshold > 0 ? Math.abs(amount) >= compactThreshold : false;
@@ -30,8 +33,11 @@ export const formatCurrency = ({
   }).format(amount);
 
   // Replace NGN with custom symbol if needed
-  if (formatAmount.includes('NGN')) {
-    formatAmount = formatAmount.replace('NGN', CURRENCY_SYMBOL);
+  if (formatAmount.includes(DEFAULT_CURRENCY)) {
+    formatAmount = formatAmount.replace(
+      DEFAULT_CURRENCY,
+      DEFAULT_CURRENCY_SYMBOL
+    );
   }
 
   return formatAmount;

@@ -42,3 +42,4 @@ export * from './spinner';
 export * from './time-picker/time-picker';
 export * from './sidebar';
 export * from './app-sidebar-trigger';
+export * from './expanded-text';

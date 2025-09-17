@@ -6,6 +6,7 @@ import { useQuery } from '@tanstack/react-query';
 import { AxiosError } from 'axios';
 import { clientAxios } from '../../lib';
 import { exhibitorUserService } from '../../services';
+import { COUNTRY_DETAILS, DEFAULT_CURRENCY } from '../../constants';
 
 export const useExhibitorUser = () => {
   const { accessToken, handleLogOut } = useExhibitorAuthStore();
@@ -49,8 +50,16 @@ export const useExhibitorUser = () => {
     enabled: !!accessToken
   });
 
+  const getCurrency = (country: string) => {
+    const toLowerCaseCountry = country.toLowerCase();
+    const countryDetails =
+      COUNTRY_DETAILS[toLowerCaseCountry as keyof typeof COUNTRY_DETAILS];
+    return countryDetails?.currency || DEFAULT_CURRENCY;
+  };
+
   return {
     user,
+    currency: getCurrency(user?.country || ''),
     isLoadingUser,
     refetchUser,
     ...queryMeta
