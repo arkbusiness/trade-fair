@@ -42,7 +42,7 @@ export const BoothDetails = ({
 
   const style = mapStatus[assignedLabel];
 
-  const qrValue = `${booth?.number}-${booth?.exhibitorId}`;
+  const qrValue = `${booth?.number}-${booth?.organizerId}`;
 
   return (
     <>
