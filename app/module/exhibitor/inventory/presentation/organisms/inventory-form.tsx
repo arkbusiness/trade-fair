@@ -159,7 +159,7 @@ export const InventoryForm = ({ isReadOnly, inventory }: InventoryForm) => {
       images: [],
       imageUrls: inventory?.images ?? [],
       customAttrs: inventory?.customAttrs
-        ? JSON.parse(inventory.customAttrs as never)
+        ? inventory.customAttrs
         : [
             {
               key: '',

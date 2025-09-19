@@ -168,7 +168,7 @@ export const RecentOrdersTable = () => {
         <LinkButton
           variant="tertiary"
           className="w-[6.75rem]"
-          href={EXHIBITOR_APP_ROUTES.inventory.root()}
+          href={EXHIBITOR_APP_ROUTES.inventory.orders.root()}
         >
           View All Orders
         </LinkButton>

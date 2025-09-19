@@ -37,3 +37,23 @@ export const useBooths = (filter: Record<string, string> = {}) => {
     refetchBooths: refetch
   };
 };
+
+export const useBoothById = (id: string) => {
+  const {
+    data: booth,
+    isLoading: isLoadingBooth,
+    isRefetching: isRefetchingBooth,
+    refetch
+  } = useCustomQuery<IBooth>({
+    ...boothsService.getBoothById(id),
+    options: {
+      enabled: !!id
+    }
+  });
+  return {
+    booth,
+    isLoadingBooth,
+    isRefetchingBooth,
+    refetchBooth: refetch
+  };
+};
