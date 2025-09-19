@@ -416,7 +416,7 @@ export const BoothsTable = () => {
         isOpen={activeModal === ModalType.VIEW_BOOTH}
         handleClose={handleCloseModal}
         handleEdit={handleEditBooth}
-        selectedBooth={selectedBooth}
+        selectedBoothId={selectedBooth?.id ?? ''}
       />
 
       <AssignExhibitorForm

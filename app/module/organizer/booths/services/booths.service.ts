@@ -12,6 +12,10 @@ export const boothsService = {
       queryKey: ['booths', queryParams]
     };
   },
+  getBoothById: (id: string) => ({
+    url: `/organizer/booths/${id}`,
+    queryKey: ['booths', id]
+  }),
   createBooth: (data: {
     number: string;
     categoryId: string;

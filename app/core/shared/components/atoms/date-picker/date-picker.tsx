@@ -74,6 +74,7 @@ export const DatePicker = <T extends FieldValues>({
             dateFormat={format}
             showTimeSelect={showTimeSelect}
             timeIntervals={timeIntervals}
+            autoComplete="off"
             className={cn('h-full min-h-9.5!', inputClassName)}
           />
         </div>
