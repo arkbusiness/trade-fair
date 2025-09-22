@@ -46,6 +46,7 @@ export enum OrganizerSettingsPage {
 
 export enum ExhibitorSettingsPageEnum {
   BUSINESS_INFORMATION = 'business-information',
+  BANK_INFORMATION = 'bank-information',
   MY_PROFILE = 'my-profile',
   CHANGE_PASSWORD = 'change-password',
   BOOTH_MEMBERS = 'booth-members',
