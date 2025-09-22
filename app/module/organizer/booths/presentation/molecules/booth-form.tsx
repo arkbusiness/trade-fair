@@ -18,7 +18,13 @@ interface BoothFormProps {
 }
 
 const validationSchema = yup.object().shape({
-  number: yup.string().required('Booth number is required'),
+  number: yup
+    .string()
+    .required('Booth number is required')
+    .matches(
+      /^[a-zA-Z0-9]+$/,
+      'Booth number must contain only letters and numbers'
+    ),
   categoryId: yup
     .mixed<{
       id: string;
