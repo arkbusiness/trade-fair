@@ -8,6 +8,7 @@ export interface IBooth {
   id: string;
   number: string;
   status: string;
+  assigned: boolean;
   assignedAt?: string;
   categoryName: string;
   categoryId: string;

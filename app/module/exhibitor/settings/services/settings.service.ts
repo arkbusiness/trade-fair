@@ -84,6 +84,17 @@ export const exhibitorSettingsService = {
       data
     };
   },
+  updatePayment: (data: {
+    bankName: string;
+    bankAccountName: string;
+    bankAccountNumber: string;
+  }): AxiosRequestConfig => {
+    return {
+      url: `/exhibitor/exhibitors/payment-details`,
+      method: 'PUT',
+      data
+    };
+  },
   updatePassword: (data: {
     currentPassword: string;
     newPassword: string;

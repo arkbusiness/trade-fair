@@ -16,11 +16,16 @@ import {
   ExhibitorInvoiceInfoForm,
   ExhibitorProfileForm
 } from '../organisms';
+import { ExhibitorBankInfoForm } from '../organisms/exhibitor-bank-info-form';
 
 const TABS_ITEMS = [
   {
     value: ExhibitorSettingsPageEnum.BUSINESS_INFORMATION,
     label: 'Business Information'
+  },
+  {
+    value: ExhibitorSettingsPageEnum.BANK_INFORMATION,
+    label: 'Bank Information'
   },
   {
     value: ExhibitorSettingsPageEnum.MY_PROFILE,
@@ -84,6 +89,15 @@ export const ExhibitorSettingsPage = () => {
         >
           <div className="mt-1">
             <ExhibitorBusinessInfoForm />
+          </div>
+        </TabsContent>
+
+        <TabsContent
+          value={ExhibitorSettingsPageEnum.BANK_INFORMATION}
+          className="p-0 md:px-3 m-0"
+        >
+          <div className="mt-1">
+            <ExhibitorBankInfoForm />
           </div>
         </TabsContent>
 
