@@ -26,8 +26,7 @@ export const BoothDetails = ({
   selectedBoothId
 }: BoothDetailsProps) => {
   const { booth, isLoadingBooth } = useBoothById(selectedBoothId);
-  const isAssigned = booth?.status?.toLowerCase() === 'assigned';
-  const assignedLabel = isAssigned ? 'assigned' : 'unassigned';
+  const assignedLabel = booth?.assigned ? 'assigned' : 'unassigned';
 
   const mapStatus = {
     assigned: {
@@ -43,6 +42,8 @@ export const BoothDetails = ({
   const style = mapStatus[assignedLabel];
 
   const qrValue = `${booth?.number}-${booth?.organizerId}`;
+
+  console.log(qrValue);
 
   return (
     <>
@@ -84,12 +85,14 @@ export const BoothDetails = ({
           <div className="flex gap-5">
             <div className="max-w-[135px] w-full border border-foreground/10 rounded-[8px] px-2 pb-6 pt-3 flex flex-col gap-1 justify-center">
               <div className="flex-1 flex justify-center h-[74px] w-[74px] mx-auto">
-                <QRGenerator
-                  size={74}
-                  value={qrValue}
-                  showDownload={true}
-                  downloadFileName={`booth-${booth?.number}-qr-code`}
-                />
+                {booth && (
+                  <QRGenerator
+                    size={74}
+                    value={qrValue}
+                    showDownload={true}
+                    downloadFileName={`booth-${booth?.number}-qr-code`}
+                  />
+                )}
               </div>
             </div>
 
