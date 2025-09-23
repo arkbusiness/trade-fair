@@ -1,3 +1,5 @@
+'use client';
+
 import { ErrorText, Input, Textarea } from '@/app/core/shared/components/atoms';
 import {
   CountrySelector,
@@ -101,7 +103,6 @@ export const ExhibitorBusinessInfoForm = () => {
         disabled={mutation.isPending}
       >
         <div className="flex flex-col gap-1 items-center">
-          <p className="text-sm font-semibold mb-2">Company logo</p>
           <ProfileImageUploader
             onImageUpload={(file: File | null) => {
               setValue('file', file);

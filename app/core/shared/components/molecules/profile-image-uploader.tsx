@@ -112,20 +112,33 @@ export const ProfileImageUploader: React.FC<ProfileImageUploaderProps> = ({
         />
       ) : (
         <>
-          {user?.photoUrl || avatarPlaceholder ? (
+          {user?.photoUrl && (
             <Image
               width={160}
               height={160}
-              src={user?.photoUrl || avatarPlaceholder}
+              src={user?.photoUrl}
               alt={user?.name || 'User avatar'}
               className={cn(
                 'w-full h-full mx-auto object-cover',
                 imageClassName
               )}
             />
-          ) : (
-            <ImagePlaceholder />
           )}
+
+          {!user?.photoUrl && avatarPlaceholder && (
+            <Image
+              width={160}
+              height={160}
+              src={avatarPlaceholder}
+              alt={user?.name || 'User avatar'}
+              className={cn(
+                'w-full h-full mx-auto object-cover',
+                imageClassName
+              )}
+            />
+          )}
+
+          {!user?.photoUrl && !avatarPlaceholder && <ImagePlaceholder />}
         </>
       )}
     </div>
