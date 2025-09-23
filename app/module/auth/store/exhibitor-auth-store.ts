@@ -28,6 +28,13 @@ export interface IExhibitorAuthUser {
   currency: string | null;
   organizeId: string | null;
   invitedId: string;
+  PaymentDetails:
+    | {
+        bankName: string;
+        bankAccountName: string;
+        bankAccountNumber: string;
+      }[]
+    | null;
 }
 interface IAuthState {
   accessToken: string;

@@ -9,6 +9,7 @@ import { useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import * as yup from 'yup';
 import { exhibitorSettingsService } from '../../services';
+import { useExhibitorUser } from '@/app/core/shared/hooks/api/use-exhibitor-user';
 
 const validationSchema = yup.object().shape({
   bankName: yup.string().required('Bank name is required'),
@@ -25,15 +26,19 @@ type IFormValues = yup.InferType<typeof validationSchema>;
 
 export const ExhibitorBankInfoForm = () => {
   const mutation = useCustomMutation();
+  const { user } = useExhibitorUser();
+
+  const bankDetails = user?.PaymentDetails?.[0];
+
   const {
     handleSubmit,
     formState: { errors },
     register
   } = useForm<IFormValues>({
     defaultValues: {
-      bankName: '',
-      bankAccountName: '',
-      bankAccountNumber: ''
+      bankName: bankDetails?.bankName || '',
+      bankAccountName: bankDetails?.bankAccountName || '',
+      bankAccountNumber: bankDetails?.bankAccountNumber || ''
     },
     resolver: yupResolver(validationSchema)
   });
