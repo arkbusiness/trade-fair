@@ -53,7 +53,7 @@ export const RecentOrdersTable = () => {
         const product = row.original?.items ?? [];
         const productName = product.map((item) => item.product.name).join(', ');
         return (
-          <Text className="w-[250px] break-words  whitespace-pre-wrap">
+          <Text className="w-[250px] break-words whitespace-pre-wrap line-clamp-1">
             <span>{productName || '---'}</span>
           </Text>
         );
