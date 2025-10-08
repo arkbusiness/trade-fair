@@ -50,3 +50,10 @@ export const exhibitorUserService = {
     queryKey: ['exhibitor-profile']
   })
 };
+
+export const attendeeUserService = {
+  getUser: () => ({
+    url: `/attendee/me`,
+    queryKey: ['attendee-profile']
+  })
+};

@@ -7,7 +7,11 @@ import {
   ShoppingBagIcon
 } from 'lucide-react';
 import { AltUserIcon, BoothIcon } from '../icons';
-import { EXHIBITOR_APP_ROUTES, ORGANIZER_APP_ROUTES } from './common.const';
+import {
+  ATTENDEE_APP_ROUTES,
+  EXHIBITOR_APP_ROUTES,
+  ORGANIZER_APP_ROUTES
+} from './common.const';
 
 export const ORGANIZER_SIDEBAR_ITEMS = [
   {
@@ -83,6 +87,32 @@ export const EXHIBITOR_SIDEBAR_ITEMS = [
         icon: MessageCircleMore,
         title: 'Messaging',
         url: EXHIBITOR_APP_ROUTES.attendees.messaging.root()
+      }
+    ]
+  }
+];
+
+export const ATTENDEE_SIDEBAR_ITEMS = [
+  {
+    title: 'Home',
+    url: ATTENDEE_APP_ROUTES.root(),
+    icon: House,
+    routes: []
+  },
+  {
+    title: 'Product Hub',
+    url: undefined,
+    icon: undefined,
+    routes: [
+      {
+        title: 'Catalogues',
+        icon: BoxIcon,
+        url: ''
+      },
+      {
+        title: 'Orders & Invoice',
+        icon: ShoppingBagIcon,
+        url: ''
       }
     ]
   }

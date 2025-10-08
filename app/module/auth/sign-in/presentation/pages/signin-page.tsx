@@ -7,6 +7,7 @@ import {
   TabsTrigger
 } from '@/app/core/shared/components/atoms';
 import {
+  ATTENDEE_APP_ROUTES,
   EXHIBITOR_APP_ROUTES,
   ORGANIZER_APP_ROUTES
 } from '@/app/core/shared/constants';
@@ -27,15 +28,20 @@ import Link from 'next/link';
 import { useRouter } from 'nextjs-toploader/app';
 import { useState } from 'react';
 import toast from 'react-hot-toast';
-import { SigninForm } from '../organisms';
+import { AttendeeSigninForm, SigninForm } from '../organisms';
 import { ISigninFormValues } from '../organisms/sign-in-form';
 
 enum TABS_ITEMS_ENUM {
   ORGANIZER = 'organizer',
-  EXHIBITOR = 'exhibitor'
+  EXHIBITOR = 'exhibitor',
+  ATTENDEE = 'attendee'
 }
 
 const TABS_ITEMS = [
+  {
+    value: TABS_ITEMS_ENUM.ATTENDEE,
+    label: 'Attendee'
+  },
   {
     value: TABS_ITEMS_ENUM.ORGANIZER,
     label: 'Organizer'
@@ -48,7 +54,7 @@ const TABS_ITEMS = [
 
 export const SigninPage = () => {
   const { searchParamsObject } = useSetParams();
-  const queryTab = searchParamsObject?.['tab'] ?? TABS_ITEMS_ENUM.ORGANIZER;
+  const queryTab = searchParamsObject?.['tab'] ?? TABS_ITEMS_ENUM.ATTENDEE;
   const [selectedTab, setSelectedTab] = useState(queryTab);
   const router = useRouter();
   const { handleSaveToken: handleOrganizerSaveToken } = useOrganizerAuthStore();
@@ -98,10 +104,17 @@ export const SigninPage = () => {
     });
   };
 
-  const dashboardRoute =
-    selectedTab === TABS_ITEMS_ENUM.ORGANIZER
-      ? ORGANIZER_APP_ROUTES.root()
-      : EXHIBITOR_APP_ROUTES.root();
+  const handleDashboardRoute = () => {
+    if (selectedTab === TABS_ITEMS_ENUM.ORGANIZER) {
+      return ORGANIZER_APP_ROUTES.root();
+    } else if (selectedTab === TABS_ITEMS_ENUM.EXHIBITOR) {
+      return EXHIBITOR_APP_ROUTES.root();
+    } else {
+      return ATTENDEE_APP_ROUTES.root();
+    }
+  };
+
+  const dashboardRoute = handleDashboardRoute();
 
   return (
     <>
@@ -171,6 +184,11 @@ export const SigninPage = () => {
                   isLoading={mutation.isPending}
                   handleSubmitForm={handleExhibitorSubmit}
                 />
+              </TabsContent>
+
+              {/* Attendee */}
+              <TabsContent value={TABS_ITEMS_ENUM.ATTENDEE}>
+                <AttendeeSigninForm />
               </TabsContent>
             </AuthCard>
           </Tabs>
