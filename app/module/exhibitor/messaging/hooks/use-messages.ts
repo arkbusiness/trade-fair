@@ -162,7 +162,7 @@ export const useAttendeeMessages = (attendeeId: string) => {
     queryFn: fetchMessages,
     initialPageParam: 1,
     enabled: !!attendeeId,
-    refetchInterval: 2000, // Refetch every 5 seconds
+    refetchInterval: 2000, // Refetch every 2 seconds
     getNextPageParam: (lastPage) => {
       // Check if there are more pages available
       if (lastPage.page < lastPage.pages) {

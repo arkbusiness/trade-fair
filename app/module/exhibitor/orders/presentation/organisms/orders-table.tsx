@@ -156,7 +156,7 @@ export const OrdersTable = () => {
             )}
             <div className="w-[150px] flex flex-col gap-1">
               {/* Product Name */}
-              <Text className="w-full whitespace-pre-wrap break-word text-foreground font-semibold">
+              <Text className="w-full whitespace-pre-wrap break-word text-foreground font-semibold line-clamp-2">
                 {productName}
               </Text>
 

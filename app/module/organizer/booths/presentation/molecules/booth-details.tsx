@@ -41,9 +41,7 @@ export const BoothDetails = ({
 
   const style = mapStatus[assignedLabel];
 
-  const qrValue = `${booth?.number}-${booth?.organizerId}`;
-
-  console.log(qrValue);
+  const qrValue = `${booth?.number}&${booth?.organizerId}`;
 
   return (
     <>

@@ -80,7 +80,7 @@ export const ChatMessageBubble = ({
               alt="Owner Avatar"
               width={32}
               height={32}
-              className="w-full h-full rounded-full"
+              className="w-full h-full rounded-full object-contain"
             />
           ) : (
             <ImagePlaceholder

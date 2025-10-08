@@ -7,35 +7,26 @@ import { isDev } from '@/app/core/shared/utils';
 import { deleteCookie, getCookie, setCookie } from 'cookies-next';
 import { create } from 'zustand';
 
-export interface IExhibitorAuthUser {
+export interface IAttendeeAuthUser {
   id: string;
-  companyName: string;
+  username: string;
+  email: string;
+  lastLogin: string;
   contactName: string;
-  contactEmail: string;
-  contactPhone: string;
-  logoUrl: string | null;
-  boothNumber: string;
-  boothName: string | null;
-  standNumber: string | null;
-  publicDescription: string | null;
-  websiteUrl: string | null;
+  phone: string | null;
+  address: string | null;
+  logoUrl: string;
   createdAt: string;
   updatedAt: string;
-  password: string;
+  pin: string;
+  interests: string[];
+  currency: string;
+  exhibitorInviteId: string | null;
+  organizerId: string;
   fcmToken: string | null;
-  deactivated: boolean;
-  country: string | null;
-  currency: string | null;
-  organizeId: string | null;
-  invitedId: string;
-  PaymentDetails:
-    | {
-        bankName: string;
-        bankAccountName: string;
-        bankAccountNumber: string;
-      }[]
-    | null;
+  invite: string | null;
 }
+
 interface IAuthState {
   accessToken: string;
   inviteToken: string;
@@ -51,7 +42,7 @@ const INITIAL_STATE = {
   inviteToken: ''
 };
 
-export const useExhibitorAuthStore = create<IAuthState>()((set) => ({
+export const useAttendeeAuthStore = create<IAuthState>()((set, get) => ({
   ...INITIAL_STATE,
   hasCheckedToken: false,
   handleLoadToken: async () => {
@@ -59,17 +50,17 @@ export const useExhibitorAuthStore = create<IAuthState>()((set) => ({
       const accessToken = (await getCookie(COOKIE_KEYS.auth.token)) || '';
 
       if (!accessToken) {
-        useExhibitorAuthStore.getState().handleLogOut();
+        get().handleLogOut();
         return;
       }
 
       if (accessToken) {
-        useExhibitorAuthStore.getState().handleSaveToken({ accessToken });
+        get().handleSaveToken({ accessToken });
       }
 
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (_error) {
-      useExhibitorAuthStore.getState().handleLogOut();
+      get().handleLogOut();
     } finally {
       set((state) => ({
         ...state,

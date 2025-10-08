@@ -48,6 +48,14 @@ export const EXHIBITOR_APP_ROUTES = {
   }
 };
 
+export const ATTENDEE_APP_ROUTES = {
+  root: () => '/attendee',
+  auth: {
+    login: () => '/?tab=attendee'
+  },
+  settings: (tab?: string) => `/attendee/settings${tab ? `?tab=${tab}` : ''}`
+};
+
 export const APP_NAME = 'Ark';
 export const DEFAULT_CURRENCY = 'NGN';
 export const DEFAULT_CURRENCY_SYMBOL = '₦';

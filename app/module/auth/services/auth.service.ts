@@ -1,5 +1,6 @@
 import { AxiosRequestConfig } from 'axios';
 import { ISigninFormValues } from '../sign-in/presentation/organisms/sign-in-form';
+import { IAttendeeSigninFormValues } from '../sign-in/presentation/organisms/attendee-sign-in-form';
 
 export const organizerAuthService = {
   signin: (data: ISigninFormValues): AxiosRequestConfig => ({
@@ -58,5 +59,13 @@ export const exhibitorAuthService = {
     headers: {
       'Content-Type': 'multipart/form-data'
     }
+  })
+};
+
+export const attendeeAuthService = {
+  signin: (data: IAttendeeSigninFormValues): AxiosRequestConfig => ({
+    url: '/attendee/login',
+    method: 'POST',
+    data
   })
 };

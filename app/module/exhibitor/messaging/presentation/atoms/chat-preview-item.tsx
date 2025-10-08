@@ -10,7 +10,6 @@ interface ChatPreviewItemProps {
   avatar: string;
   name: string;
   message: string;
-  // date: string;
   handleSelect: () => void;
 }
 
@@ -24,7 +23,7 @@ export const ChatPreviewItem = ({
 }: ChatPreviewItemProps) => {
   const { searchParamsObject } = useSetParams();
 
-  const attendeeId = searchParamsObject?.['attendeeId'] ?? '';
+  const exhibitorId = searchParamsObject?.['exhibitor'] ?? '';
 
   const hasImage = !!avatar;
 
@@ -33,7 +32,7 @@ export const ChatPreviewItem = ({
       className={cn(
         'py-5 px-2 rounded-[8px] flex gap-2 items-center hover:bg-highlight cursor-pointer',
         {
-          'bg-highlight': id === attendeeId
+          'bg-highlight': id === exhibitorId
         }
       )}
       onClick={handleSelect}
@@ -66,20 +65,9 @@ export const ChatPreviewItem = ({
             <p className="text-sm font-medium text-foreground line-clamp-1 flex-1 ">
               {name}
             </p>
-            {/* <p className="text-[10px] font-normal text-foreground  w-24 text-right">
-              {distanceFormat(date)}
-            </p> */}
           </div>
           <p className="text-[10px] font-normal line-clamp-1">{message}</p>
         </div>
-
-        {/* <div
-          className={cn(
-            'w-5 h-5 rounded-full bg-tertiary text-background flex items-center justify-center text-xs'
-          )}
-        >
-          <span>5</span>
-        </div> */}
       </div>
     </div>
   );

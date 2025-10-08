@@ -42,6 +42,8 @@ export const BoothForm = ({
 }: BoothFormProps) => {
   const mutation = useCustomMutation();
 
+  const isAssigned = !!selectedBooth?.assignedAt;
+
   const form = useForm<BoothFormType>({
     resolver: yupResolver(validationSchema),
     values: {
@@ -151,6 +153,7 @@ export const BoothForm = ({
               <Input
                 label="Booth Number"
                 placeholder="e.g. B0003"
+                disabled={isAssigned}
                 hasError={!!boothNumberError?.message?.length}
                 {...register('number')}
               />

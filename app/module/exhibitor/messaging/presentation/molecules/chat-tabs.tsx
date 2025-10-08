@@ -17,12 +17,12 @@ export const ChatTabs = () => {
       label: 'All',
       value: CHAT_TAB.ALL,
       count: undefined
-    },
-    {
-      label: 'Unread',
-      value: CHAT_TAB.UNREAD,
-      count: undefined
     }
+    // {
+    //   label: 'Unread',
+    //   value: CHAT_TAB.UNREAD,
+    //   count: undefined
+    // }
   ];
 
   const handleTabChange = (value: string) => {

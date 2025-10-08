@@ -38,18 +38,23 @@ export const ChatPreview = () => {
           <Spinner />
         </div>
       )}
-      {data?.map((chatPreview) => (
-        <ChatPreviewItem
-          key={chatPreview.attendeeId}
-          id={chatPreview.attendeeId}
-          avatar={chatPreview?.attendeeLogoUrl ?? ''}
-          name={chatPreview.attendeeName}
-          // TODO: LOOK INTO THIS(IT should display the latest message)
-          message={chatPreview.messages[0].content}
-          // date={chatPreview.messages[0].createdAt}
-          handleSelect={() => handleSelect(chatPreview.attendeeId)}
-        />
-      ))}
+      {data?.map((chatPreview) => {
+        const lastMessage = chatPreview?.messages
+          ?.filter((msg) => msg.receiverType === 'ATTENDEE')
+          .pop();
+
+        return (
+          <ChatPreviewItem
+            key={chatPreview.attendeeId}
+            id={chatPreview.attendeeId}
+            avatar={chatPreview?.attendeeLogoUrl ?? ''}
+            name={chatPreview.attendeeName}
+            message={lastMessage?.content ?? ''}
+            // date={chatPreview.messages[0].createdAt}
+            handleSelect={() => handleSelect(chatPreview.attendeeId)}
+          />
+        );
+      })}
     </div>
   );
 };
