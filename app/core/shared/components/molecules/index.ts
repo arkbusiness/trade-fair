@@ -42,3 +42,4 @@ export * from './currency-selector';
 export * from './border-tab';
 export * from './pagination/pagination';
 export * from './attendee-sidebar-items';
+export * from './attendee-header';

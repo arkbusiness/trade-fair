@@ -57,6 +57,9 @@ export const ATTENDEE_APP_ROUTES = {
     root: () => '/attendee/onboarding',
     verifyOtp: () => '/attendee/onboarding/verify-otp'
   },
+  exhibitors: {
+    root: () => '/attendee/exhibitors'
+  },
   settings: (tab?: string) => `/attendee/settings${tab ? `?tab=${tab}` : ''}`
 };
 

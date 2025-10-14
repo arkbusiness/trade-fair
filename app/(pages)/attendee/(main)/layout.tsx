@@ -1,9 +1,6 @@
 import { AttendeeAuthProvider } from '@/app/core/providers';
 import { SidebarProvider } from '@/app/core/shared/components/atoms';
-import {
-  ExhibitorGlobalHeader,
-  ExhibitorSecondaryHeader
-} from '@/app/core/shared/components/molecules';
+import { AttendeeHeader } from '@/app/core/shared/components/molecules';
 import { AttendeeSidebar } from '@/app/core/shared/components/organisms';
 import {
   ATTENDEE_APP_ROUTES,
@@ -26,10 +23,9 @@ export default async function AttendeeLayout({
   return (
     <AttendeeAuthProvider>
       <SidebarProvider>
-        <ExhibitorGlobalHeader />
         <AttendeeSidebar />
-        <main className="w-full pb-[6.25rem] overflow-x-hidden relative top-[var(--header-height)]">
-          <ExhibitorSecondaryHeader />
+        <main className="w-full pb-[6.25rem] overflow-x-hidden relative">
+          <AttendeeHeader />
           <div className=" px-[1.13rem] mt-5 z-10 before:bg-sidebar before:absolute before:top-0 before:left-0 before:right-0 before:bottom-0 before:z-[-1]">
             {children}
           </div>
