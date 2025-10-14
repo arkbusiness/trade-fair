@@ -63,7 +63,7 @@ export const AttendeeSidebarItems = () => {
                       {
                         'text-sidebar-highlight stroke-sidebar-highlight':
                           hasActiveChild || hasActiveParent,
-                        'hover:bg-gray-light hover:text-tertiary': !!item.url,
+                        'hover:bg-highlight hover:text-tertiary!': !!item.url,
                         'bg-tertiary !text-background': hasActiveParent
                       }
                     )}

@@ -1,9 +1,20 @@
-import { Card, CardContent } from '@/app/core/shared/components/atoms';
+'use client';
+
+import { Card, CardContent, Spinner } from '@/app/core/shared/components/atoms';
 import { ATTENDEE_APP_ROUTES } from '@/app/core/shared/constants';
 import { ChevronRight } from 'lucide-react';
 import Link from 'next/link';
+import { useAttendeeExhibitors } from '../../../exhibitors/hooks';
+import { AttendeeExhibitorCard } from '../../../exhibitors/presentation/molecules';
 
 export const AttendeeOverviewExhibitors = () => {
+  const { exhibitors, isLoadingExhibitor, refetchExhibitor } =
+    useAttendeeExhibitors({
+      limit: '4'
+    });
+
+  const isLoading = isLoadingExhibitor;
+
   return (
     <Card className="w-full justify-between">
       <div className="flex justify-between gap-3 items-center px-3.5 border-b pb-4">
@@ -15,11 +26,27 @@ export const AttendeeOverviewExhibitors = () => {
           </span>
         </Link>
       </div>
-      <CardContent className="px-3.5">
-        Lorem ipsum, dolor sit amet consectetur adipisicing elit. Distinctio
-        voluptas unde consequuntur itaque architecto autem rerum perferendis
-        minima nemo nulla debitis, ratione quibusdam dolores quisquam soluta
-        accusantium magnam cupiditate eos?
+      <CardContent className="px-3.5 py-0 borderborder-solid">
+        <div className="grid grid-cols-[repeat(auto-fill,_minmax(15rem,_1fr))] items-stretch  gap-x-6 gap-y-2">
+          {exhibitors.map((exhibitor) => {
+            const isLiked = exhibitor.isFavorite;
+
+            return (
+              <AttendeeExhibitorCard
+                key={exhibitor.id}
+                exhibitorId={exhibitor.id}
+                imageUrl={exhibitor.logoUrl || './images/empty-image.svg'}
+                companyName={exhibitor.companyName}
+                boothNumber={exhibitor.boothNumber}
+                description={exhibitor.publicDescription}
+                isLiked={isLiked}
+                allowNavigation={false}
+                handleRefetchExhibitors={refetchExhibitor}
+              />
+            );
+          })}
+        </div>
+        {isLoading && <Spinner />}
       </CardContent>
     </Card>
   );
