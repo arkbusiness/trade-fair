@@ -61,6 +61,9 @@ export const ATTENDEE_APP_ROUTES = {
     root: () => '/attendee/exhibitors',
     detail: (id: string) => `/attendee/exhibitors/${id}`
   },
+  meetings: {
+    root: () => '/attendee/meetings'
+  },
   settings: (tab?: string) => `/attendee/settings${tab ? `?tab=${tab}` : ''}`
 };
 

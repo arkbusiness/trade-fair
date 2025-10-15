@@ -12,7 +12,7 @@ const DASHBOARD_TITLES = {
   '/catalogues': 'Catalogues',
   '/orders': 'Orders & Invoice',
   '/exhibitors': 'Exhibitors',
-  '/appointments': 'Appointments',
+  '/meetings': 'Meetings',
   '/messaging': 'Messaging',
   '/settings': 'Settings'
 };

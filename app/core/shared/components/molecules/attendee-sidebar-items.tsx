@@ -100,7 +100,7 @@ export const AttendeeSidebarItems = () => {
                               className={cn(
                                 'flex items-center text-xs font-medium gap-x-[0.63rem] text-text-secondary py-[7.5px] pl-6 rounded-[4px] hover:bg-gray-light-2 cursor-pointer opacity-70',
                                 {
-                                  'bg-gray-light-2 text-tertiary font-bold hover:bg-gray-light opacity-100':
+                                  'bg-tertiary !text-background font-bold hover:bg-highlight hover:text-tertiary! opacity-100':
                                     isActive
                                 }
                               )}

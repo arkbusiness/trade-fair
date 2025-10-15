@@ -115,5 +115,27 @@ export const ATTENDEE_SIDEBAR_ITEMS = [
         url: ''
       }
     ]
+  },
+  {
+    title: 'Networking',
+    url: undefined,
+    icon: undefined,
+    routes: [
+      {
+        title: 'Exhibitors',
+        icon: BoxIcon,
+        url: ''
+      },
+      {
+        title: 'Messaging',
+        icon: BoxIcon,
+        url: ''
+      },
+      {
+        title: 'Appointments',
+        icon: ShoppingBagIcon,
+        url: ATTENDEE_APP_ROUTES.meetings.root()
+      }
+    ]
   }
 ];
