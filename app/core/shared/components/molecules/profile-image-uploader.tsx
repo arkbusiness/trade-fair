@@ -114,8 +114,8 @@ export const ProfileImageUploader: React.FC<ProfileImageUploaderProps> = ({
         <>
           {user?.photoUrl && (
             <Image
-              width={160}
-              height={160}
+              width={130}
+              height={130}
               src={user?.photoUrl}
               alt={user?.name || 'User avatar'}
               className={cn(
