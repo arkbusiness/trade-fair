@@ -64,6 +64,10 @@ export const ATTENDEE_APP_ROUTES = {
   meetings: {
     root: () => '/attendee/meetings'
   },
+  orders: {
+    root: () => '/attendee/orders',
+    detail: (id: string) => `/attendee/orders/${id}`
+  },
   settings: (tab?: string) => `/attendee/settings${tab ? `?tab=${tab}` : ''}`
 };
 

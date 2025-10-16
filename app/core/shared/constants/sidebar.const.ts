@@ -1,10 +1,14 @@
 import {
+  Backpack,
   BoxIcon,
+  Calendar,
   CalendarIcon,
   House,
   MessageCircleMore,
+  ReceiptText,
   SettingsIcon,
-  ShoppingBagIcon
+  ShoppingBagIcon,
+  ShoppingBasket
 } from 'lucide-react';
 import { AltUserIcon, BoothIcon } from '../icons';
 import {
@@ -106,13 +110,13 @@ export const ATTENDEE_SIDEBAR_ITEMS = [
     routes: [
       {
         title: 'Catalogues',
-        icon: BoxIcon,
+        icon: ShoppingBasket,
         url: ''
       },
       {
         title: 'Orders & Invoice',
-        icon: ShoppingBagIcon,
-        url: ''
+        icon: ReceiptText,
+        url: ATTENDEE_APP_ROUTES.orders.root()
       }
     ]
   },
@@ -123,17 +127,17 @@ export const ATTENDEE_SIDEBAR_ITEMS = [
     routes: [
       {
         title: 'Exhibitors',
-        icon: BoxIcon,
+        icon: Backpack,
         url: ''
       },
       {
         title: 'Messaging',
-        icon: BoxIcon,
+        icon: MessageCircleMore,
         url: ''
       },
       {
         title: 'Appointments',
-        icon: ShoppingBagIcon,
+        icon: Calendar,
         url: ATTENDEE_APP_ROUTES.meetings.root()
       }
     ]
