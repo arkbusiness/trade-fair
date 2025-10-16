@@ -1,25 +1,42 @@
 'use client';
 
 import { Spinner } from '@/app/core/shared/components/atoms';
-import { Pagination } from '@/app/core/shared/components/molecules';
+import {
+  ConfirmationModal,
+  Pagination
+} from '@/app/core/shared/components/molecules';
 import { useSetParams } from '@/app/core/shared/hooks';
 import { Calendar } from 'lucide-react';
 import { IAttendeeMeeting } from '../../api';
 import { AttendeeMeetingItem } from '../molecules';
+import { useState } from 'react';
+import { useCustomMutation } from '@/app/core/shared/hooks/use-mutate';
+import { errorHandler } from '@/app/core/shared/utils';
+import toast from 'react-hot-toast';
 
 interface AttendeeMeetingsItemsProps {
   appointments: IAttendeeMeeting[];
   isLoading: boolean;
   pageCount: number;
+  handleRefetch: () => void;
   page: number;
+}
+
+enum ModalType {
+  CANCEL_APPOINTMENT,
+  NONE
 }
 
 export const AttendeeMeetingsItems = ({
   appointments,
   isLoading,
   pageCount,
+  handleRefetch,
   page
 }: AttendeeMeetingsItemsProps) => {
+  const [toBeCancelledId, setToBeCancelledId] = useState('');
+  const mutation = useCustomMutation();
+  const [modalType, setModalType] = useState<ModalType>(ModalType.NONE);
   const { setMultipleParam, searchParamsObject } = useSetParams();
 
   const hasAppointments = appointments?.length > 0;
@@ -34,8 +51,51 @@ export const AttendeeMeetingsItems = ({
     window?.scrollTo({ top: 20, behavior: 'smooth' });
   };
 
+  const handleCloseModal = () => {
+    if (mutation.isPending) return;
+    setModalType(ModalType.NONE);
+    handleRefetch();
+  };
+
+  const handleCancelAppointment = (id: string) => {
+    mutation.mutate(
+      {
+        url: `/attendee/appointments/${id}/cancel`,
+        method: 'DELETE'
+      },
+      {
+        onError(error) {
+          const errorMessage = errorHandler(error);
+          toast.error(errorMessage);
+        },
+        onSuccess() {
+          toast.success('Appointment cancelled successfully');
+          handleCloseModal();
+        }
+      }
+    );
+  };
+
+  const handleConfirmCancel = (id: string) => {
+    switch (modalType) {
+      case ModalType.CANCEL_APPOINTMENT:
+        handleCancelAppointment(id);
+        break;
+      default:
+        break;
+    }
+  };
+
   return (
     <>
+      <ConfirmationModal
+        isOpen={modalType !== ModalType.NONE}
+        onClose={handleCloseModal}
+        title="Cancel Appointment"
+        description="Are you sure you want to cancel this appointment?"
+        isLoading={mutation.isPending}
+        onConfirm={() => handleConfirmCancel(toBeCancelledId)}
+      />
       {isLoading && (
         <div className="flex flex-col items-center justify-center py-8 text-center">
           <Spinner />
@@ -57,7 +117,14 @@ export const AttendeeMeetingsItems = ({
       )}
       <div className="flex flex-col gap-2">
         {appointments.map((appointment) => (
-          <AttendeeMeetingItem key={appointment.id} appointment={appointment} />
+          <AttendeeMeetingItem
+            key={appointment.id}
+            appointment={appointment}
+            handleCancel={() => {
+              setToBeCancelledId(appointment.id);
+              setModalType(ModalType.CANCEL_APPOINTMENT);
+            }}
+          />
         ))}
         <div className="flex justify-center mt-5">
           <Pagination

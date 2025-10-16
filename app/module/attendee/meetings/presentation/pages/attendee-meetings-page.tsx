@@ -13,8 +13,12 @@ export const AttendeeMeetingsPage = () => {
     limit: '5'
   };
 
-  const { appointments, isLoadingAppointments, paginationMeta } =
-    useAttendeeAppointments(appointmentsQuery);
+  const {
+    appointments,
+    isLoadingAppointments,
+    paginationMeta,
+    refetchAppointments
+  } = useAttendeeAppointments(appointmentsQuery);
 
   const { total } = paginationMeta;
 
@@ -29,6 +33,7 @@ export const AttendeeMeetingsPage = () => {
           isLoading={isLoading}
           pageCount={paginationMeta.pages}
           page={paginationMeta.page}
+          handleRefetch={refetchAppointments}
         />
       </div>
     </>

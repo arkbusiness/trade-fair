@@ -1,6 +1,6 @@
 'use client';
 
-import { BoardIcon } from '@/app/core/shared/components/atoms';
+import { BoardIcon, Button } from '@/app/core/shared/components/atoms';
 import { formatDate } from '@/app/core/shared/lib';
 import { SlotStatus } from '@/app/module/exhibitor/appointments/hooks';
 import { AppointmentStatusBadge } from '@/app/module/exhibitor/appointments/presentation/molecules';
@@ -9,10 +9,12 @@ import { IAttendeeMeeting } from '../../api';
 
 interface AttendeeMeetingItemProps {
   appointment: IAttendeeMeeting;
+  handleCancel: () => void;
 }
 
 export const AttendeeMeetingItem = ({
-  appointment
+  appointment,
+  handleCancel
 }: AttendeeMeetingItemProps) => {
   const { exhibitor, startTime, endTime, status, waitlistPosition } =
     appointment;
@@ -48,26 +50,42 @@ export const AttendeeMeetingItem = ({
   const content = mapContent[status];
 
   const isWaitlisted = status === SlotStatus.WAITLISTED;
+  const isBooked = status === SlotStatus.BOOKED;
 
   return (
     <div className="flex flex-col md:flex-row gap-2 border border-border py-4 rounded-md px-5">
       <div className="flex gap-4 justify-between flex-1 flex-col md:flex-row">
         <div className="flex flex-col gap-2 pr-5">
-          {content.title && (
-            <h4 className="font-medium text-base text-foreground">
-              {content.title}
-            </h4>
-          )}
+          <div className="flex gap-4 items-center">
+            <div className="flex flex-col gap-2">
+              {content.title && (
+                <h4 className="font-medium text-base text-foreground">
+                  {content.title}
+                </h4>
+              )}
 
-          {/* Attendee Name */}
-          {content.exhibitor && (
-            <div className="flex gap-1 items-center">
-              {content.image}
-              <p className="text-sm relative top-0.5 opacity-80">
-                {content.exhibitor}
-              </p>
+              {/* Exhibitor Name */}
+              {content.exhibitor && (
+                <div className="flex gap-1 items-center">
+                  {content.image}
+                  <p className="text-sm relative top-0.5 opacity-80">
+                    {content.exhibitor}
+                  </p>
+                </div>
+              )}
             </div>
-          )}
+
+            {isBooked && (
+              <Button
+                variant="highlight"
+                size="lg"
+                className=""
+                onClick={handleCancel}
+              >
+                Cancel
+              </Button>
+            )}
+          </div>
 
           {!isWaitlisted && (
             <div className="flex gap-2 md:items-center flex-col md:flex-row">
