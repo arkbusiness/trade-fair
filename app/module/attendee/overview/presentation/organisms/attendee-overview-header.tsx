@@ -19,10 +19,11 @@ export const AttendeeOverviewHeader = () => {
   const name = eventName;
   const venue = venueName;
 
-  const { days, hours, minutes, seconds, isLive, isExpired } = useCountdown({
-    startDate,
-    endDate
-  });
+  const { days, hours, minutes, seconds, isLive, isExpired, hasError } =
+    useCountdown({
+      startDate,
+      endDate
+    });
 
   const hasEventImage = eventLogoUrl;
 
@@ -57,7 +58,7 @@ export const AttendeeOverviewHeader = () => {
               <CountdownBox value={seconds} label="Seconds" />
             </>
           )}
-          {!isLive && isExpired && (
+          {!isLive && isExpired && !hasError && (
             <>
               <EndedBox />
             </>
