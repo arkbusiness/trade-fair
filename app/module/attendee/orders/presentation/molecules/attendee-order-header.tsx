@@ -25,6 +25,8 @@ export const AttendeeOrderDetailHeader = ({
   const { order, refetchOrder } = useAttendeeOrderById(orderId);
   const status = order ? order.status : '';
 
+  const isCompleted = status === OrderStatus.COMPLETED;
+
   const handleCloseModal = () => {
     setShowUploadReceiptModal(false);
     refetchOrder();
@@ -53,6 +55,7 @@ export const AttendeeOrderDetailHeader = ({
               onClick={() => {
                 setShowUploadReceiptModal(true);
               }}
+              disabled={isCompleted}
             >
               <FileUp size={16} />
               <span>Upload Receipt</span>

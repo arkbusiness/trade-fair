@@ -101,7 +101,7 @@ export const AttendeeOrderReceiptUploadForm = ({
         isOpen={isOpen}
         onClose={handleCloseModal}
         title="Upload Receipt"
-        description="Upload your file"
+        description=""
         contentClassName="px-0 pb-0 overflow-hidden"
         headerClassName="px-6"
       >
