@@ -144,7 +144,7 @@ export function FileUploader({
                 You can upload
                 {maxFiles > 1
                   ? ` ${maxFiles === Infinity ? 'multiple' : maxFiles} files (up to ${formatBytes(maxSize)} each)`
-                  : ` a file with ${formatBytes(maxSize)}`}
+                  : ` a file up to ${formatBytes(maxSize)}`}
               </p>
             </div>
           </div>
