@@ -1,7 +1,7 @@
 import { getQueryClient, serverFetcher } from '@/app/core/shared/lib';
 import { dehydrate, HydrationBoundary } from '@tanstack/react-query';
 import { notFound } from 'next/navigation';
-import { IOrderItem } from '../../hooks';
+import { IOrderItems } from '../../hooks';
 import { orderService } from '../../services';
 import { OrderDetailHeader } from '../atoms';
 import { OrderItems } from '../organisms';
@@ -30,7 +30,7 @@ export const OrderDetailsPage = async ({ id }: OrderDetailsPageProps) => {
 
   const order = (await queryClient.getQueryData(
     orderService.getById(id).queryKey
-  )) as IOrderItem;
+  )) as IOrderItems;
 
   if (!order) {
     return notFound();

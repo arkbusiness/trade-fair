@@ -26,7 +26,7 @@ export default async function AttendeeLayout({
         <AttendeeSidebar />
         <main className="w-full pb-[6.25rem] overflow-x-hidden relative">
           <AttendeeHeader />
-          <div className=" px-[1.13rem] mt-5 z-10 before:bg-sidebar before:absolute before:top-0 before:left-0 before:right-0 before:bottom-0 before:z-[-1]">
+          <div className=" px-[1.13rem] mt-5 z-10 before:bg-background before:absolute before:top-0 before:left-0 before:right-0 before:bottom-0 before:z-[-1]">
             {children}
           </div>
         </main>

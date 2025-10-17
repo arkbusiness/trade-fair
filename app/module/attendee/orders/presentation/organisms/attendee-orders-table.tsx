@@ -19,8 +19,11 @@ import { ORDER_STATUS_MAP } from '@/app/module/exhibitor/orders/presentation/org
 import { ColumnDef } from '@tanstack/react-table';
 import Image from 'next/image';
 import { IAttendeeOrder, useAttendeeOrders } from '../../api';
+import { useRouter } from 'next/navigation';
+import { ATTENDEE_APP_ROUTES } from '@/app/core/shared/constants';
 
 export const AttendeeOrdersTable = () => {
+  const router = useRouter();
   const ORDER_TAB_LIST = [
     {
       label: 'All Orders',
@@ -219,14 +222,12 @@ export const AttendeeOrdersTable = () => {
         const original = row.original;
         const orderId = original?.id;
 
-        console.log(orderId);
-
         return (
           <Button
             variant="ghost"
             className="h-[32px] text-tertiary text-sm"
             onClick={() => {
-              // router.push(EXHIBITOR_APP_ROUTES.inventory.orders.detail(orderId))
+              router.push(ATTENDEE_APP_ROUTES.orders.detail(orderId));
             }}
           >
             View

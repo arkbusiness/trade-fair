@@ -64,6 +64,9 @@ export const ATTENDEE_APP_ROUTES = {
   meetings: {
     root: () => '/attendee/meetings'
   },
+  messages: {
+    root: () => '/attendee/messages'
+  },
   orders: {
     root: () => '/attendee/orders',
     detail: (id: string) => `/attendee/orders/${id}`

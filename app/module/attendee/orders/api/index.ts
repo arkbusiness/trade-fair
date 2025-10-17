@@ -7,14 +7,16 @@ import {
 } from '@/app/core/shared/utils';
 import {
   IOrderItem,
-  IOrderTimeline
+  IOrderTimeline,
+  IOrderTracking
 } from '@/app/module/exhibitor/orders/hooks';
+import { attendeeOrderQueryKeys } from '../constants';
 
 const buildUrl = (filter: Record<string, string>) => {
   const queryParams = buildQueryParams({
     params: filter
   });
-  return `attendee/orders${queryParams ? `?${queryParams}` : ''}`;
+  return `/attendee/orders${queryParams ? `?${queryParams}` : ''}`;
 };
 
 export interface IAttendeeOrder {
@@ -33,8 +35,28 @@ export interface IAttendeeOrder {
   exhibitor: {
     id: string;
     companyName: string;
+    contactEmail: string;
+    contactPhone: string;
+    PaymentDetails:
+      | [
+          {
+            id: string;
+            exhibitorId: string;
+            bankName: string;
+            bankAccountName: string;
+            bankAccountNumber: string;
+          }
+        ]
+      | null;
   };
-  items: IOrderItem['items'];
+  attendee: {
+    id: string;
+    contactName: string;
+    email: string;
+    phone: string;
+    address: string;
+  };
+  items: IOrderItem[];
   OrderTimeLine: IOrderTimeline[];
 }
 
@@ -45,7 +67,7 @@ export const useAttendeeOrders = (filter: Record<string, string> = {}) => {
     isRefetching: isRefetchingOrders,
     refetch
   } = useCustomQuery<IPaginatedResponse<IAttendeeOrder>>({
-    queryKey: ['attendee-orders', filter],
+    queryKey: attendeeOrderQueryKeys.all(filter),
     url: buildUrl(filter)
   });
 
@@ -64,15 +86,19 @@ export const useAttendeeOrderById = (orderId: string) => {
     isLoading: isLoadingOrder,
     isRefetching: isRefetchingOrder,
     refetch
-  } = useCustomQuery<IOrderItem>({
-    queryKey: ['attendee-order', orderId],
-    url: `attendee/order/${orderId}`,
+  } = useCustomQuery<{
+    order: IAttendeeOrder;
+    trackingDetails: IOrderTracking[] | null;
+  }>({
+    queryKey: attendeeOrderQueryKeys.byId(orderId),
+    url: `/attendee/order/${orderId}`,
     options: {
       enabled: !!orderId
     }
   });
   return {
-    order: data,
+    order: data?.order,
+    trackingDetails: data?.trackingDetails,
     isLoadingOrder,
     isRefetchingOrder,
     refetchOrder: refetch
