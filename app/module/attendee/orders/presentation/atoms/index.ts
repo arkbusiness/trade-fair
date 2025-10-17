@@ -1,1 +1,1 @@
-export * from './attendee-order-header';
+export * from './attendee-order-receipt-upload';

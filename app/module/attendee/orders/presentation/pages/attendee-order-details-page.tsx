@@ -1,5 +1,4 @@
 import { getQueryClient, serverFetcher } from '@/app/core/shared/lib';
-import { AttendeeOrderDetailHeader } from '../atoms';
 import { attendeeOrderQueryKeys } from '../../constants';
 import { notFound } from 'next/navigation';
 import { IOrderItem } from '@/app/module/exhibitor/orders/hooks';
@@ -7,6 +6,7 @@ import { dehydrate, HydrationBoundary } from '@tanstack/react-query';
 import {
   AttendeeOrderBankInfo,
   AttendeeOrderDeliveryInfo,
+  AttendeeOrderDetailHeader,
   AttendeeOrderExhibitorInfo,
   AttendeeOrderInfo,
   AttendeeOrderItems,
