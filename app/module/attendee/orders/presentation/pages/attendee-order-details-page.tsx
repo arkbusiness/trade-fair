@@ -9,7 +9,8 @@ import {
   AttendeeOrderDeliveryInfo,
   AttendeeOrderExhibitorInfo,
   AttendeeOrderInfo,
-  AttendeeOrderItems
+  AttendeeOrderItems,
+  AttendeeOrderTimeline
 } from '../molecules';
 
 interface AttendeeOrderDetailPageProps {
@@ -47,6 +48,7 @@ export const AttendeeOrderDetailPage = async ({
         <AttendeeOrderInfo orderId={id} />
         <AttendeeOrderDeliveryInfo orderId={id} />
         <AttendeeOrderBankInfo orderId={id} />
+        <AttendeeOrderTimeline orderId={id} />
       </div>
     </HydrationBoundary>
   );
