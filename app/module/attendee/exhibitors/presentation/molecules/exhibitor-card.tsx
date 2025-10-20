@@ -2,16 +2,18 @@
 
 import { Card, CardContent } from '@/app/core/shared/components/atoms';
 import { ATTENDEE_APP_ROUTES } from '@/app/core/shared/constants';
-import { useCustomMutation } from '@/app/core/shared/hooks/use-mutate';
 import { cn, errorHandler } from '@/app/core/shared/utils';
 import { Heart, MapPin } from 'lucide-react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import toast from 'react-hot-toast';
-import { attendeeExhibitorsService } from '../../services';
+import {
+  useAddExhibitorToFavourite,
+  useRemoveExhibitorFromFavourite
+} from '../../api';
 
-interface IAttendeeExhibitorCard {
+type AttendeeExhibitorCardProps = {
   imageUrl: string;
   exhibitorId: string;
   companyName: string;
@@ -20,7 +22,7 @@ interface IAttendeeExhibitorCard {
   isLiked?: boolean;
   allowNavigation?: boolean;
   handleRefetchExhibitors: () => void;
-}
+};
 
 export const AttendeeExhibitorCard = ({
   imageUrl,
@@ -31,10 +33,38 @@ export const AttendeeExhibitorCard = ({
   isLiked,
   allowNavigation = false,
   handleRefetchExhibitors
-}: IAttendeeExhibitorCard) => {
-  const [isLikedState, setIsLikedState] = useState(isLiked);
-  const mutation = useCustomMutation();
+}: AttendeeExhibitorCardProps) => {
   const router = useRouter();
+  const [isLikedState, setIsLikedState] = useState(isLiked);
+
+  const { addToFavouriteMutation, isPending: isPendingAddToFavourite } =
+    useAddExhibitorToFavourite({
+      exhibitorId,
+      onSuccess: () => {
+        toast.success('Exhibitor added to favourite');
+        handleRefetchExhibitors();
+      },
+      onError: (error) => {
+        const errorMessage = errorHandler(error);
+        toast.error(errorMessage);
+        setIsLikedState(false);
+      }
+    });
+  const {
+    removeFromFavouriteMutation,
+    isPending: isPendingRemoveFromFavourite
+  } = useRemoveExhibitorFromFavourite({
+    exhibitorId,
+    onSuccess: () => {
+      toast.success('Exhibitor removed from favourite');
+      handleRefetchExhibitors();
+    },
+    onError: (error) => {
+      const errorMessage = errorHandler(error);
+      setIsLikedState(false);
+      toast.error(errorMessage);
+    }
+  });
 
   const handleGoToExhibitor = (exhibitorId: string) => {
     if (allowNavigation) {
@@ -44,32 +74,12 @@ export const AttendeeExhibitorCard = ({
 
   const handleAddToFavorite = () => {
     setIsLikedState((prev) => !prev);
-    mutation.mutate(attendeeExhibitorsService.addToFavorite(exhibitorId), {
-      onError(error) {
-        const errorMessage = errorHandler(error);
-        toast.error(errorMessage);
-        setIsLikedState(false);
-      },
-      onSuccess() {
-        toast.success('Exhibitor added to favourite');
-        handleRefetchExhibitors();
-      }
-    });
+    addToFavouriteMutation();
   };
 
   const handleRemoveFromFavorite = () => {
     setIsLikedState((prev) => !prev);
-    mutation.mutate(attendeeExhibitorsService.removeFromFavorite(exhibitorId), {
-      onError(error) {
-        const errorMessage = errorHandler(error);
-        setIsLikedState(false);
-        toast.error(errorMessage);
-      },
-      onSuccess() {
-        toast.success('Exhibitor removed from favourite');
-        handleRefetchExhibitors();
-      }
-    });
+    removeFromFavouriteMutation();
   };
 
   const handleClickFavourite = () => {
@@ -80,7 +90,7 @@ export const AttendeeExhibitorCard = ({
     }
   };
 
-  const isMutating = mutation.isPending;
+  const isMutating = isPendingAddToFavourite || isPendingRemoveFromFavourite;
 
   return (
     <Card
