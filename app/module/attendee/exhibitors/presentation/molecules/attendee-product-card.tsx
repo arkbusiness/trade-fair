@@ -99,7 +99,7 @@ export const AttendeeProductCard = ({
         />
       </div>
       <CardContent>
-        <div className="mt-3 mb-4 flex flex-col gap-3 px-2">
+        <div className="mt-3  flex flex-col gap-3 px-2">
           <div className="flex justify-between items-center">
             <div className="flex flex-col">
               <h3 className="text-sm font-semibold line-clamp-2">
@@ -108,7 +108,7 @@ export const AttendeeProductCard = ({
             </div>
           </div>
 
-          <p className="text-xs font-medium line-clamp-2 mt-2">
+          <p className="text-xs font-medium line-clamp-2 opacity-60">
             {product.description || 'N/A'}
           </p>
 
@@ -136,7 +136,6 @@ export const AttendeeProductCard = ({
               />
             </button>
           </div>
-          <div></div>
         </div>
       </CardContent>
     </Card>

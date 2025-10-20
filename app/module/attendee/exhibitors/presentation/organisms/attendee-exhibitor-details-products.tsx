@@ -18,7 +18,6 @@ export const AttendeeExhibitorDetailsProducts = ({
 
   const exhibitorQuery = {
     exhibitorId,
-    page: searchParamsObject.page ?? '1',
     limit: '15',
     ...filter
   };
@@ -38,6 +37,7 @@ export const AttendeeExhibitorDetailsProducts = ({
   };
 
   const hasNextPage = paginationMeta.hasNext;
+  const hasCatalogues = catalogues.length > 0;
 
   return (
     <>
@@ -55,6 +55,17 @@ export const AttendeeExhibitorDetailsProducts = ({
           />
         ))}
       </div>
+
+      {!hasCatalogues && !isLoadingCatalogues && (
+        <div className="mt-7.5 flex flex-col items-center justify-center py-12">
+          <p className="text-gray-700 text-lg font-medium">
+            No products available
+          </p>
+          <p className="text-gray-800 text-sm mt-2">
+            This exhibitor hasn&lsquo;t added any products yet.
+          </p>
+        </div>
+      )}
 
       {hasNextPage && (
         <div className="flex justify-center mt-10">

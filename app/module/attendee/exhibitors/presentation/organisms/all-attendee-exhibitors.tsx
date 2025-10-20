@@ -13,7 +13,6 @@ export const AllAttendeeExhibitors = ({
 }) => {
   const { setMultipleParam, searchParamsObject } = useSetParams();
   const exhibitorQuery = {
-    page: searchParamsObject.page ?? '1',
     limit: '15',
     ...filter
   };
