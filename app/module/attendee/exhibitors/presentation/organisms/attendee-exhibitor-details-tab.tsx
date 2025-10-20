@@ -3,6 +3,7 @@
 import { BorderTab } from '@/app/core/shared/components/molecules';
 import { useState } from 'react';
 import { AttendeeExhibitorDetailsInfo } from './attendee-exhibitor-details-info';
+import { AttendeeExhibitorDetailsProducts } from './attendee-exhibitor-details-products';
 
 const TABS_ITEMS = [
   {
@@ -25,7 +26,7 @@ export const AttendeeExhibitorDetailsTab = ({
   const [selectedTab, setSelectedTab] = useState(TABS_ITEMS[0].value);
 
   const isInfoTab = selectedTab === 'info';
-  // const isProductsTab = selectedTab === 'products';
+  const isProductsTab = selectedTab === 'products';
 
   return (
     <>
@@ -40,6 +41,9 @@ export const AttendeeExhibitorDetailsTab = ({
       />
 
       {isInfoTab && <AttendeeExhibitorDetailsInfo id={exhibitorId} />}
+      {isProductsTab && (
+        <AttendeeExhibitorDetailsProducts exhibitorId={exhibitorId} />
+      )}
     </>
   );
 };

@@ -2,10 +2,14 @@
 
 import { ContentCard } from '@/app/core/shared/components/molecules';
 import { CircleAlert, Globe, Mail, Phone } from 'lucide-react';
-import { useAttendeeExhibitorById } from '../../api';
+import {
+  useAttendeeExhibitorById,
+  useAttendeeExhibitorScanBooth
+} from '../../api';
 
 export const AttendeeExhibitorDetailsInfo = ({ id }: { id: string }) => {
   const { exhibitor } = useAttendeeExhibitorById(id);
+  const { isScanned } = useAttendeeExhibitorScanBooth(id);
 
   const contactInformation = [
     {
@@ -68,15 +72,20 @@ export const AttendeeExhibitorDetailsInfo = ({ id }: { id: string }) => {
         </div>
       </ContentCard>
 
-      <div className="py-5 px-4 rounded-lg bg-gray-light-4 flex gap-3">
-        <div>
-          <CircleAlert size={20} className="text-background fill-destructive" />
+      {!isScanned && (
+        <div className="py-5 px-4 rounded-lg bg-gray-light-4 flex gap-3">
+          <div>
+            <CircleAlert
+              size={20}
+              className="text-background fill-destructive"
+            />
+          </div>
+          <p className="max-w-[470px] w-full font-normal">
+            Scan QR code at the booth stand with your mobile phone to unlock
+            chat with this exhibitor
+          </p>
         </div>
-        <p className="max-w-[470px] w-full font-normal">
-          Scan QR code at the booth stand with your mobile phone to unlock chat
-          with this exhibitor
-        </p>
-      </div>
+      )}
     </div>
   );
 };

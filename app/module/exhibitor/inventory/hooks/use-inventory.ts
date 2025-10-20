@@ -36,6 +36,7 @@ export interface Inventory {
   createdAt: string;
   updatedAt: string;
   productCategoryId: string;
+  isFavorite: boolean;
   productCategory: {
     id: string;
     name: string;
