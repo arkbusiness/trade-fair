@@ -1,2 +1,2 @@
-export * from './get-attendee-exhibitors';
-export * from './update-exhibitor-favourite';
+export * from './exhibitor-queries';
+export * from './exhibitor-mutations';

@@ -128,12 +128,12 @@ export const ATTENDEE_SIDEBAR_ITEMS = [
       {
         title: 'Exhibitors',
         icon: Backpack,
-        url: ''
+        url: ATTENDEE_APP_ROUTES.exhibitors.root()
       },
       {
         title: 'Messaging',
         icon: MessageCircleMore,
-        url: ''
+        url: ATTENDEE_APP_ROUTES.messages.root()
       },
       {
         title: 'Appointments',

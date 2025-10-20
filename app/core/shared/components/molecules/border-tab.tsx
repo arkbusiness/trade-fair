@@ -16,7 +16,12 @@ interface TableTabsProps {
   tabs: IBorderTabItem[];
   defaultValue: string;
   showCount?: boolean;
-  children?: React.ReactNode;
+  rightContent?: React.ReactNode;
+  rightContentClassName?: string;
+  tabTriggerClassName?: string;
+  tabListClassName?: string;
+  tabListContainerClassName?: string;
+  selectContainerClassName?: string;
   selectedValue?: string;
   variant?: 'default' | 'chat';
   handleSelectedTab(value: IBorderTabItem): void;
@@ -33,6 +38,12 @@ export const BorderTab = ({
   defaultValue,
   selectedValue,
   showCount = false,
+  rightContent,
+  rightContentClassName,
+  tabTriggerClassName,
+  tabListClassName,
+  tabListContainerClassName,
+  selectContainerClassName,
   variant = 'default',
   handleSelectedTab
 }: TableTabsProps) => {
@@ -54,7 +65,7 @@ export const BorderTab = ({
         <label htmlFor="view-selector" className="sr-only">
           Select
         </label>
-        <div className="flex lg:hidden">
+        <div className={cn('flex lg:hidden', selectContainerClassName)}>
           <Select
             defaultValue={defaultValue}
             onValueChange={(value) => {
@@ -81,14 +92,22 @@ export const BorderTab = ({
             </SelectContent>
           </Select>
         </div>
-        <div className="hidden lg:flex w-full">
-          <TabsList className="flex bg-transparent h-[2.7rem] px-[1rem] py-0  gap-x-4 border-b-1 border-b-input rounded-none w-full justify-start">
+        <div className={cn('hidden lg:flex w-full', tabListContainerClassName)}>
+          <TabsList
+            className={cn(
+              'flex bg-transparent h-[2.7rem] px-[1rem] py-0  gap-x-4 border-b-1 border-b-input rounded-none w-full justify-start',
+              tabListClassName
+            )}
+          >
             {tabs.map((tab) => {
               return (
                 <TabsTrigger
                   value={tab.value}
                   key={tab.label}
-                  className="px-[10px] cursor-pointer border-b rounded-none bg-transparent data-[state=active]:rounded-none data-[state=active]:bg-transparent data-[state=active]:border-b-tertiary data-[state=active]:border-3 data-[state=active]:text-tertiary  data-[state=active]:shadow-none self-start max-w-min w-full py-4.5"
+                  className={cn(
+                    'px-[10px] cursor-pointer border-b rounded-none bg-transparent data-[state=active]:rounded-none data-[state=active]:bg-transparent data-[state=active]:border-b-tertiary data-[state=active]:border-3 data-[state=active]:text-tertiary  data-[state=active]:shadow-none self-start max-w-min w-full py-4.5',
+                    tabTriggerClassName
+                  )}
                   onClick={() => handleSelectedTab(tab)}
                 >
                   <span>{tab.label}</span>
@@ -110,6 +129,14 @@ export const BorderTab = ({
                 </TabsTrigger>
               );
             })}
+
+            {rightContent && (
+              <div
+                className={cn('flex justify-end flex-1', rightContentClassName)}
+              >
+                {rightContent}
+              </div>
+            )}
           </TabsList>
         </div>
       </div>

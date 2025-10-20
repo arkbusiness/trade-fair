@@ -19,13 +19,13 @@ export const ExhibitorProfileInformation = ({ id }: { id: string }) => {
       label: 'Website',
       type: 'website',
       icon: <Globe size={12} />,
-      value: exhibitor?.website ?? 'N/A'
+      value: exhibitor?.website || 'N/A'
     },
     {
       label: 'Email',
       type: 'email',
       icon: <Mail size={12} />,
-      value: exhibitor?.email ?? 'N/A'
+      value: exhibitor?.email || 'N/A'
     }
   ];
 

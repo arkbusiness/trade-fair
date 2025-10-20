@@ -5,13 +5,13 @@ import { ATTENDEE_APP_ROUTES } from '@/app/core/shared/constants';
 import { cn, errorHandler } from '@/app/core/shared/utils';
 import { Heart, MapPin } from 'lucide-react';
 import Image from 'next/image';
-import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import toast from 'react-hot-toast';
 import {
   useAddExhibitorToFavourite,
   useRemoveExhibitorFromFavourite
 } from '../../api';
+import { useRouter } from 'nextjs-toploader/app';
 
 type AttendeeExhibitorCardProps = {
   imageUrl: string;
@@ -118,7 +118,14 @@ export const AttendeeExhibitorCard = ({
                 </span>
               </div>
             </div>
-            <button onClick={handleClickFavourite} disabled={isMutating}>
+            <button
+              onClick={(event) => {
+                event.stopPropagation();
+                handleClickFavourite();
+              }}
+              disabled={isMutating}
+              className="relative z-10 h-10 w-10 flex items-center justify-center"
+            >
               <Heart
                 size={16}
                 className={cn({
