@@ -17,6 +17,23 @@ export const getAttendeeExhibitorsQueryOptions = ({
   };
 };
 
+export const getAttendeeFavouriteExhibitorsQueryOptions = ({
+  filter
+}: {
+  filter: Record<string, string>;
+}) => {
+  const queryParams = buildQueryParams({
+    params: {
+      ...filter
+    }
+  });
+
+  return {
+    queryKey: ['attendee-favourite-exhibitors', queryParams],
+    url: `/attendee/favorite-exhibitors${queryParams ? `?${queryParams}` : ''}`
+  };
+};
+
 export const getAttendeeExhibitorByIdQueryOptions = ({
   exhibitorId
 }: {

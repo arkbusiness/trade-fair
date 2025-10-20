@@ -6,7 +6,8 @@ import { AttendeeExhibitor } from '../types';
 import {
   getAttendeeExhibitorsQueryOptions,
   getAttendeeExhibitorByIdQueryOptions,
-  getAttendeeExhibitorScannedBoothOptions
+  getAttendeeExhibitorScannedBoothOptions,
+  getAttendeeFavouriteExhibitorsQueryOptions
 } from './exhibitor-query-options';
 
 export const useAttendeeExhibitors = (filter: Record<string, string>) => {
@@ -44,6 +45,28 @@ export const useAttendeeExhibitorById = (exhibitorId: string) => {
     exhibitor,
     isLoadingExhibitor,
     isRefetchingExhibitor,
+    refetchExhibitor: refetch
+  };
+};
+
+export const useAttendeeFavouriteExhibitors = (
+  filter: Record<string, string>
+) => {
+  const {
+    data: exhibitors,
+    isLoading: isLoadingExhibitor,
+    isRefetching: isRefetchingExhibitor,
+    refetch
+  } = useCustomQuery<IPaginatedResponse<AttendeeExhibitor>>({
+    ...getAttendeeFavouriteExhibitorsQueryOptions({
+      filter
+    })
+  });
+  return {
+    exhibitors: exhibitors?.data ?? EMPTY_ARRAY,
+    isLoadingExhibitor,
+    isRefetchingExhibitor,
+    paginationMeta: extractPaginationMeta(exhibitors),
     refetchExhibitor: refetch
   };
 };

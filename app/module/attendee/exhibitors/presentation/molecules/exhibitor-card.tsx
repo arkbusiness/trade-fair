@@ -21,6 +21,7 @@ type AttendeeExhibitorCardProps = {
   description: string;
   isLiked?: boolean;
   allowNavigation?: boolean;
+  showFavouriteButton?: boolean;
   handleRefetchExhibitors: () => void;
 };
 
@@ -32,6 +33,7 @@ export const AttendeeExhibitorCard = ({
   description,
   isLiked,
   allowNavigation = false,
+  showFavouriteButton = true,
   handleRefetchExhibitors
 }: AttendeeExhibitorCardProps) => {
   const router = useRouter();
@@ -107,7 +109,7 @@ export const AttendeeExhibitorCard = ({
         />
       </div>
       <CardContent>
-        <div className="mt-3 mb-4 flex flex-col gap-3 px-2">
+        <div className="mt-3  flex flex-col gap-3 px-2">
           <div className="flex justify-between items-center">
             <div className="flex flex-col">
               <h3 className="text-sm font-semibold">{companyName}</h3>
@@ -118,22 +120,24 @@ export const AttendeeExhibitorCard = ({
                 </span>
               </div>
             </div>
-            <button
-              onClick={(event) => {
-                event.stopPropagation();
-                handleClickFavourite();
-              }}
-              disabled={isMutating}
-              className="relative z-10 h-10 w-10 flex items-center justify-center"
-            >
-              <Heart
-                size={16}
-                className={cn({
-                  'text-golden-yellow fill-golden-yellow':
-                    (isLiked && !isMutating) || isLikedState
-                })}
-              />
-            </button>
+            {showFavouriteButton && (
+              <button
+                onClick={(event) => {
+                  event.stopPropagation();
+                  handleClickFavourite();
+                }}
+                disabled={isMutating}
+                className="relative z-10 h-10 w-10 flex items-center justify-center"
+              >
+                <Heart
+                  size={16}
+                  className={cn({
+                    'text-golden-yellow fill-golden-yellow':
+                      (isLiked && !isMutating) || isLikedState
+                  })}
+                />
+              </button>
+            )}
           </div>
           <p className="text-xs font-medium line-clamp-2 mt-2">
             {description || 'N/A'}

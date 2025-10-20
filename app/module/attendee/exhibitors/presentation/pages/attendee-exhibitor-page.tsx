@@ -2,7 +2,10 @@
 
 import { useQueryFilters } from '@/app/core/shared/hooks';
 import { AttendeeExhibitorTab } from '../molecules';
-import { AllAttendeeExhibitors } from '../organisms';
+import {
+  AllAttendeeExhibitors,
+  FavouriteAttendeeExhibitors
+} from '../organisms';
 
 export const AttendeeExhibitorPage = () => {
   const { setFilterParams, filter } = useQueryFilters(['page']);
@@ -27,9 +30,7 @@ export const AttendeeExhibitorPage = () => {
     });
   };
 
-  console.log(selectedTab);
-
-  // const isFavouriteTab = selectedTab === 'favourites';
+  const isFavouriteTab = selectedTab === 'favourites';
   const isAllTab = selectedTab === 'all';
 
   return (
@@ -40,6 +41,7 @@ export const AttendeeExhibitorPage = () => {
       />
       <div className="mt-8">
         {isAllTab && <AllAttendeeExhibitors filter={filter} />}
+        {isFavouriteTab && <FavouriteAttendeeExhibitors filter={filter} />}
       </div>
     </>
   );
