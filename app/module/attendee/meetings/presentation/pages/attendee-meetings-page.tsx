@@ -3,6 +3,7 @@
 import { useSetParams } from '@/app/core/shared/hooks';
 import { AttendeeMeetingsItems, AttendeeMeetingsTab } from '../organisms';
 import { useAttendeeAppointments } from '../../api';
+import { OverlaySpinner } from '@/app/core/shared/components/molecules';
 
 export const AttendeeMeetingsPage = () => {
   const { searchParamsObject } = useSetParams();
@@ -17,6 +18,7 @@ export const AttendeeMeetingsPage = () => {
     appointments,
     isLoadingAppointments,
     paginationMeta,
+    isRefetchingAppointments,
     refetchAppointments
   } = useAttendeeAppointments(appointmentsQuery);
 
@@ -26,6 +28,7 @@ export const AttendeeMeetingsPage = () => {
 
   return (
     <>
+      {isRefetchingAppointments && <OverlaySpinner />}
       <AttendeeMeetingsTab totalAppointments={total} isLoading={isLoading} />
       <div className="mt-4">
         <AttendeeMeetingsItems
