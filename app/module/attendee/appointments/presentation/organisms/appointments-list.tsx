@@ -1,6 +1,6 @@
 'use client';
 
-import { Spinner } from '@/app/core/shared/components/atoms';
+import { Button, Spinner } from '@/app/core/shared/components/atoms';
 import { Pagination } from '@/app/core/shared/components/molecules';
 import { useSetParams } from '@/app/core/shared/hooks';
 import { useState } from 'react';
@@ -11,12 +11,16 @@ import {
   AttendeeBookAppointment,
   AttendeeJoinWaitlist
 } from '../molecules';
+import { X } from 'lucide-react';
+import { useQueryClient } from '@tanstack/react-query';
+import { getAttendeeAppointmentSlotsQueryOptions } from '../../api/appointments-query-options';
 
 interface AppointmentsListProps {
   exhibitorId: string;
 }
 
 export const AppointmentsList = ({ exhibitorId }: AppointmentsListProps) => {
+  const queryClient = useQueryClient();
   const [selectedSlot, setSelectedSlot] = useState<IAttendeeMeeting | null>(
     null
   );
@@ -50,16 +54,51 @@ export const AppointmentsList = ({ exhibitorId }: AppointmentsListProps) => {
     setMultipleParam(newFilter);
   };
 
+  const handleClearFilters = () => {
+    const filters = {
+      page: '',
+      date: ''
+    };
+
+    setMultipleParam({
+      ...filters
+    });
+
+    queryClient.invalidateQueries({
+      queryKey: getAttendeeAppointmentSlotsQueryOptions({
+        filter: filters,
+        exhibitorId
+      }).queryKey
+    });
+  };
+
+  const handleRefetchSlots = () => {
+    refetchSlots();
+    handleClearFilters();
+  };
+
   const isLoading = isLoadingSlots || isRefetchingSlots;
   const hasSlots = slots.length > 0;
-  const showPagination = paginationMeta.pages > 1;
+  const showPagination = paginationMeta.pages > 1 && !isLoading;
+  const hasActiveFilters = searchParamsObject.date;
 
   return (
     <div>
+      <div className="flex justify-end">
+        {hasActiveFilters && (
+          <div className="mb-4 flex justify-center">
+            <Button variant="secondary" onClick={handleClearFilters}>
+              <X size={20} />
+              Clear Filters
+            </Button>
+          </div>
+        )}
+      </div>
+
       <AttendeeBookAppointment
         isOpen={!!selectedSlot}
         selectedSlot={selectedSlot || null}
-        refetchSlots={refetchSlots}
+        refetchSlots={handleRefetchSlots}
         onClose={handleCloseModal}
       />
 
@@ -70,6 +109,7 @@ export const AppointmentsList = ({ exhibitorId }: AppointmentsListProps) => {
       />
 
       {isLoading && <Spinner />}
+
       <div className="mb-3">
         {hasSlots && !isLoading && (
           <div className="text-center">
