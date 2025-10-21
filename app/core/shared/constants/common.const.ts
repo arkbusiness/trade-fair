@@ -59,7 +59,8 @@ export const ATTENDEE_APP_ROUTES = {
   },
   exhibitors: {
     root: () => '/attendee/exhibitors',
-    detail: (id: string) => `/attendee/exhibitors/${id}`
+    detail: (id: string) => `/attendee/exhibitors/${id}`,
+    appointment: (id: string) => `/attendee/exhibitors/${id}/appointment`
   },
   catalogues: {
     root: () => '/attendee/catalogues',

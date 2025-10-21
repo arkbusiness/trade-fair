@@ -7,14 +7,17 @@ import { useAttendeeFavouriteExhibitors } from '../../api';
 import { AttendeeExhibitorCard } from '../molecules';
 import { useEffect } from 'react';
 
+interface FavouriteAttendeeExhibitorsProps {
+  filter: Record<string, string>;
+}
+
 export const FavouriteAttendeeExhibitors = ({
   filter
-}: {
-  filter: Record<string, string>;
-}) => {
+}: FavouriteAttendeeExhibitorsProps) => {
   const { setMultipleParam, searchParamsObject } = useSetParams();
   const exhibitorQuery = {
     limit: '15',
+    page: searchParamsObject.page || '1',
     search: filter.search || ''
   };
   const {
@@ -27,7 +30,7 @@ export const FavouriteAttendeeExhibitors = ({
 
   useEffect(() => {
     refetchExhibitor();
-  }, []);
+  }, [refetchExhibitor]);
 
   const handlePageClick = (value: { selected: number }) => {
     const newPage = value.selected + 1;
@@ -41,7 +44,7 @@ export const FavouriteAttendeeExhibitors = ({
 
   const isLoading = isLoadingExhibitor;
   const isFetching = isRefetchingExhibitor || isLoading;
-  const hasNextPage = paginationMeta.hasNext;
+  const showPagination = paginationMeta.pages > 1;
 
   const hasExhibitors = exhibitors.length > 0;
 
@@ -77,7 +80,7 @@ export const FavouriteAttendeeExhibitors = ({
           })}
       </div>
 
-      {hasNextPage && (
+      {showPagination && (
         <div className="flex justify-center mt-10">
           <Pagination
             page={paginationMeta.page}

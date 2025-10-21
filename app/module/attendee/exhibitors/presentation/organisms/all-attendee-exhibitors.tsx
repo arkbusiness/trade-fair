@@ -6,14 +6,17 @@ import { useSetParams } from '@/app/core/shared/hooks';
 import { useAttendeeExhibitors } from '../../api';
 import { AttendeeExhibitorCard } from '../molecules';
 
+interface AllAttendeeExhibitorsProps {
+  filter: Record<string, string>;
+}
+
 export const AllAttendeeExhibitors = ({
   filter
-}: {
-  filter: Record<string, string>;
-}) => {
+}: AllAttendeeExhibitorsProps) => {
   const { setMultipleParam, searchParamsObject } = useSetParams();
   const exhibitorQuery = {
     limit: '15',
+    page: searchParamsObject.page || '1',
     search: filter.search || ''
   };
   const { exhibitors, isLoadingExhibitor, paginationMeta, refetchExhibitor } =
@@ -30,7 +33,7 @@ export const AllAttendeeExhibitors = ({
   };
 
   const isLoading = isLoadingExhibitor;
-  const hasNextPage = paginationMeta.hasNext;
+  const showPagination = paginationMeta.pages > 1;
   const hasExhibitors = exhibitors.length > 0;
 
   return (
@@ -63,7 +66,7 @@ export const AllAttendeeExhibitors = ({
           );
         })}
       </div>
-      {hasNextPage && (
+      {showPagination && (
         <div className="flex justify-center mt-10">
           <Pagination
             page={paginationMeta.page}

@@ -32,7 +32,7 @@ export const AttendeeExhibitorCard = ({
   boothNumber,
   description,
   isLiked,
-  allowNavigation = false,
+  allowNavigation = true,
   showFavouriteButton = true,
   handleRefetchExhibitors
 }: AttendeeExhibitorCardProps) => {

@@ -2,7 +2,7 @@
 
 import { Button } from '@/app/core/shared/components/atoms';
 import { useAttendeeExhibitorScanBooth } from '../../api';
-import { Calendar, Lock } from 'lucide-react';
+import { Calendar, Lock, MessageCircle } from 'lucide-react';
 import { useRouter } from 'nextjs-toploader/app';
 
 interface AttendeeExhibitorDetailsActionsProps {
@@ -29,7 +29,8 @@ export const AttendeeExhibitorDetailsActions = ({
             router.push(`/attendee/messages?exhibitorId=${exhibitorId}`);
           }}
         >
-          <Lock size={16} />
+          {!isEnableMessageButton && <Lock size={16} />}
+          {isEnableMessageButton && <MessageCircle size={16} />}
           <span>Send Message</span>
         </Button>
 
@@ -37,7 +38,9 @@ export const AttendeeExhibitorDetailsActions = ({
           variant="tertiary"
           disabled={isLoadingExhibitorScanBooth}
           className="w-full h-11"
-          onClick={() => {}}
+          onClick={() => {
+            router.push(`/attendee/exhibitors/${exhibitorId}/appointments`);
+          }}
         >
           <Calendar size={16} />
           <span>Request 1:1 Meeting</span>

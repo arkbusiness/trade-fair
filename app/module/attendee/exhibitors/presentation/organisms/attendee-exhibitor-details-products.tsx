@@ -19,6 +19,7 @@ export const AttendeeExhibitorDetailsProducts = ({
   const exhibitorQuery = {
     exhibitorId,
     limit: '15',
+    page: searchParamsObject.page || '1',
     ...filter
   };
 
@@ -36,7 +37,7 @@ export const AttendeeExhibitorDetailsProducts = ({
     setMultipleParam(newFilter);
   };
 
-  const hasNextPage = paginationMeta.hasNext;
+  const showPagination = paginationMeta.pages > 1;
   const hasCatalogues = catalogues.length > 0;
 
   return (
@@ -67,7 +68,7 @@ export const AttendeeExhibitorDetailsProducts = ({
         </div>
       )}
 
-      {hasNextPage && (
+      {showPagination && (
         <div className="flex justify-center mt-10">
           <Pagination
             page={paginationMeta.page}

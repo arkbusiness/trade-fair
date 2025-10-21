@@ -6,13 +6,16 @@ import {
   AllAttendeeExhibitors,
   FavouriteAttendeeExhibitors
 } from '../organisms';
+import { useSetParams } from '@/app/core/shared/hooks';
 
 export const AttendeeExhibitorPage = () => {
+  const { removeQueryParam } = useSetParams();
   const { setFilterParams, filter } = useQueryFilters(['page']);
 
   const selectedTab = filter?.tab || 'all';
 
   const handleTabChange = (value: string) => {
+    removeQueryParam('page');
     if (value === 'all') {
       setFilterParams({
         tab: 'all'

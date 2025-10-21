@@ -28,12 +28,16 @@ export const AttendeeExhibitorDetailsTab = ({
   const isInfoTab = selectedTab === 'info';
   const isProductsTab = selectedTab === 'products';
 
+  const handleSelectedTab = (tab: string) => {
+    setSelectedTab(tab);
+  };
+
   return (
     <>
       <BorderTab
         tabs={TABS_ITEMS}
         defaultValue={selectedTab}
-        handleSelectedTab={(tab) => setSelectedTab(tab.value)}
+        handleSelectedTab={(tab) => handleSelectedTab(tab.value)}
         tabTriggerClassName="max-w-[8rem] w-full"
         tabListClassName="h-[3rem]"
         tabListContainerClassName="hidden sm:flex lg:flex"

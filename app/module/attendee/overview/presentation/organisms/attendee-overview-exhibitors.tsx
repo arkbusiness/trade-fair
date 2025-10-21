@@ -47,7 +47,6 @@ export const AttendeeOverviewExhibitors = () => {
                 boothNumber={exhibitor.boothNumber}
                 description={exhibitor.publicDescription}
                 isLiked={isLiked}
-                allowNavigation={false}
                 handleRefetchExhibitors={handleRefetch}
               />
             );

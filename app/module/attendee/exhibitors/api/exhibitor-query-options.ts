@@ -52,6 +52,6 @@ export const getAttendeeExhibitorScannedBoothOptions = ({
 }) => {
   return {
     queryKey: ['exhibitor-scanned', exhibitorId],
-    url: `exhibitors/${exhibitorId}/scanned`
+    url: `/attendee/exhibitors/${exhibitorId}/scanned`
   };
 };

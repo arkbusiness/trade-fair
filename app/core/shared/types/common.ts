@@ -1,5 +1,6 @@
 import { SVGProps } from 'react';
 
+export type FilterParams = Record<string, string>;
 export interface IQueryParams {
   // eslint-disable-next-line  @typescript-eslint/no-explicit-any
   params: Promise<any>;
