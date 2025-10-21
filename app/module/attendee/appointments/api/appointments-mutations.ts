@@ -9,7 +9,7 @@ export type JoinWaitingListParams = {
   exhibitorId: string;
 };
 
-export const useBookAppointment = ({
+export const useAttendeeBookAppointment = ({
   meetingId,
   onSuccess,
   onError
@@ -17,7 +17,7 @@ export const useBookAppointment = ({
   const mutation = useCustomMutation();
 
   return {
-    addToFavouriteMutation: () =>
+    bookAppointmentMutation: () =>
       mutation.mutate(
         {
           url: `/attendee/appointments/${meetingId}/book`,
@@ -36,7 +36,7 @@ export const useBookAppointment = ({
   };
 };
 
-export const useJoinWaitingList = ({
+export const useAttendeeJoinWaitingList = ({
   exhibitorId,
   onSuccess,
   onError
@@ -44,10 +44,10 @@ export const useJoinWaitingList = ({
   const mutation = useCustomMutation();
 
   return {
-    removeFromFavouriteMutation: () =>
+    joinWaitingListMutation: () =>
       mutation.mutate(
         {
-          url: `/attendee/appointments/${exhibitorId}/waiting`,
+          url: `/attendee/appointments/${exhibitorId}/waitlist`,
           method: 'POST'
         },
         {

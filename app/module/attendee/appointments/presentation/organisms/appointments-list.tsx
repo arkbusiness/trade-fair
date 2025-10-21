@@ -1,16 +1,25 @@
 'use client';
 
-import { useAttendeeAppointmentsSlots } from '../../api';
-import { useSetParams } from '@/app/core/shared/hooks';
-import { AppointmentsListItem } from '../molecules';
-import { Spinner, Button } from '@/app/core/shared/components/atoms';
+import { Spinner } from '@/app/core/shared/components/atoms';
 import { Pagination } from '@/app/core/shared/components/molecules';
+import { useSetParams } from '@/app/core/shared/hooks';
+import { useState } from 'react';
+import { IAttendeeMeeting } from '../../../meetings/api';
+import { useAttendeeAppointmentsSlots } from '../../api';
+import {
+  AppointmentsListItem,
+  AttendeeBookAppointment,
+  AttendeeJoinWaitlist
+} from '../molecules';
 
 interface AppointmentsListProps {
   exhibitorId: string;
 }
 
 export const AppointmentsList = ({ exhibitorId }: AppointmentsListProps) => {
+  const [selectedSlot, setSelectedSlot] = useState<IAttendeeMeeting | null>(
+    null
+  );
   const { searchParamsObject, setMultipleParam } = useSetParams();
   const exhibitorQuery = {
     date: searchParamsObject.date,
@@ -27,9 +36,9 @@ export const AppointmentsList = ({ exhibitorId }: AppointmentsListProps) => {
     filter: exhibitorQuery
   });
 
-  const handleJoinWaitlist = () => {
-    // TODO: Implement waitlist functionality
-    refetchSlots();
+  const handleCloseModal = () => {
+    if (isLoadingSlots) return;
+    setSelectedSlot(null);
   };
 
   const handlePageClick = (value: { selected: number }) => {
@@ -47,6 +56,19 @@ export const AppointmentsList = ({ exhibitorId }: AppointmentsListProps) => {
 
   return (
     <div>
+      <AttendeeBookAppointment
+        isOpen={!!selectedSlot}
+        selectedSlot={selectedSlot || null}
+        refetchSlots={refetchSlots}
+        onClose={handleCloseModal}
+      />
+
+      <AttendeeJoinWaitlist
+        isLoadingSlots={isLoadingSlots}
+        hasSlots={hasSlots}
+        exhibitorId={exhibitorId}
+      />
+
       {isLoading && <Spinner />}
       <div className="mb-3">
         {hasSlots && !isLoading && (
@@ -67,7 +89,9 @@ export const AppointmentsList = ({ exhibitorId }: AppointmentsListProps) => {
             <AppointmentsListItem
               key={slot.id}
               appointment={slot}
-              onClick={() => {}}
+              onClick={() => {
+                setSelectedSlot(slot);
+              }}
             />
           ))}
         </div>
@@ -80,26 +104,6 @@ export const AppointmentsList = ({ exhibitorId }: AppointmentsListProps) => {
             pageCount={paginationMeta.pages}
             handlePageClick={handlePageClick}
           />
-        </div>
-      )}
-
-      {!isLoading && !hasSlots && (
-        <div className="text-center py-8">
-          <div className="mb-4">
-            <p className="mb-2 text-lg text-foreground font-semibold">
-              No available meeting slots at this time
-            </p>
-            <p className="text-secondary">
-              Join the waitlist to be notified when new slots become available
-            </p>
-          </div>
-          <Button
-            variant="tertiary"
-            onClick={handleJoinWaitlist}
-            className="px-6"
-          >
-            Join Waitlist
-          </Button>
         </div>
       )}
     </div>
