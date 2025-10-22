@@ -9,7 +9,10 @@ import {
 } from './catalogues-query-options';
 import { Inventory } from '@/app/module/exhibitor/inventory/hooks';
 
-export const useCatalogues = (filter: Record<string, string>) => {
+export const useCatalogues = (
+  exhibitorId: string,
+  filter: Record<string, string>
+) => {
   const {
     data: catalogues,
     isLoading: isLoadingCatalogues,
@@ -17,8 +20,12 @@ export const useCatalogues = (filter: Record<string, string>) => {
     refetch
   } = useCustomQuery<IPaginatedResponse<Inventory>>({
     ...getCataloguesQueryOptions({
-      filter
-    })
+      filter,
+      exhibitorId
+    }),
+    options: {
+      enabled: !!exhibitorId
+    }
   });
   return {
     catalogues: catalogues?.data ?? EMPTY_ARRAY,

@@ -17,16 +17,14 @@ export const AttendeeExhibitorDetailsProducts = ({
   const { setMultipleParam, searchParamsObject } = useSetParams();
 
   const exhibitorQuery = {
-    exhibitorId,
     limit: '15',
+    exhibitorId,
     page: searchParamsObject.page || '1',
     ...filter
   };
 
   const { catalogues, isLoadingCatalogues, refetchCatalogues, paginationMeta } =
-    useCatalogues({
-      ...exhibitorQuery
-    });
+    useCatalogues(exhibitorId, exhibitorQuery);
 
   const handlePageClick = (value: { selected: number }) => {
     const newPage = value.selected + 1;

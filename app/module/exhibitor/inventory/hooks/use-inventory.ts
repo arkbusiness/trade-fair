@@ -27,6 +27,10 @@ export interface Inventory {
   tags: string[] | null;
   availableFrom: string;
   availableTo: string;
+  exhibitor: {
+    companyName: string;
+    contactEmail: string;
+  };
   customAttrs:
     | {
         key: string;

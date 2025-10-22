@@ -1,10 +1,15 @@
+import { FilterParams } from '@/app/core/shared/types';
 import { buildQueryParams } from '@/app/core/shared/utils';
 
+type CataloguesQueryOptions = {
+  exhibitorId: string;
+  filter: FilterParams;
+};
+
 export const getCataloguesQueryOptions = ({
+  exhibitorId,
   filter
-}: {
-  filter: Record<string, string>;
-}) => {
+}: CataloguesQueryOptions) => {
   const queryParams = buildQueryParams({
     params: {
       ...filter
@@ -12,7 +17,7 @@ export const getCataloguesQueryOptions = ({
   });
 
   return {
-    queryKey: ['exhibitor-catalogue', queryParams],
+    queryKey: ['exhibitor-catalogue', queryParams, exhibitorId],
     url: `/attendee/catalogue${queryParams ? `?${queryParams}` : ''}`
   };
 };
@@ -26,9 +31,7 @@ export const getCatalogueByIdQueryOptions = (catalogueId: string) => {
 
 export const getFavoriteCataloguesQueryOptions = ({
   filter
-}: {
-  filter: Record<string, string>;
-}) => {
+}: Omit<CataloguesQueryOptions, 'exhibitorId'>) => {
   const queryParams = buildQueryParams({
     params: {
       ...filter

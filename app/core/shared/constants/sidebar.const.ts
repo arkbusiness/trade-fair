@@ -111,7 +111,7 @@ export const ATTENDEE_SIDEBAR_ITEMS = [
       {
         title: 'Catalogues',
         icon: ShoppingBasket,
-        url: ''
+        url: ATTENDEE_APP_ROUTES.catalogues.root()
       },
       {
         title: 'Orders & Invoice',

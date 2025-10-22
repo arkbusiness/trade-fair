@@ -3,7 +3,7 @@
 import { Card, CardContent } from '@/app/core/shared/components/atoms';
 import { ATTENDEE_APP_ROUTES } from '@/app/core/shared/constants';
 import { cn, errorHandler, formatCurrency } from '@/app/core/shared/utils';
-import { Heart } from 'lucide-react';
+import { ChevronRight, Heart } from 'lucide-react';
 import Image from 'next/image';
 import { useState } from 'react';
 import toast from 'react-hot-toast';
@@ -17,11 +17,13 @@ import {
 
 type AttendeeProductCardProps = {
   product: Inventory;
+  showExhibitor?: boolean;
   handleRefetchExhibitors: () => void;
 };
 
 export const AttendeeProductCard = ({
   product,
+  showExhibitor = false,
   handleRefetchExhibitors
 }: AttendeeProductCardProps) => {
   const router = useRouter();
@@ -81,8 +83,14 @@ export const AttendeeProductCard = ({
     router.push(ATTENDEE_APP_ROUTES.catalogues.detail(productId));
   };
 
+  const handleGoToExhibitor = () => {
+    router.push(ATTENDEE_APP_ROUTES.exhibitors.detail(product.exhibitorId));
+  };
+
   const isMutating = isPendingAddToFavourite || isPendingRemoveFromFavourite;
   const isFavourited = (isProductFavourited && !isMutating) || isLikedState;
+
+  const exhibitorName = product?.exhibitor?.companyName;
 
   return (
     <Card
@@ -108,9 +116,26 @@ export const AttendeeProductCard = ({
             </div>
           </div>
 
-          <p className="text-xs font-medium line-clamp-2 opacity-60">
-            {product.description || 'N/A'}
-          </p>
+          {!showExhibitor && (
+            <p className="text-xs font-medium line-clamp-2 opacity-60">
+              {product.description || 'N/A'}
+            </p>
+          )}
+
+          {showExhibitor && exhibitorName && (
+            <button
+              className="flex justify-between items-center"
+              onClick={(event) => {
+                event.stopPropagation();
+                handleGoToExhibitor();
+              }}
+            >
+              <span className="font-medium line-clamp-2 text-light-blue-2">
+                {exhibitorName}
+              </span>
+              <ChevronRight size={16} className="text-light-blue-2" />
+            </button>
+          )}
 
           <div className="flex justify-between items-center">
             <p className="font-semibold text-lg">
