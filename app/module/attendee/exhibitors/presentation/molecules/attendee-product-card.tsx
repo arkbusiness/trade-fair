@@ -5,7 +5,7 @@ import { ATTENDEE_APP_ROUTES } from '@/app/core/shared/constants';
 import { cn, errorHandler, formatCurrency } from '@/app/core/shared/utils';
 import { ChevronRight, Heart } from 'lucide-react';
 import Image from 'next/image';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 
 import { useRouter } from 'nextjs-toploader/app';
@@ -18,18 +18,26 @@ import {
 type AttendeeProductCardProps = {
   product: Inventory;
   showExhibitor?: boolean;
+  showFavouriteButton?: boolean;
+  hasBeenFavourited?: boolean;
   handleRefetchExhibitors: () => void;
 };
 
 export const AttendeeProductCard = ({
   product,
   showExhibitor = false,
+  showFavouriteButton = true,
+  hasBeenFavourited = false,
   handleRefetchExhibitors
 }: AttendeeProductCardProps) => {
   const router = useRouter();
 
-  const isProductFavourited = product?.isFavorite || false;
-  const [isLikedState, setIsLikedState] = useState(isProductFavourited);
+  const isProductFavourited = product?.isFavorite || hasBeenFavourited || false;
+  const [isLikedState, setIsLikedState] = useState(false);
+
+  useEffect(() => {
+    setIsLikedState(isProductFavourited);
+  }, [isProductFavourited]);
 
   const { addToFavouriteMutation, isPending: isPendingAddToFavourite } =
     useAddCatalogueToFavourite({
@@ -89,7 +97,6 @@ export const AttendeeProductCard = ({
 
   const isMutating = isPendingAddToFavourite || isPendingRemoveFromFavourite;
   const isFavourited = (isProductFavourited && !isMutating) || isLikedState;
-
   const exhibitorName = product?.exhibitor?.companyName;
 
   return (
@@ -145,21 +152,23 @@ export const AttendeeProductCard = ({
               })}
             </p>
 
-            <button
-              onClick={(event) => {
-                event.stopPropagation();
-                handleClickFavourite();
-              }}
-              disabled={isMutating}
-              className="relative z-10 h-10 w-10 flex items-center justify-center"
-            >
-              <Heart
-                size={16}
-                className={cn({
-                  'text-golden-yellow fill-golden-yellow': isFavourited
-                })}
-              />
-            </button>
+            {showFavouriteButton && (
+              <button
+                onClick={(event) => {
+                  event.stopPropagation();
+                  handleClickFavourite();
+                }}
+                disabled={isMutating}
+                className="relative z-10 h-10 w-10 flex items-center justify-center"
+              >
+                <Heart
+                  size={16}
+                  className={cn({
+                    'text-golden-yellow fill-golden-yellow': isFavourited
+                  })}
+                />
+              </button>
+            )}
           </div>
         </div>
       </CardContent>

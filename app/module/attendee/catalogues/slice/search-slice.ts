@@ -6,7 +6,7 @@ interface SearchState {
   clearSearch: () => void;
 }
 
-export const useSearchStore = create<SearchState>((set) => ({
+export const useSearchSlice = create<SearchState>((set) => ({
   search: '',
   setSearch: (search: string) => set({ search }),
   clearSearch: () => set({ search: '' })

@@ -1,44 +1,41 @@
 'use client';
 
-import { useQueryFilters } from '@/app/core/shared/hooks';
-import { useSetParams } from '@/app/core/shared/hooks';
+import { useQueryFilters, useSetParams } from '@/app/core/shared/hooks';
+import { useSearchSlice } from '../../slice/search-slice';
 import { AttendeeCataloguesTab } from '../molecules';
-import { AllCataloguesExhibitors } from '../organisms/all-catalogues-exhibitors';
-import { useSearchStore } from '../../slice/search-slice';
+import { AllExhibitorCatalogues } from '../organisms/all-exhibitor-catalogues';
+import { AllExhibitorFavouriteCatalogues } from '../organisms/all-exhibitor-favourite-catalogues';
 
 export const AttendeeCataloguesPage = () => {
-  const { removeQueryParam } = useSetParams();
+  const { removeMultipleQueryParams } = useSetParams();
   const { setFilterParams, filter } = useQueryFilters(['page']);
-  const { setSearch } = useSearchStore();
+  const { setSearch } = useSearchSlice();
 
-  const handleTabChange = (value: string) => {
-    removeQueryParam('page');
-    if (value === 'all') {
-      setFilterParams({
-        tab: 'all'
-      });
-    } else {
-      setFilterParams({
-        tab: value
-      });
-    }
+  const clearSearchAndPagination = () => {
+    setSearch('');
+    removeMultipleQueryParams(['page']);
   };
 
-  const handleSearch = (value: string) => {
-    setSearch(value?.trim());
+  const updateTabFilter = (tabValue: string) => {
+    setFilterParams({
+      tab: tabValue
+    });
+  };
+
+  const handleTabChange = (value: string) => {
+    clearSearchAndPagination();
+    updateTabFilter(value);
   };
 
   const selectedTab = filter?.tab || 'all';
   const isAllTab = selectedTab === 'all';
-  // const isFavouriteTab = selectedTab === 'favourites';
+  const isFavouriteTab = selectedTab === 'favourites';
 
   return (
     <>
-      <AttendeeCataloguesTab
-        handleTabChange={handleTabChange}
-        handleSearch={handleSearch}
-      />
-      {isAllTab && <AllCataloguesExhibitors />}
+      <AttendeeCataloguesTab handleTabChange={handleTabChange} />
+      {isAllTab && <AllExhibitorCatalogues />}
+      {isFavouriteTab && <AllExhibitorFavouriteCatalogues />}
     </>
   );
 };

@@ -1,21 +1,19 @@
 'use client';
 
+import { Spinner } from '@/app/core/shared/components/atoms';
 import { useSetParams } from '@/app/core/shared/hooks';
-import { useAttendeeExhibitors } from '../../../exhibitors/api';
+import { cn } from '@/app/core/shared/utils';
 import Image from 'next/image';
 import { useMemo } from 'react';
+import { useAttendeeExhibitors } from '../../../exhibitors/api';
 import { groupExhibitorsByLetter } from '../../utils';
-import { cn } from '@/app/core/shared/utils';
-import { Spinner } from '@/app/core/shared/components/atoms';
 
 export const AllCataloguesSidebar = () => {
-  const { setParam, searchParamsObject } = useSetParams();
+  const { searchParamsObject, setMultipleParam } = useSetParams();
   const selectedExhibitorId = searchParamsObject.exhibitorId;
 
   const exhibitorQuery = {
-    limit: '1000',
-    page: searchParamsObject.page || '1',
-    search: ''
+    limit: '1000'
   };
   const { exhibitors, isLoadingExhibitor } =
     useAttendeeExhibitors(exhibitorQuery);
@@ -26,7 +24,10 @@ export const AllCataloguesSidebar = () => {
   }, [exhibitors]);
 
   const handleExhibitorClick = (exhibitorId: string) => {
-    setParam('exhibitorId', exhibitorId);
+    setMultipleParam({
+      exhibitorId,
+      page: '1'
+    });
   };
 
   const hasExhibitors = exhibitors.length > 0;

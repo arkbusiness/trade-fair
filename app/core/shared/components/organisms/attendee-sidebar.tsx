@@ -15,6 +15,7 @@ export function AttendeeSidebar({
   const pathname = usePathname();
 
   const isSettingsActive = pathname.includes(ATTENDEE_APP_ROUTES.settings());
+
   return (
     <Sidebar
       collapsible="offcanvas"

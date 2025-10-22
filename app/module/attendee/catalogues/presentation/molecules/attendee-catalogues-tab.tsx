@@ -4,6 +4,7 @@ import {
   BorderTab,
   TableSearchInput
 } from '@/app/core/shared/components/molecules';
+import { useSearchSlice } from '../../slice/search-slice';
 
 const ATTENDEE_CATALOGUES_TAB_LIST = [
   {
@@ -18,13 +19,13 @@ const ATTENDEE_CATALOGUES_TAB_LIST = [
 
 type AttendeeCataloguesTabProps = {
   handleTabChange: (value: string) => void;
-  handleSearch: (value: string) => void;
 };
 
 export const AttendeeCataloguesTab = ({
-  handleTabChange,
-  handleSearch
+  handleTabChange
 }: AttendeeCataloguesTabProps) => {
+  const { setSearch } = useSearchSlice();
+
   return (
     <div className="flex justify-between gap-x-8 gap-y-5 items-center flex-wrap w-full">
       <BorderTab
@@ -37,7 +38,7 @@ export const AttendeeCataloguesTab = ({
           <div className="max-w-[390px] w-full">
             <TableSearchInput
               placeholder="Search product name..."
-              handleSearch={handleSearch}
+              handleSearch={(value) => setSearch(value)}
               inputClassName="border-0"
             />
           </div>
