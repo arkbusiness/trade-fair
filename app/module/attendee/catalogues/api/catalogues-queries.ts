@@ -20,7 +20,10 @@ export const useCatalogues = (
     refetch
   } = useCustomQuery<IPaginatedResponse<Inventory>>({
     ...getCataloguesQueryOptions({
-      filter,
+      filter: {
+        ...filter,
+        limit: '15'
+      },
       exhibitorId
     }),
     options: {
@@ -61,7 +64,10 @@ export const useFavoriteCatalogues = (filter: Record<string, string>) => {
     refetch
   } = useCustomQuery<IPaginatedResponse<Inventory>>({
     ...getFavoriteCataloguesQueryOptions({
-      filter
+      filter: {
+        ...filter,
+        limit: '15'
+      }
     })
   });
   return {

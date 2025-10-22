@@ -14,7 +14,6 @@ export const FavouriteCataloguesGrid = () => {
   const { setMultipleParam, searchParamsObject } = useSetParams();
 
   const favouriteCataloguesQuery = {
-    limit: '15',
     page: searchParamsObject.page || '1',
     search
   };

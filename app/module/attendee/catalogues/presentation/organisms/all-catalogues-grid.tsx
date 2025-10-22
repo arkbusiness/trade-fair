@@ -21,7 +21,6 @@ export const AllCataloguesGrid = ({ exhibitorId }: CataloguesGridProps) => {
   const { setMultipleParam, searchParamsObject } = useSetParams();
 
   const cataloguesQuery = {
-    limit: '15',
     page: searchParamsObject.page || '1',
     exhibitorId,
     search
