@@ -1,84 +1,78 @@
 'use client';
 
-import { FavoriteButton } from '../atoms/favorite-button';
+import {
+  ATTENDEE_APP_ROUTES,
+  DEFAULT_CURRENCY
+} from '@/app/core/shared/constants';
+import { formatCurrency } from '@/app/core/shared/utils';
+import { ChevronRight } from 'lucide-react';
+import Link from 'next/link';
+import { useCatalogueById } from '../../api';
+import { ProductFavoriteButton } from '../atoms/product-favorite-button';
 import { QuantitySelector } from '../molecules/quantity-selector';
+import { RequestInvoiceButton } from '../molecules/request-invoice-button';
 
 interface ProductDetailsProps {
-  title: string;
-  exhibitor: {
-    name: string;
-    link?: string;
-  };
-  price: number;
-  quantity: number;
-  isFavorite: boolean;
-  onQuantityChange: (quantity: number) => void;
-  onFavoriteToggle: () => void;
-  onRequestInvoice: () => void;
+  catalogueId: string;
 }
 
-export const ProductDetails = ({
-  title,
-  exhibitor,
-  price,
-  quantity,
-  isFavorite,
-  onQuantityChange,
-  onFavoriteToggle,
-  onRequestInvoice
-}: ProductDetailsProps) => {
-  const totalPrice = price * quantity;
+export const ProductDetails = ({ catalogueId }: ProductDetailsProps) => {
+  const { catalogue, refetchCatalogue } = useCatalogueById(catalogueId);
+  const exhibitor = catalogue?.exhibitor;
+  const exhibitorId = catalogue?.exhibitorId;
+  const isFavorited = catalogue?.isFavorite || false;
+
+  const currency = catalogue?.currency || DEFAULT_CURRENCY;
+  const basePrice = catalogue?.basePrice || 0;
 
   return (
-    <div className="flex flex-col gap-6">
+    <div className="flex flex-col gap-6 w-full">
       {/* Product Title and Favorite */}
       <div className="flex items-start justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900 mb-2">{title}</h1>
+          <h1 className="text-2xl font-bold  mb-2 text-foreground">
+            {catalogue?.name}
+          </h1>
           <div className="flex items-center gap-2">
-            <span className="text-sm text-gray-600">Exhibitor:</span>
-            <a
-              href={exhibitor.link || '#'}
-              className="text-blue-500 text-sm hover:underline flex items-center gap-1"
-            >
-              {exhibitor.name}
-              <svg
-                className="w-4 h-4"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M9 5l7 7-7 7"
-                />
-              </svg>
-            </a>
+            <span className="text-sm text-foreground">Exhibitor:</span>
+
+            {exhibitor && exhibitorId && (
+              <Link href={ATTENDEE_APP_ROUTES.exhibitors.detail(exhibitorId)}>
+                <span className="flex justify-between items-center gap-4">
+                  <span className="font-medium line-clamp-2 text-light-blue-2">
+                    {exhibitor.companyName}
+                  </span>
+                  <ChevronRight size={16} className="text-light-blue-2" />
+                </span>
+              </Link>
+            )}
           </div>
         </div>
-        <FavoriteButton isFavorite={isFavorite} onToggle={onFavoriteToggle} />
+        <ProductFavoriteButton
+          isProductFavorite={isFavorited}
+          productId={catalogueId}
+          handleRefetch={refetchCatalogue}
+        />
       </div>
 
       {/* Price */}
-      <div className="text-3xl font-bold text-gray-900">
-        ₦{totalPrice.toLocaleString()}
-      </div>
+      <p className="text-xl font-bold text-foreground">
+        {formatCurrency({
+          amount: basePrice,
+          currency: currency
+        })}
+      </p>
 
       {/* Quantity Selector */}
-      <QuantitySelector
-        quantity={quantity}
-        onQuantityChange={onQuantityChange}
-      />
+      <QuantitySelector product={catalogue || null} />
 
-      {/* Request Invoice Button */}
-      <button
-        onClick={onRequestInvoice}
-        className="w-full bg-red-500 hover:bg-red-600 text-white font-medium py-4 rounded-lg transition-colors"
-      >
-        REQUEST INVOICE (₦{totalPrice.toLocaleString()})
-      </button>
+      <div className="mt-15 border lg:max-w-[391px]">
+        <RequestInvoiceButton
+          productId={catalogueId}
+          currency={currency}
+          className="w-full"
+        />
+      </div>
     </div>
   );
 };
