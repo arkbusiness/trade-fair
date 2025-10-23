@@ -53,7 +53,7 @@ export const MainImageSlider = ({
                 alt={productName}
                 width={450}
                 height={450}
-                className="w-full h-full object-cover"
+                className="w-full h-full object-contain"
               />
             </div>
           </SwiperSlide>

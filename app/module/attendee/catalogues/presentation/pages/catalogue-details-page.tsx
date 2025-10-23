@@ -18,6 +18,9 @@ export const CatalogueDetailsPage = ({
           <ProductImageSlider catalogueId={catalogueId} />
           <ProductDetails catalogueId={catalogueId} />
         </div>
+        <div className="my-14">
+          <hr />
+        </div>
       </div>
     </>
   );
