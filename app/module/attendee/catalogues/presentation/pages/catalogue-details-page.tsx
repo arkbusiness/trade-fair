@@ -1,6 +1,6 @@
 'use client';
 
-import { CatalogueDetailsHeader } from '../molecules';
+import { CatalogueDescription, CatalogueDetailsHeader } from '../molecules';
 import { ProductImageSlider, ProductDetails } from '../organisms';
 
 interface CatalogueDetailsPageProps {
@@ -21,6 +21,7 @@ export const CatalogueDetailsPage = ({
         <div className="my-14">
           <hr />
         </div>
+        <CatalogueDescription catalogueId={catalogueId} />
       </div>
     </>
   );

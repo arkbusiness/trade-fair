@@ -6,3 +6,4 @@ export * from './quantity-selector';
 export * from './navigation-buttons';
 export * from './thumbnail-slider';
 export * from './main-image-slider';
+export * from './catalogue-description';
