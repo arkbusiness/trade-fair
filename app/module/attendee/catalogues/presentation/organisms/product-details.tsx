@@ -22,7 +22,7 @@ export const ProductDetails = ({ catalogueId }: ProductDetailsProps) => {
   const exhibitorId = catalogue?.exhibitorId;
   const isFavorited = catalogue?.isFavorite || false;
 
-  const currency = catalogue?.currency || DEFAULT_CURRENCY;
+  const productCurrency = catalogue?.currency || DEFAULT_CURRENCY;
   const basePrice = catalogue?.basePrice || 0;
 
   return (
@@ -59,7 +59,7 @@ export const ProductDetails = ({ catalogueId }: ProductDetailsProps) => {
       <p className="text-xl font-bold text-foreground">
         {formatCurrency({
           amount: basePrice,
-          currency: currency
+          currency: productCurrency
         })}
       </p>
 
@@ -69,7 +69,7 @@ export const ProductDetails = ({ catalogueId }: ProductDetailsProps) => {
       <div className="mt-15 border lg:max-w-[391px]">
         <RequestInvoiceButton
           productId={catalogueId}
-          currency={currency}
+          productCurrency={productCurrency}
           className="w-full"
         />
       </div>
