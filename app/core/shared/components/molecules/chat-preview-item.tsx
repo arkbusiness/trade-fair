@@ -1,7 +1,6 @@
 'use client';
 
 import { ImagePlaceholder } from '@/app/core/shared/components/atoms/image-placeholder';
-import { useSetParams } from '@/app/core/shared/hooks';
 import { cn } from '@/app/core/shared/utils';
 import Image from 'next/image';
 
@@ -10,6 +9,7 @@ interface ChatPreviewItemProps {
   avatar: string;
   name: string;
   message: string;
+  selectedUserId: string;
   handleSelect: () => void;
 }
 
@@ -18,13 +18,9 @@ export const ChatPreviewItem = ({
   avatar,
   name,
   message,
-  // date,
+  selectedUserId,
   handleSelect
 }: ChatPreviewItemProps) => {
-  const { searchParamsObject } = useSetParams();
-
-  const exhibitorId = searchParamsObject?.['exhibitor'] ?? '';
-
   const hasImage = !!avatar;
 
   return (
@@ -32,7 +28,7 @@ export const ChatPreviewItem = ({
       className={cn(
         'py-5 px-2 rounded-[8px] flex gap-2 items-center hover:bg-highlight cursor-pointer',
         {
-          'bg-highlight': id === exhibitorId
+          'bg-highlight': id === selectedUserId
         }
       )}
       onClick={handleSelect}

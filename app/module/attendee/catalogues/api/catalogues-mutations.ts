@@ -72,7 +72,10 @@ export const useRequestInvoice = ({
   const mutation = useCustomMutation();
 
   return {
-    requestInvoiceMutation: (payload: { items: RequestInvoicePayload[] }) =>
+    requestInvoiceMutation: (payload: {
+      items: RequestInvoicePayload[];
+      currency: string;
+    }) =>
       mutation.mutate(
         {
           url: `/attendee/order`,

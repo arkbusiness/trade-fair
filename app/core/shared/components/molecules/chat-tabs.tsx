@@ -1,16 +1,10 @@
 'use client';
 
 import { BorderTab } from '@/app/core/shared/components/molecules';
-import { useSetParams } from '@/app/core/shared/hooks';
-
-export enum CHAT_TAB {
-  ALL = 'all',
-  UNREAD = 'unread'
-}
+import { CHAT_TAB, useMessageSlice } from '@/app/core/shared/slice';
 
 export const ChatTabs = () => {
-  const { searchParamsObject, setMultipleParam } = useSetParams();
-  const tab = searchParamsObject?.['chat-type'] || CHAT_TAB.ALL;
+  const { tab, setTab, setSelectedUserId } = useMessageSlice();
 
   const CHAT_TAB_LIST = [
     {
@@ -18,24 +12,15 @@ export const ChatTabs = () => {
       value: CHAT_TAB.ALL,
       count: undefined
     }
-    // {
-    //   label: 'Unread',
-    //   value: CHAT_TAB.UNREAD,
-    //   count: undefined
-    // }
   ];
 
   const handleTabChange = (value: string) => {
     if (value === CHAT_TAB.ALL) {
-      setMultipleParam({
-        attendeeId: '',
-        'chat-type': ''
-      });
+      setSelectedUserId('');
+      setTab(CHAT_TAB.ALL);
     } else {
-      setMultipleParam({
-        attendeeId: '',
-        'chat-type': value
-      });
+      setSelectedUserId('');
+      setTab(CHAT_TAB.UNREAD);
     }
   };
 

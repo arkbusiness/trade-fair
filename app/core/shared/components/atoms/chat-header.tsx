@@ -1,8 +1,8 @@
 'use client';
 
-import { useSetParams } from '@/app/core/shared/hooks';
 import { AlignLeft } from 'lucide-react';
 import Image from 'next/image';
+import { useMessageSlice } from '../../slice';
 
 interface ChatHeaderProps {
   contactName: string;
@@ -10,14 +10,14 @@ interface ChatHeaderProps {
 }
 
 export const ChatHeader = ({ contactName, contactAvatar }: ChatHeaderProps) => {
-  const { setParam } = useSetParams();
+  const { onOpenDrawer } = useMessageSlice();
   const hasImage = !!contactAvatar;
 
   return (
     <div className="border-b bg-white px-6 py-4">
       <div className="flex items-center gap-3">
         <button
-          onClick={() => setParam('chat-drawer', '1')}
+          onClick={() => onOpenDrawer()}
           className="cursor-pointer lg:hidden"
         >
           <AlignLeft size={24} />

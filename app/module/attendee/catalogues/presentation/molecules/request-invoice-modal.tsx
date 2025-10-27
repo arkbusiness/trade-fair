@@ -69,7 +69,8 @@ export const RequestInvoiceModal = ({
           quantity: item.cartQuantity,
           price: item.basePrice
         }
-      ]
+      ],
+      currency: productCurrency
     });
   };
 

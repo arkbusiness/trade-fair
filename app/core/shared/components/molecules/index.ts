@@ -43,3 +43,6 @@ export * from './border-tab';
 export * from './pagination/pagination';
 export * from './attendee-sidebar-items';
 export * from './attendee-header';
+export * from './chat-tabs';
+export * from './chat-preview-item';
+export * from './chat-input';

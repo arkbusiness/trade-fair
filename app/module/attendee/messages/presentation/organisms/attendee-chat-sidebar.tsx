@@ -1,19 +1,16 @@
 'use client';
 
 import { ChatTabs } from '@/app/core/shared/components/molecules';
-import { ExhibitorChatPreview } from '../molecules';
+import { AttendeeChatPreview } from '../molecules/attendee-chat-preview';
 
-export const ChatSidebar = () => {
+export const AttendeeChatSidebar = () => {
   return (
     <div className="flex-col overflow-hidden border border-gray-200 bg-white hidden  lg:flex lg:w-[20rem]">
-      {/* Search */}
-      {/* <ChatSearch handleSearch={(value) => console.log(value)} /> */}
-
       {/* Tabs */}
       <ChatTabs />
 
       {/* Preview */}
-      <ExhibitorChatPreview />
+      <AttendeeChatPreview />
     </div>
   );
 };

@@ -1,30 +1,25 @@
 'use client';
 
-import { useSetParams } from '@/app/core/shared/hooks';
+import { Spinner } from '@/app/core/shared/components/atoms';
+import { CHAT_TAB, useMessageSlice } from '@/app/core/shared/slice';
 import { cn } from '@/app/core/shared/utils';
 import { useAllMessages } from '../../hooks/use-messages';
-import { ChatPreviewItem } from '../atoms';
-import { CHAT_TAB } from './chat-tabs';
-import { Spinner } from '@/app/core/shared/components/atoms';
+import { ChatPreviewItem } from '@/app/core/shared/components/molecules';
 
 const MAX_CHAT_PREVIEW = 6;
 
-export const ChatPreview = () => {
-  const { setMultipleParam, searchParamsObject } = useSetParams();
-
-  const type = searchParamsObject?.['chat-type'] ?? CHAT_TAB.ALL;
+export const ExhibitorChatPreview = () => {
+  const { tab, setSelectedUserId, selectedUserId, setTab } = useMessageSlice();
 
   const { data, isFetching } = useAllMessages({
-    unread: type === CHAT_TAB.UNREAD ? 'true' : ''
+    unread: tab === CHAT_TAB.UNREAD ? 'true' : ''
   });
 
   const isChatPreviewOverflow = (data?.length || 0) > MAX_CHAT_PREVIEW;
 
   const handleSelect = (attendeeId: string) => {
-    setMultipleParam({
-      'chat-drawer': '',
-      attendeeId: attendeeId
-    });
+    setTab(CHAT_TAB.ALL);
+    setSelectedUserId(attendeeId);
   };
 
   return (
@@ -50,6 +45,7 @@ export const ChatPreview = () => {
             avatar={chatPreview?.attendeeLogoUrl ?? ''}
             name={chatPreview.attendeeName}
             message={lastMessage?.content ?? ''}
+            selectedUserId={selectedUserId || ''}
             // date={chatPreview.messages[0].createdAt}
             handleSelect={() => handleSelect(chatPreview.attendeeId)}
           />

@@ -5,25 +5,25 @@ import { distanceFormat } from '@/app/core/shared/lib';
 import { ImagePlaceholder } from '@/app/core/shared/components/atoms/image-placeholder';
 import Image from 'next/image';
 
-interface ChatMessageBubbleProps {
+interface ChatBubbleProps {
   ownerAvatar?: string;
-  attendeeAvatar?: string;
+  selectedUserAvatar?: string;
   message: string;
   timestamp: string;
   isOwn: boolean;
-  attendeeName?: string;
+  selectedUserName?: string;
 }
 
-export const ChatMessageBubble = ({
+export const ChatBubble = ({
   message,
   timestamp,
   isOwn,
-  attendeeName,
+  selectedUserName,
   ownerAvatar,
-  attendeeAvatar
-}: ChatMessageBubbleProps) => {
+  selectedUserAvatar
+}: ChatBubbleProps) => {
   const hasOwnerImage = !!ownerAvatar;
-  const hasAttendeeImage = !!attendeeAvatar;
+  const hasSelectedUserImage = !!selectedUserAvatar;
 
   return (
     <div
@@ -34,10 +34,10 @@ export const ChatMessageBubble = ({
     >
       {!isOwn && (
         <div className="w-8 h-8 rounded-full mr-3">
-          {hasAttendeeImage ? (
+          {hasSelectedUserImage ? (
             <Image
-              src={attendeeAvatar}
-              alt="Attendee Avatar"
+              src={selectedUserAvatar}
+              alt="Selected User Avatar"
               width={32}
               height={32}
               className="w-full h-full rounded-full"
@@ -45,7 +45,7 @@ export const ChatMessageBubble = ({
           ) : (
             <ImagePlaceholder
               className="w-full h-full rounded-full text-xs"
-              label={attendeeName?.slice(0, 2) || 'User'}
+              label={selectedUserName?.slice(0, 2) || 'User'}
             />
           )}
         </div>
@@ -56,9 +56,9 @@ export const ChatMessageBubble = ({
           'bg-gray-100 text-gray-900': !isOwn
         })}
       >
-        {!isOwn && attendeeName && (
+        {!isOwn && selectedUserName && (
           <p className="text-xs font-medium text-gray-600 mb-1">
-            {attendeeName}
+            {selectedUserName}
           </p>
         )}
         <p className="text-sm px-2 whitespace-normal break-words">{message}</p>

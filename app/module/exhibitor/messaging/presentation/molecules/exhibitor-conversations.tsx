@@ -1,18 +1,15 @@
 'use client';
 
-import { Spinner } from '@/app/core/shared/components/atoms';
-import { useSetParams } from '@/app/core/shared/hooks';
+import { ChatBubble, Spinner } from '@/app/core/shared/components/atoms';
 import { useExhibitorUser } from '@/app/core/shared/hooks/api/use-exhibitor-user';
+import { useMessageSlice } from '@/app/core/shared/slice';
 import { useEffect, useRef } from 'react';
 import { useInView } from 'react-intersection-observer';
 import { useAttendeeMessages } from '../../hooks/use-messages';
-import { ChatMessageBubble } from '../atoms';
 
-export const ChatMessagesList = () => {
-  const { searchParamsObject } = useSetParams();
+export const ExhibitorConversations = () => {
   const { user } = useExhibitorUser();
-
-  const attendeeId = searchParamsObject?.['attendeeId'] ?? '';
+  const { selectedUserId } = useMessageSlice();
 
   const {
     messages,
@@ -21,7 +18,7 @@ export const ChatMessagesList = () => {
     handleFetchPreviousPage,
     isLoading,
     isFetchingNextPage
-  } = useAttendeeMessages(attendeeId);
+  } = useAttendeeMessages(selectedUserId);
   const { ref: endRef, inView: endInView } = useInView();
   const { ref: startRef, inView: startInView } = useInView();
 
@@ -130,14 +127,14 @@ export const ChatMessagesList = () => {
           const isOwn = msg.senderId === user?.id;
 
           return (
-            <ChatMessageBubble
+            <ChatBubble
               key={msg.id}
               message={msg.content}
               timestamp={msg.createdAt}
               isOwn={isOwn}
-              attendeeName={!isOwn ? attendee?.name : undefined}
+              selectedUserName={!isOwn ? attendee?.name : undefined}
               ownerAvatar={user?.logoUrl ?? ''}
-              attendeeAvatar={attendee?.avatar}
+              selectedUserAvatar={attendee?.avatar}
             />
           );
         })}

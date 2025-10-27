@@ -1,54 +1,28 @@
 'use client';
 
-import { useState } from 'react';
-import { cn, errorHandler } from '@/app/core/shared/utils';
-import { useCustomMutation } from '@/app/core/shared/hooks/use-mutate';
-import toast from 'react-hot-toast';
-import { messagingService } from '../../services/messaging.service';
-import { useSetParams } from '@/app/core/shared/hooks';
+import { cn } from '@/app/core/shared/utils';
 
 interface ChatInputProps {
   placeholder?: string;
+  handleSubmit: (e: React.FormEvent) => void;
+  handleChange: (value: string) => void;
+  message: string;
+  isDisabled: boolean;
 }
 
 export const ChatInput = ({
-  placeholder = 'Type a message...'
+  placeholder = 'Type a message...',
+  handleSubmit,
+  handleChange,
+  message,
+  isDisabled
 }: ChatInputProps) => {
-  const { searchParamsObject } = useSetParams();
-
-  const attendeeId = searchParamsObject?.['attendeeId'] || '';
-
-  const mutation = useCustomMutation();
-  const [message, setMessage] = useState('');
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (message.trim()) {
-      const messageContent = message.trim();
-
-      mutation.mutate(
-        messagingService.postMessage(attendeeId, {
-          content: messageContent
-        }),
-        {
-          onError(error) {
-            const errorMessage = errorHandler(error);
-            toast.error(errorMessage);
-          }
-        }
-      );
-      setMessage('');
-    }
-  };
-
   const handleKeyPress = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
       handleSubmit(e);
     }
   };
-
-  const isDisabled = mutation.isPending || !attendeeId;
 
   return (
     <div className="bg-gray-light-4 border-t p-4 h-[5.13rem] flex items-center justify-center">
@@ -59,7 +33,7 @@ export const ChatInput = ({
         <input
           type="text"
           value={message}
-          onChange={(e) => setMessage(e.target.value)}
+          onChange={(e) => handleChange(e.target.value)}
           onKeyDown={handleKeyPress}
           placeholder={placeholder}
           disabled={isDisabled}

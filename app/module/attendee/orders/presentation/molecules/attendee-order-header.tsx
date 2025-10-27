@@ -1,15 +1,13 @@
 'use client';
 
-import {
-  Button,
-  GoBackButton,
-  LinkButton
-} from '@/app/core/shared/components/atoms';
+import { Button, GoBackButton } from '@/app/core/shared/components/atoms';
 import { ATTENDEE_APP_ROUTES } from '@/app/core/shared/constants';
+import { useMessageSlice } from '@/app/core/shared/slice';
 import { cn } from '@/app/core/shared/utils';
 import { OrderStatus } from '@/app/module/exhibitor/orders/hooks';
 import { ORDER_STATUS_MAP } from '@/app/module/exhibitor/orders/presentation/organisms';
 import { FileUp, MessageCircleMore } from 'lucide-react';
+import { useRouter } from 'nextjs-toploader/app';
 import { useState } from 'react';
 import { useAttendeeOrderById } from '../../api';
 import { AttendeeOrderReceiptUploadForm } from '../atoms';
@@ -21,11 +19,18 @@ interface OrderDetailHeaderProps {
 export const AttendeeOrderDetailHeader = ({
   orderId
 }: OrderDetailHeaderProps) => {
+  const { setSelectedUserId } = useMessageSlice();
+  const router = useRouter();
   const [showUploadReceiptModal, setShowUploadReceiptModal] = useState(false);
   const { order, refetchOrder } = useAttendeeOrderById(orderId);
   const status = order ? order.status : '';
 
   const isCompleted = status === OrderStatus.COMPLETED;
+
+  const handleContactExhibitor = () => {
+    setSelectedUserId(order?.exhibitorId ?? '');
+    router.push(ATTENDEE_APP_ROUTES.messages.root());
+  };
 
   const handleCloseModal = () => {
     setShowUploadReceiptModal(false);
@@ -61,14 +66,14 @@ export const AttendeeOrderDetailHeader = ({
               <span>Upload Receipt</span>
             </Button>
 
-            <LinkButton
+            <Button
               variant="tertiary"
               className="flex gap-x-[0.63rem] rounded-[6px] h-8"
-              href={`${ATTENDEE_APP_ROUTES.messages.root()}?exhibitorId=${order?.exhibitorId}`}
+              onClick={handleContactExhibitor}
             >
               <MessageCircleMore size={16} />
               <span>Contact Exhibitor</span>
-            </LinkButton>
+            </Button>
           </div>
         </div>
         <div className="flex h-[5.31rem] w-full bg-gray-light-3 items-center px-6 justify-between flex-wrap gap-5">

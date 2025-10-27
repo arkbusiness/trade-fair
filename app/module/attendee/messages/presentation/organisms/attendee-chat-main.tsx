@@ -4,14 +4,16 @@ import { NoMessage } from '@/app/core/shared/components/atoms';
 import { ChatInterface } from '@/app/core/shared/components/molecules/chat-interfact';
 import { useMessageSlice } from '@/app/core/shared/slice';
 import { AlignLeft } from 'lucide-react';
-import { useAttendeeMessages } from '../../hooks/use-messages';
-import { ExhibitorChatInput } from '../atoms';
-import { ExhibitorConversations } from '../molecules';
+import { useAttendeeChatMessages } from '../../api/get-attendee-chat-messages';
+import { AttendeeChatInput } from '../atoms';
+import { AttendeeConversations } from '../molecules';
 
-export const ChatMain = () => {
+export const AttendeeChatMain = () => {
   const { selectedUserId, onOpenDrawer } = useMessageSlice();
 
-  const { attendee } = useAttendeeMessages(selectedUserId);
+  const { exhibitor } = useAttendeeChatMessages({
+    exhibitorId: selectedUserId
+  });
 
   const hasSelectedChat = !!selectedUserId;
 
@@ -26,11 +28,11 @@ export const ChatMain = () => {
 
       {hasSelectedChat ? (
         <ChatInterface
-          contactName={attendee?.name ?? ''}
-          contactAvatar={attendee?.avatar}
+          contactName={exhibitor?.name ?? ''}
+          contactAvatar={exhibitor?.avatar}
         >
-          <ExhibitorConversations />
-          <ExhibitorChatInput />
+          <AttendeeConversations />
+          <AttendeeChatInput />
         </ChatInterface>
       ) : (
         <div className="flex h-full flex-col items-center justify-center">
