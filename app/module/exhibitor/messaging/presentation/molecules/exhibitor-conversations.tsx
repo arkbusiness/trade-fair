@@ -5,7 +5,7 @@ import { useExhibitorUser } from '@/app/core/shared/hooks/api/use-exhibitor-user
 import { useMessageSlice } from '@/app/core/shared/slice';
 import { useEffect, useRef } from 'react';
 import { useInView } from 'react-intersection-observer';
-import { useAttendeeMessages } from '../../hooks/use-messages';
+import { useExhibitorChatMessages } from '../../api';
 
 export const ExhibitorConversations = () => {
   const { user } = useExhibitorUser();
@@ -18,7 +18,7 @@ export const ExhibitorConversations = () => {
     handleFetchPreviousPage,
     isLoading,
     isFetchingNextPage
-  } = useAttendeeMessages(selectedUserId);
+  } = useExhibitorChatMessages({ attendeeId: selectedUserId });
   const { ref: endRef, inView: endInView } = useInView();
   const { ref: startRef, inView: startInView } = useInView();
 

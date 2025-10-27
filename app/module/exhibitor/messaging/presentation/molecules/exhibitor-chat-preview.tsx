@@ -1,17 +1,17 @@
 'use client';
 
 import { Spinner } from '@/app/core/shared/components/atoms';
+import { ChatPreviewItem } from '@/app/core/shared/components/molecules';
 import { CHAT_TAB, useMessageSlice } from '@/app/core/shared/slice';
 import { cn } from '@/app/core/shared/utils';
-import { useAllMessages } from '../../hooks/use-messages';
-import { ChatPreviewItem } from '@/app/core/shared/components/molecules';
+import { useExhibitorChatHistory } from '../../api';
 
 const MAX_CHAT_PREVIEW = 6;
 
 export const ExhibitorChatPreview = () => {
   const { tab, setSelectedUserId, selectedUserId, setTab } = useMessageSlice();
 
-  const { data, isFetching } = useAllMessages({
+  const { data, isFetching } = useExhibitorChatHistory({
     unread: tab === CHAT_TAB.UNREAD ? 'true' : ''
   });
 

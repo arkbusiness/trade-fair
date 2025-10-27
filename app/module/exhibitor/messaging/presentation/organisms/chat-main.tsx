@@ -4,14 +4,14 @@ import { NoMessage } from '@/app/core/shared/components/atoms';
 import { ChatInterface } from '@/app/core/shared/components/molecules/chat-interfact';
 import { useMessageSlice } from '@/app/core/shared/slice';
 import { AlignLeft } from 'lucide-react';
-import { useAttendeeMessages } from '../../hooks/use-messages';
+import { useExhibitorChatMessages } from '../../api';
 import { ExhibitorChatInput } from '../atoms';
 import { ExhibitorConversations } from '../molecules';
 
 export const ChatMain = () => {
   const { selectedUserId, onOpenDrawer } = useMessageSlice();
 
-  const { attendee } = useAttendeeMessages(selectedUserId);
+  const { attendee } = useExhibitorChatMessages({ attendeeId: selectedUserId });
 
   const hasSelectedChat = !!selectedUserId;
 
