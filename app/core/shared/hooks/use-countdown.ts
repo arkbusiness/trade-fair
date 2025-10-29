@@ -14,6 +14,7 @@ interface TimeRemaining {
   minutes: string;
   seconds: string;
   isExpired: boolean;
+  hasError: boolean;
   isLive: boolean;
 }
 
@@ -35,6 +36,7 @@ const getTimeRemaining = (
       minutes: '00',
       seconds: '00',
       isExpired: true,
+      hasError: true,
       isLive: false
     };
   }
@@ -54,6 +56,7 @@ const getTimeRemaining = (
       minutes: '00',
       seconds: '00',
       isExpired: true,
+      hasError: true,
       isLive: false
     };
   }
@@ -82,6 +85,7 @@ const getTimeRemaining = (
         minutes: '00',
         seconds: '00',
         isExpired: true,
+        hasError: true,
         isLive: false
       };
     }
@@ -112,6 +116,7 @@ const getTimeRemaining = (
     hours: padZero(Math.max(0, hours)),
     minutes: padZero(Math.max(0, minutes)),
     seconds: padZero(Math.max(0, seconds)),
+    hasError: false,
     isExpired,
     isLive
   };

@@ -25,15 +25,6 @@ export const RecentOrdersTable = () => {
   const orders = overviewStats?.latestOrders ?? [];
 
   const columns: ColumnDef<IExhibitorLatestOrder>[] = [
-    // {
-    //   accessorKey: 'id',
-    //   header: 'Order ID',
-    //   cell: ({ row }) => (
-    //     <Text>
-    //       <span>{row.getValue('id')}</span>
-    //     </Text>
-    //   )
-    // },
     {
       id: 'customer',
       header: 'Customer',

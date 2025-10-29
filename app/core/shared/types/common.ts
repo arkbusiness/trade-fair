@@ -1,5 +1,6 @@
 import { SVGProps } from 'react';
 
+export type FilterParams = Record<string, string>;
 export interface IQueryParams {
   // eslint-disable-next-line  @typescript-eslint/no-explicit-any
   params: Promise<any>;
@@ -57,3 +58,8 @@ export enum SortOrderEnum {
   ASC = 'asc',
   DESC = 'desc'
 }
+
+export type ApiCallbacks<TData> = {
+  onSuccess: (data: TData) => void;
+  onError: (error: unknown) => void;
+};

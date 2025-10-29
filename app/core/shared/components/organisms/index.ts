@@ -4,3 +4,4 @@ export * from './booths-select';
 export * from './booths-category-select';
 export * from './product-category-select';
 export * from './attendee-sidebar';
+export * from './currency-converter';

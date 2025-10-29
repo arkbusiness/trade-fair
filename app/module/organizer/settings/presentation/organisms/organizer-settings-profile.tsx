@@ -45,7 +45,7 @@ const validationSchema = yup.object().shape({
     .required('Phone number is required')
 });
 
-type IProfileFormValues = yup.InferType<typeof validationSchema>;
+type FormValues = yup.InferType<typeof validationSchema>;
 
 export const OrganizerSettingsProfile = () => {
   const { user, refetchUser } = useOrganizerUser();
@@ -56,7 +56,7 @@ export const OrganizerSettingsProfile = () => {
     watch,
     formState: { errors },
     register
-  } = useForm<IProfileFormValues>({
+  } = useForm<FormValues>({
     values: {
       contactName: user?.contactName ?? '',
       officialEmail: user?.officialEmail ?? '',
@@ -81,7 +81,7 @@ export const OrganizerSettingsProfile = () => {
     contactPhone: phoneError
   } = errors;
 
-  const onSubmit = (values: IProfileFormValues) => {
+  const onSubmit = (values: FormValues) => {
     mutation.mutate(
       organizerUserService.updateUser({
         ...values,

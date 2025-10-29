@@ -18,3 +18,4 @@ export * from './has-preview';
 export * from './format-filters.utils';
 export * from './print-element.utils';
 export * from './format-bytes.utils';
+export * from './rate-conversion.utils';

@@ -53,6 +53,29 @@ export const ATTENDEE_APP_ROUTES = {
   auth: {
     login: () => '/?tab=attendee'
   },
+  onboarding: {
+    root: () => '/attendee/onboarding',
+    verifyOtp: () => '/attendee/onboarding/verify-otp'
+  },
+  exhibitors: {
+    root: () => '/attendee/exhibitors',
+    detail: (id: string) => `/attendee/exhibitors/${id}`,
+    appointment: (id: string) => `/attendee/exhibitors/${id}/appointment`
+  },
+  catalogues: {
+    root: () => '/attendee/catalogues',
+    detail: (id: string) => `/attendee/catalogues/${id}`
+  },
+  meetings: {
+    root: () => '/attendee/meetings'
+  },
+  messages: {
+    root: () => '/attendee/messages'
+  },
+  orders: {
+    root: () => '/attendee/orders',
+    detail: (id: string) => `/attendee/orders/${id}`
+  },
   settings: (tab?: string) => `/attendee/settings${tab ? `?tab=${tab}` : ''}`
 };
 

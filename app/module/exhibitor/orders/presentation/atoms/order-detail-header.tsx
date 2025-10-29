@@ -1,10 +1,12 @@
 'use client';
 
-import { GoBackButton, LinkButton } from '@/app/core/shared/components/atoms';
+import { Button, GoBackButton } from '@/app/core/shared/components/atoms';
 import { ExportButton } from '@/app/core/shared/components/organisms/export-button';
 import { EXHIBITOR_APP_ROUTES } from '@/app/core/shared/constants';
+import { useMessageSlice } from '@/app/core/shared/slice';
 import { cn } from '@/app/core/shared/utils';
 import { MessageCircleMore } from 'lucide-react';
+import { useRouter } from 'nextjs-toploader/app';
 import { OrderStatus, useOrderById } from '../../hooks';
 import { ORDER_STATUS_MAP } from '../organisms/orders-table';
 
@@ -14,8 +16,10 @@ interface OrderDetailHeaderProps {
 
 export const OrderDetailHeader = ({ orderId }: OrderDetailHeaderProps) => {
   const { order } = useOrderById(orderId);
+  const { setSelectedUserId } = useMessageSlice();
+  const router = useRouter();
 
-  const productName = order ? order.items[0].product?.name : '';
+  const productName = order ? order.items?.[0].product?.name : '';
   const status = order ? order.status : '';
 
   const orderStatus = status?.toUpperCase() as OrderStatus;
@@ -31,14 +35,19 @@ export const OrderDetailHeader = ({ orderId }: OrderDetailHeaderProps) => {
           data={[orderId]}
         />
 
-        <LinkButton
+        <Button
           variant="tertiary"
           className="flex gap-x-[0.63rem] rounded-[6px] h-8"
-          href={`${EXHIBITOR_APP_ROUTES.attendees.messaging.root()}?attendeeId=${order?.attendeeId}`}
+          onClick={() => {
+            setSelectedUserId(order?.attendeeId || '');
+            router.push(
+              `${EXHIBITOR_APP_ROUTES.attendees.messaging.root()}?attendeeId=${order?.attendeeId}`
+            );
+          }}
         >
           <MessageCircleMore size={16} />
           <span>Contact Attendee</span>
-        </LinkButton>
+        </Button>
       </div>
       <div className="flex h-[5.31rem] w-full bg-input items-center px-10 justify-between">
         <div>

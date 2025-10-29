@@ -1,23 +1,24 @@
 'use client';
 
-import { useSetParams } from '@/app/core/shared/hooks';
-import { useAttendeeMessages } from '../../hooks/use-messages';
-import { NoMessage } from '../atoms';
-import { ChatInterface } from '../molecules';
+import { NoMessage } from '@/app/core/shared/components/atoms';
+import { ChatInterface } from '@/app/core/shared/components/molecules/chat-interfact';
+import { useMessageSlice } from '@/app/core/shared/slice';
 import { AlignLeft } from 'lucide-react';
+import { useExhibitorChatMessages } from '../../api';
+import { ExhibitorChatInput } from '../atoms';
+import { ExhibitorConversations } from '../molecules';
 
 export const ChatMain = () => {
-  const { searchParamsObject, setParam } = useSetParams();
-  const attendeeId = searchParamsObject?.['attendeeId'] ?? '';
+  const { selectedUserId, onOpenDrawer } = useMessageSlice();
 
-  const { attendee } = useAttendeeMessages(attendeeId);
+  const { attendee } = useExhibitorChatMessages({ attendeeId: selectedUserId });
 
-  const hasSelectedChat = !!attendeeId;
+  const hasSelectedChat = !!selectedUserId;
 
   return (
     <div className="flex h-full flex-col overflow-hidden border bg-white lg:w-3/4 relative">
       <button
-        onClick={() => setParam('chat-drawer', '1')}
+        onClick={() => onOpenDrawer()}
         className="cursor-pointer lg:hidden absolute top-4 left-4"
       >
         <AlignLeft size={24} />
@@ -27,7 +28,10 @@ export const ChatMain = () => {
         <ChatInterface
           contactName={attendee?.name ?? ''}
           contactAvatar={attendee?.avatar}
-        />
+        >
+          <ExhibitorConversations />
+          <ExhibitorChatInput />
+        </ChatInterface>
       ) : (
         <div className="flex h-full flex-col items-center justify-center">
           <NoMessage />

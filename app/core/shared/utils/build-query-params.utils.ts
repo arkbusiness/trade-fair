@@ -32,5 +32,7 @@ export function buildQueryParams<T extends Record<string, any>>({
     searchParams.append('limit', '8');
   }
 
+  console.log(searchParams.toString());
+
   return searchParams.toString();
 }

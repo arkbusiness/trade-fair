@@ -19,7 +19,7 @@ import { cn, formatCurrency } from '@/app/core/shared/utils';
 import { ColumnDef } from '@tanstack/react-table';
 import Image from 'next/image';
 import { useRouter } from 'nextjs-toploader/app';
-import { IOrderItem, OrderStatus, useOrders } from '../../hooks';
+import { IOrderItems, OrderStatus, useOrders } from '../../hooks';
 import { ExhibitorOrdersStat, OrdersTableFilter } from '../molecules';
 
 const ORDER_TAB_LIST = [
@@ -120,7 +120,7 @@ export const OrdersTable = () => {
     paginationMeta
   } = useOrders(filter);
 
-  const columns: ColumnDef<IOrderItem>[] = [
+  const columns: ColumnDef<IOrderItems>[] = [
     {
       id: 'product',
       header: 'Order Details',

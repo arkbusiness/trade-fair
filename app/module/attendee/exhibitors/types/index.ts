@@ -1,0 +1,23 @@
+export type AttendeeExhibitor = {
+  id: string;
+  companyName: string;
+  contactName: string;
+  contactEmail: string;
+  contactPhone: string;
+  logoUrl: string | null;
+  lastLogin: string;
+  boothNumber: string;
+  boothName: string | null;
+  standNumber: string | null;
+  publicDescription: string;
+  websiteUrl: string;
+  createdAt: string;
+  updatedAt: string;
+  fcmToken: string | null;
+  deactivated: boolean;
+  country: string;
+  currency: string;
+  organizeId: string;
+  invitedId: string;
+  isFavorite: boolean;
+};

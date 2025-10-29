@@ -59,12 +59,12 @@ export const AttendeeSidebarItems = () => {
                 <SidebarGroupLabel asChild className={'group/label'}>
                   <CollapsibleTrigger
                     className={cn(
-                      'flex gap-x-[0.63rem] text-foreground stroke-foreground py-[7.5px] text-xs font-medium cursor-pointer',
+                      'flex gap-x-[0.63rem] text-foreground stroke-foreground py-[7.5px] text-xs font-medium cursor-pointer px-3',
                       {
                         'text-sidebar-highlight stroke-sidebar-highlight':
                           hasActiveChild || hasActiveParent,
-                        'hover:bg-gray-light hover:text-tertiary': !!item.url,
-                        'bg-gray-light-2 !text-tertiary': hasActiveParent
+                        'hover:bg-highlight hover:text-tertiary!': !!item.url,
+                        'bg-tertiary !text-background': hasActiveParent
                       }
                     )}
                   >
@@ -72,10 +72,12 @@ export const AttendeeSidebarItems = () => {
                       <item.icon className="w-4 h-4" aria-label={item.title} />
                     )}
                     {item.url && <Link href={item.url}>{item.title}</Link>}
-                    {!item.url && <span>{item.title}</span>}
+                    {!item.url && (
+                      <span className="text-foreground">{item.title}</span>
+                    )}
 
                     {hasChildren && (
-                      <ChevronRight className="ml-auto transition-transform group-data-[state=open]/collapsible:rotate-90" />
+                      <ChevronRight className="ml-auto transition-transform group-data-[state=open]/collapsible:rotate-90 text-foreground" />
                     )}
                   </CollapsibleTrigger>
                 </SidebarGroupLabel>
@@ -98,7 +100,7 @@ export const AttendeeSidebarItems = () => {
                               className={cn(
                                 'flex items-center text-xs font-medium gap-x-[0.63rem] text-text-secondary py-[7.5px] pl-6 rounded-[4px] hover:bg-gray-light-2 cursor-pointer opacity-70',
                                 {
-                                  'bg-gray-light-2 text-tertiary font-bold hover:bg-gray-light opacity-100':
+                                  'bg-tertiary !text-background font-bold hover:bg-highlight hover:text-tertiary! opacity-100':
                                     isActive
                                 }
                               )}

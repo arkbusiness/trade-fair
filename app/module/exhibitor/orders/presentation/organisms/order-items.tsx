@@ -1,9 +1,9 @@
 import { cn } from '@/app/core/shared/utils';
-import { IOrderItem } from '../../hooks';
+import { IOrderItems } from '../../hooks';
 import { OrderItem } from '../molecules';
 
 interface OrderItemsProps {
-  items: IOrderItem['items'];
+  items: IOrderItems['items'];
 }
 
 const MAX_ITEMS = 4;

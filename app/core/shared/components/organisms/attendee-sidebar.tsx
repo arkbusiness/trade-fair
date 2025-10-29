@@ -15,13 +15,14 @@ export function AttendeeSidebar({
   const pathname = usePathname();
 
   const isSettingsActive = pathname.includes(ATTENDEE_APP_ROUTES.settings());
+
   return (
     <Sidebar
       collapsible="offcanvas"
       {...props}
-      className="pt-[calc(var(--header-height))] px-[1.12rem] bg-sidebar"
+      className="px-[1.12rem] bg-sidebar"
     >
-      <SidebarContent className="mt-[2.86rem]">
+      <SidebarContent className="mt-[1.2rem]">
         <AttendeeSidebarItems />
       </SidebarContent>
       <SidebarFooter>

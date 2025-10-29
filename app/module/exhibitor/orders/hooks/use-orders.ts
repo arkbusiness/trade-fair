@@ -59,6 +59,15 @@ export interface IOrderTracking {
 
 export interface IOrderItem {
   id: string;
+  orderId: string;
+  productId: string;
+  quantity: number;
+  unitPrice: number;
+  product: IProduct;
+}
+
+export interface IOrderItems {
+  id: string;
   attendeeId: string;
   exhibitorId: string;
   trackingId: string | null;
@@ -73,14 +82,7 @@ export interface IOrderItem {
   tracking: IOrderTracking[] | null;
   OrderTimeLine: IOrderTimeline[];
   attendee: IAttendee;
-  items: {
-    id: string;
-    orderId: string;
-    productId: string;
-    quantity: number;
-    unitPrice: number;
-    product: IProduct;
-  }[];
+  items: IOrderItem[];
 }
 
 export interface IOrder {
@@ -88,7 +90,7 @@ export interface IOrder {
   totalTransactions: number;
   totalCustomers: number;
   orders: {
-    data: IOrderItem[];
+    data: IOrderItems[];
     page: number;
     limit: number;
     total: number;
@@ -137,7 +139,7 @@ export const useOrderById = (orderId: string) => {
     isLoading: isLoadingOrder,
     isRefetching: isRefetchingOrder,
     refetch
-  } = useCustomQuery<IOrderItem>({
+  } = useCustomQuery<IOrderItems>({
     ...orderService.getById(orderId),
     options: {
       enabled: !!orderId

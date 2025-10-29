@@ -1,6 +1,7 @@
 'use client';
 
-import { ChatPreview, ChatTabs } from '../molecules';
+import { ChatTabs } from '@/app/core/shared/components/molecules';
+import { ExhibitorChatPreview } from '../molecules';
 
 export const ChatSidebar = () => {
   return (
@@ -12,7 +13,7 @@ export const ChatSidebar = () => {
       <ChatTabs />
 
       {/* Preview */}
-      <ChatPreview />
+      <ExhibitorChatPreview />
     </div>
   );
 };

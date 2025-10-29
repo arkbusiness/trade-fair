@@ -10,9 +10,9 @@ import * as yup from 'yup';
 import { attendeeAuthService } from '../../../services';
 import { errorHandler } from '@/app/core/shared/utils';
 import { ATTENDEE_APP_ROUTES } from '@/app/core/shared/constants';
-import { useRouter } from 'next/navigation';
 import toast from 'react-hot-toast';
 import { useAttendeeAuthStore } from '../../../store';
+import { useRouter } from 'nextjs-toploader/app';
 
 const validationSchema = yup.object().shape({
   usernameOrEmail: yup
