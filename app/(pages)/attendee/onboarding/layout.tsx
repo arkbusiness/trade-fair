@@ -1,22 +1,14 @@
 import { MainContainer } from '@/app/core/shared/components/atoms';
 import { ATTENDEE_APP_ROUTES } from '@/app/core/shared/constants';
 import { SigninPrompt } from '@/app/module/auth/sign-in/presentation/atoms';
-// import { cookies } from 'next/headers';
 import Image from 'next/image';
 import Link from 'next/link';
-// import { redirect } from 'next/navigation';
 
 export default async function AttendeeOnboardingLayout({
   children
 }: {
   children: React.ReactNode;
 }) {
-  // const accessToken = (await cookies()).get(COOKIE_KEYS.auth.token)?.value;
-
-  // if (!accessToken) {
-  //   return redirect(ATTENDEE_APP_ROUTES.auth.login());
-  // }
-
   return (
     <MainContainer className="pt-[2.19rem] pb-[1.75rem]">
       <div className="flex justify-between gap-5 items-center flex-wrap">

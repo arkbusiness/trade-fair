@@ -2,16 +2,15 @@
 
 import { ErrorText, Input } from '@/app/core/shared/components/atoms';
 import { LoadingButton } from '@/app/core/shared/components/molecules';
-import { useCustomMutation } from '@/app/core/shared/hooks/use-mutate';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useForm } from 'react-hook-form';
 import * as yup from 'yup';
-import { attendeeOnboardingService } from '../../services/attendee-onboarding.service';
 import { errorHandler } from '@/app/core/shared/utils';
 import toast from 'react-hot-toast';
 import { useRouter } from 'next/navigation';
 import { ATTENDEE_APP_ROUTES } from '@/app/core/shared/constants';
 import { useAttendeeOnboardingStore } from '../../store';
+import { useAttendeeRequestOtp } from '../../api';
 
 const validationSchema = yup.object().shape({
   email: yup
@@ -29,11 +28,11 @@ export interface IAttendeeRequestOtpFormValues {
 
 export const AttendeeRequestOtpForm = () => {
   const router = useRouter();
-  const mutation = useCustomMutation();
   const { handleSaveOTPInput } = useAttendeeOnboardingStore();
 
   const {
     handleSubmit,
+    watch,
     formState: { errors },
     register
   } = useForm<IAttendeeRequestOtpFormValues>({
@@ -44,33 +43,36 @@ export const AttendeeRequestOtpForm = () => {
     resolver: yupResolver(validationSchema)
   });
 
+  const { requestOtpMutation, isPending } = useAttendeeRequestOtp({
+    onSuccess: () => {
+      toast.success('OTP sent successfully');
+      handleSaveOTPInput({
+        email: watch('email'),
+        inviteCode: watch('inviteCode')
+      });
+      router.push(ATTENDEE_APP_ROUTES.onboarding.verifyOtp());
+    },
+    onError: (error) => {
+      const errorMessage = errorHandler(error);
+      toast.error(errorMessage);
+    }
+  });
+
   const onSubmit = (values: IAttendeeRequestOtpFormValues) => {
     const { email, inviteCode } = values;
-
-    const formValues = {
-      email,
-      inviteCode
-    };
-
-    mutation.mutate(attendeeOnboardingService.requestOtp(formValues), {
-      onError(error) {
-        const errorMessage = errorHandler(error);
-        toast.error(errorMessage);
-      },
-      onSuccess() {
-        toast.success('OTP sent successfully');
-        handleSaveOTPInput({ email, inviteCode });
-        router.push(ATTENDEE_APP_ROUTES.onboarding.verifyOtp());
-      }
-    });
+    requestOtpMutation({ email, inviteCode });
   };
 
   const { email: emailError, inviteCode: inviteCodeError } = errors;
 
-  const isLoading = mutation.isPending;
+  const isLoading = isPending;
 
   return (
-    <form className="w-full" onSubmit={handleSubmit(onSubmit)}>
+    <form
+      className="w-full"
+      onSubmit={handleSubmit(onSubmit)}
+      autoComplete="off"
+    >
       <fieldset disabled={isLoading} className="flex flex-col gap-[1.86rem]">
         {/* Email */}
         <div>

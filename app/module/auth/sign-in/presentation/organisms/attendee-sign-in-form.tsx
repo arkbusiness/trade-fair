@@ -3,16 +3,15 @@
 import { ErrorText, Input } from '@/app/core/shared/components/atoms';
 import { LoadingButton } from '@/app/core/shared/components/molecules';
 import { PasswordInput } from '@/app/core/shared/components/molecules/password-input';
-import { useCustomMutation } from '@/app/core/shared/hooks/use-mutate';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useForm } from 'react-hook-form';
 import * as yup from 'yup';
-import { attendeeAuthService } from '../../../services';
 import { errorHandler } from '@/app/core/shared/utils';
 import { ATTENDEE_APP_ROUTES } from '@/app/core/shared/constants';
 import toast from 'react-hot-toast';
 import { useAttendeeAuthStore } from '../../../store';
 import { useRouter } from 'nextjs-toploader/app';
+import { useAttendeeSignin } from '../../api';
 
 const validationSchema = yup.object().shape({
   usernameOrEmail: yup
@@ -30,7 +29,23 @@ export interface IAttendeeSigninFormValues {
 export const AttendeeSigninForm = () => {
   const router = useRouter();
   const { handleSaveToken } = useAttendeeAuthStore();
-  const mutation = useCustomMutation<{ accessToken: string }>();
+
+  const { signinMutation, isPending } = useAttendeeSignin({
+    onSuccess: (data) => {
+      const token = data?.accessToken;
+      if (token) {
+        handleSaveToken({ accessToken: token });
+        router.push(ATTENDEE_APP_ROUTES.root());
+      } else {
+        toast.error('Something went wrong');
+      }
+    },
+    onError: (error) => {
+      const errorMessage = errorHandler(error);
+      toast.error(errorMessage);
+    }
+  });
+
   const {
     handleSubmit,
     formState: { errors },
@@ -44,24 +59,10 @@ export const AttendeeSigninForm = () => {
   });
 
   const onSubmit = (values: IAttendeeSigninFormValues) => {
-    mutation.mutate(attendeeAuthService.signin(values), {
-      onError(error) {
-        const errorMessage = errorHandler(error);
-        toast.error(errorMessage);
-      },
-      onSuccess(data) {
-        const token = data?.accessToken;
-        if (token) {
-          handleSaveToken({ accessToken: token });
-          router.push(ATTENDEE_APP_ROUTES.root());
-        } else {
-          toast.error('Something went wrong');
-        }
-      }
-    });
+    signinMutation(values);
   };
 
-  const isLoading = mutation.isPending;
+  const isLoading = isPending;
 
   const { usernameOrEmail: usernameOrEmailError, pin: pinError } = errors;
 

@@ -8,7 +8,6 @@ import {
   PhoneNumberInput
 } from '@/app/core/shared/components/molecules';
 import { ORGANIZER_APP_ROUTES } from '@/app/core/shared/constants';
-import { useCustomMutation } from '@/app/core/shared/hooks/use-mutate';
 import { errorHandler } from '@/app/core/shared/utils';
 import { useOrganizerAuthStore } from '@/app/module/auth/store';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -21,7 +20,7 @@ import {
   parsePhoneNumber
 } from 'react-phone-number-input';
 import * as yup from 'yup';
-import { organizerAuthService } from '../../../services';
+import { useOrganizerSignup } from '../../api';
 
 const validationSchema = yup.object().shape({
   adminUsername: yup.string().trim().required('Username is required'),
@@ -72,17 +71,26 @@ export interface ISignupFormValues {
   confirmPassword: string;
 }
 
-interface ISignupFormResponse {
-  message: string;
-  accessToken: string;
-}
-
 export const OrganizerSignupForm = () => {
   const param = useParams();
   const token = (param?.token ?? '') as string;
   const { handleSaveToken } = useOrganizerAuthStore();
-  const mutation = useCustomMutation<ISignupFormResponse>();
   const router = useRouter();
+
+  const { signupMutation, isPending } = useOrganizerSignup({
+    onSuccess: (data) => {
+      const successMessage = data?.message ?? 'User registered successfully.';
+      const token = data?.accessToken ?? '';
+      toast.success(successMessage);
+      handleSaveToken({ accessToken: token });
+      router.push(ORGANIZER_APP_ROUTES.auth.onboarding());
+    },
+    onError: (error) => {
+      const errorMessage = errorHandler(error);
+      toast.error(errorMessage);
+    }
+  });
+
   const {
     handleSubmit,
     setValue,
@@ -124,19 +132,7 @@ export const OrganizerSignupForm = () => {
       password
     };
 
-    mutation.mutate(organizerAuthService.register(formValues), {
-      onError(error) {
-        const errorMessage = errorHandler(error);
-        toast.error(errorMessage);
-      },
-      onSuccess(data) {
-        const successMessage = data?.message ?? 'User registered successfully.';
-        const token = data?.accessToken ?? '';
-        toast.success(successMessage);
-        handleSaveToken({ accessToken: token });
-        router.push(ORGANIZER_APP_ROUTES.auth.onboarding());
-      }
-    });
+    signupMutation(formValues);
   };
 
   const watchedPhoneNo = watch('phoneNumber');
@@ -159,7 +155,7 @@ export const OrganizerSignupForm = () => {
     >
       <fieldset
         className="flex flex-col gap-[1.86rem] w-full"
-        disabled={mutation.isPending}
+        disabled={isPending}
       >
         <div className="grid lg:grid-cols-2 gap-[1.86rem]">
           {/* Company Name */}
@@ -266,8 +262,8 @@ export const OrganizerSignupForm = () => {
       <LoadingButton
         type="submit"
         variant="tertiary"
-        isLoading={mutation.isPending}
-        disabled={mutation.isPending}
+        isLoading={isPending}
+        disabled={isPending}
       >
         Continue
       </LoadingButton>

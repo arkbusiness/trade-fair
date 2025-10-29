@@ -10,15 +10,14 @@ import {
   ATTENDEE_APP_ROUTES,
   DEFAULT_CURRENCY
 } from '@/app/core/shared/constants';
-import { useCustomMutation } from '@/app/core/shared/hooks/use-mutate';
 import { errorHandler } from '@/app/core/shared/utils';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import * as yup from 'yup';
-import { attendeeOnboardingService } from '../../services/attendee-onboarding.service';
 import { useAttendeeOnboardingStore } from '../../store';
+import { useAttendeeVerifyOtp } from '../../api';
 
 const validationSchema = yup.object().shape({
   attendeeEmail: yup
@@ -43,8 +42,19 @@ export type AttendeeVerifyOtpFormValues = yup.InferType<
 
 export const AttendeeVerifyOtpForm = () => {
   const router = useRouter();
-  const mutation = useCustomMutation();
   const { email, inviteCode } = useAttendeeOnboardingStore();
+
+  const { verifyOtpMutation, isPending } = useAttendeeVerifyOtp({
+    onSuccess: () => {
+      toast.success('Attendee created successfully');
+      router.push(ATTENDEE_APP_ROUTES.auth.login());
+    },
+    onError: (error) => {
+      const errorMessage = errorHandler(error);
+      toast.error(errorMessage);
+    }
+  });
+
   const {
     handleSubmit,
     formState: { errors },
@@ -81,16 +91,7 @@ export const AttendeeVerifyOtpForm = () => {
       otp: values.attendeeOtp
     };
 
-    mutation.mutate(attendeeOnboardingService.verifyOtp(formValues), {
-      onError(error) {
-        const errorMessage = errorHandler(error);
-        toast.error(errorMessage);
-      },
-      onSuccess() {
-        toast.success('Attendee created successfully');
-        router.push(ATTENDEE_APP_ROUTES.auth.login());
-      }
-    });
+    verifyOtpMutation(formValues);
   };
 
   const watchedCurrency = watch('attendeeCurrency');
@@ -107,14 +108,10 @@ export const AttendeeVerifyOtpForm = () => {
     attendeeCurrency: currencyError
   } = errors;
 
-  const isLoading = mutation.isPending;
+  const isLoading = isPending;
 
   return (
-    <form
-      className="w-full"
-      onSubmit={handleSubmit(onSubmit)}
-      autoComplete="off"
-    >
+    <form className="w-full" onSubmit={handleSubmit(onSubmit)}>
       <fieldset disabled={isLoading} className="flex flex-col gap-[1.86rem]">
         {/* Email */}
         <div>
@@ -158,6 +155,7 @@ export const AttendeeVerifyOtpForm = () => {
             label="Username*"
             placeholder="e.g. Enter your username"
             {...register('attendeeUsername')}
+            autoComplete="nope"
             hasError={!!usernameError?.message?.length}
           />
           <ErrorText message={usernameError?.message} />

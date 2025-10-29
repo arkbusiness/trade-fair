@@ -1,5 +1,4 @@
 import { useCustomQuery } from '@/app/core/shared/hooks';
-import { exhibitorAuthService } from '../../services';
 
 export interface IExhibitorOnboarding {
   id: string;
@@ -14,6 +13,11 @@ export interface IExhibitorOnboarding {
   exhibitorId: string | null;
 }
 
+const getExhibitorOnboardingQueryOptions = (token: string) => ({
+  url: `/exhibitor/register/${token}`,
+  queryKey: ['exhibitor-onboarding', token]
+});
+
 export const useExhibitorOnboarding = (token: string) => {
   const {
     data: exhibitorOnboarding,
@@ -21,11 +25,12 @@ export const useExhibitorOnboarding = (token: string) => {
     isRefetching: isRefetchingExhibitorOnboarding,
     refetch
   } = useCustomQuery<IExhibitorOnboarding>({
-    ...exhibitorAuthService.getOnboarding(token),
+    ...getExhibitorOnboardingQueryOptions(token),
     options: {
       enabled: !!token
     }
   });
+
   return {
     exhibitorOnboarding,
     isLoadingExhibitorOnboarding,

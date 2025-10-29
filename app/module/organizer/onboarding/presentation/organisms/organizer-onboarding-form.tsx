@@ -7,15 +7,14 @@ import {
 } from '@/app/core/shared/components/atoms';
 import { LoadingButton } from '@/app/core/shared/components/molecules';
 import { ORGANIZER_APP_ROUTES } from '@/app/core/shared/constants';
-import { useCustomMutation } from '@/app/core/shared/hooks/use-mutate';
 import { errorHandler } from '@/app/core/shared/utils';
-import { organizerAuthService } from '@/app/module/auth/services';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { formatISO } from 'date-fns';
 import { useRouter } from 'nextjs-toploader/app';
 import { useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import * as yup from 'yup';
+import { useOrganizerOnboarding } from '../../api';
 
 const validationSchema = yup.object().shape({
   eventName: yup.string().trim().required('Event name is required'),
@@ -41,8 +40,18 @@ const validationSchema = yup.object().shape({
 type OrganizerOnboardingFormValues = yup.InferType<typeof validationSchema>;
 
 export const OrganizerOnboardingForm = () => {
-  const mutation = useCustomMutation<OrganizerOnboardingFormValues>();
   const router = useRouter();
+
+  const { onboardingMutation, isPending } = useOrganizerOnboarding({
+    onSuccess: () => {
+      toast.success('Event created successfully');
+      router.push(ORGANIZER_APP_ROUTES.root());
+    },
+    onError: (error) => {
+      const errorMessage = errorHandler(error);
+      toast.error(errorMessage);
+    }
+  });
 
   const {
     handleSubmit,
@@ -69,16 +78,7 @@ export const OrganizerOnboardingForm = () => {
       eventEndDate: formatISO(eventEndDate)
     };
 
-    mutation.mutate(organizerAuthService.onboarding(formValues), {
-      onError(error) {
-        const errorMessage = errorHandler(error);
-        toast.error(errorMessage);
-      },
-      onSuccess() {
-        toast.success('Event created successfully');
-        router.push(ORGANIZER_APP_ROUTES.root());
-      }
-    });
+    onboardingMutation(formValues);
   };
 
   const watchedStartDate = watch('eventStartDate');
@@ -99,7 +99,7 @@ export const OrganizerOnboardingForm = () => {
     >
       <fieldset
         className="flex flex-col gap-[1.86rem] w-full"
-        disabled={mutation.isPending}
+        disabled={isPending}
       >
         <div className="grid lg:grid-cols-2 gap-[1.86rem]">
           {/* Venue Name */}
@@ -170,8 +170,8 @@ export const OrganizerOnboardingForm = () => {
       <LoadingButton
         type="submit"
         variant="tertiary"
-        isLoading={mutation.isPending}
-        disabled={mutation.isPending}
+        isLoading={isPending}
+        disabled={isPending}
       >
         Submit
       </LoadingButton>

@@ -12,7 +12,6 @@ import {
   PhoneNumberInput,
   ProfileImageUploader
 } from '@/app/core/shared/components/molecules';
-import { useCustomMutation } from '@/app/core/shared/hooks/use-mutate';
 import { useExhibitorAuthStore } from '@/app/module/auth/store';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useParams } from 'next/navigation';
@@ -23,16 +22,15 @@ import {
   parsePhoneNumber
 } from 'react-phone-number-input';
 import * as yup from 'yup';
-import { useExhibitorOnboarding } from '../../hooks/use-exhibitor-onboarding';
 import { useEffect } from 'react';
 import {
   COUNTRY_DETAILS,
   DEFAULT_CURRENCY,
   EXHIBITOR_APP_ROUTES
 } from '@/app/core/shared/constants';
-import { exhibitorAuthService } from '../../../services';
 import { errorHandler } from '@/app/core/shared/utils';
 import toast from 'react-hot-toast';
+import { useExhibitorOnboarding, useExhibitorSignup } from '../../api';
 
 const validationSchema = yup.object().shape({
   username: yup.string().trim().required('Username is required'),
@@ -78,11 +76,6 @@ const validationSchema = yup.object().shape({
 
 type ExhibitorSignupFormValues = yup.InferType<typeof validationSchema>;
 
-interface IFormResponse {
-  message: string;
-  accessToken: string;
-}
-
 export const ExhibitorSignupForm = () => {
   const param = useParams();
   const token = (param?.token ?? '') as string;
@@ -91,8 +84,22 @@ export const ExhibitorSignupForm = () => {
     useExhibitorOnboarding(token);
 
   const { handleSaveToken } = useExhibitorAuthStore();
-  const mutation = useCustomMutation<IFormResponse>();
   const router = useRouter();
+
+  const { signupMutation, isPending } = useExhibitorSignup({
+    onSuccess: (data) => {
+      const successMessage = data?.message ?? 'User registered successfully.';
+      const token = data?.accessToken ?? '';
+      toast.success(successMessage);
+      handleSaveToken({ accessToken: token });
+      router.push(EXHIBITOR_APP_ROUTES.root());
+    },
+    onError: (error) => {
+      const errorMessage = errorHandler(error);
+      toast.error(errorMessage);
+    }
+  });
+
   const {
     handleSubmit,
     setValue,
@@ -149,19 +156,7 @@ export const ExhibitorSignupForm = () => {
       password
     };
 
-    mutation.mutate(exhibitorAuthService.register(formValues), {
-      onError(error) {
-        const errorMessage = errorHandler(error);
-        toast.error(errorMessage);
-      },
-      onSuccess(data) {
-        const successMessage = data?.message ?? 'User registered successfully.';
-        const token = data?.accessToken ?? '';
-        toast.success(successMessage);
-        handleSaveToken({ accessToken: token });
-        router.push(EXHIBITOR_APP_ROUTES.root());
-      }
-    });
+    signupMutation(formValues);
   };
 
   const watchedPhoneNo = watch('contactPhone');
@@ -191,7 +186,7 @@ export const ExhibitorSignupForm = () => {
       >
         <fieldset
           className="flex flex-col gap-[1.86rem] w-full"
-          disabled={mutation.isPending}
+          disabled={isPending}
         >
           <div className="flex justify-center gap-4 items-center max-w-[25.94rem] w-full mx-auto flex-wrap">
             <div>
@@ -364,8 +359,8 @@ export const ExhibitorSignupForm = () => {
         <LoadingButton
           type="submit"
           variant="tertiary"
-          isLoading={mutation.isPending}
-          disabled={mutation.isPending}
+          isLoading={isPending}
+          disabled={isPending}
         >
           Continue
         </LoadingButton>
