@@ -9,7 +9,6 @@ import { Inventory } from '@/app/module/exhibitor/inventory/hooks';
 
 const DEFAULT_PAGE_SIZE = '15';
 
-// Query Keys
 export const catalogueListsQueryKeys = {
   base: 'catalogue',
   lists: (exhibitorId: string, filter: FilterParams) => [
@@ -18,7 +17,6 @@ export const catalogueListsQueryKeys = {
   ]
 };
 
-// Query Options
 const getCatalogueListQueryOptions = (
   exhibitorId: string,
   filter: FilterParams

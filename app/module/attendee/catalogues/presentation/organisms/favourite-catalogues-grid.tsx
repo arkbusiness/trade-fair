@@ -4,7 +4,7 @@ import { Spinner } from '@/app/core/shared/components/atoms';
 import { Pagination } from '@/app/core/shared/components/molecules';
 import { useSetParams } from '@/app/core/shared/hooks';
 import { AttendeeProductCard } from '../../../exhibitors/presentation/molecules';
-import { useFavouriteCatalogueList } from '../../api/get-favourite-catalogues';
+import { useFavouriteCatalogueList } from '../../api/get-favourite-catalogue-list';
 import { useSearchSlice } from '../../slice/search-slice';
 import { NoProductsAvailable } from '../atoms';
 

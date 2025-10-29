@@ -1,15 +1,6 @@
 import { useCustomQuery } from '@/app/core/shared/hooks';
 import { Inventory } from '@/app/module/exhibitor/inventory/hooks';
-
-export const catalogueQueryKeys = {
-  base: 'catalogue-details',
-  detail: (catalogueId: string) => [catalogueQueryKeys.base, { catalogueId }]
-};
-
-const getCatalogueQueryOptions = (catalogueId: string) => ({
-  queryKey: catalogueQueryKeys.detail(catalogueId),
-  url: `/attendee/catalogue/${catalogueId}`
-});
+import { getCatalogueQueryOptions } from './catalogue-query-options';
 
 export const useCatalogueById = (catalogueId: string) => {
   const {

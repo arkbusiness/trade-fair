@@ -1,8 +1,8 @@
 import { useCustomMutation } from '@/app/core/shared/hooks/use-mutate';
 import { useQueryClient } from '@tanstack/react-query';
-import { catalogueListsQueryKeys } from './get-catalogues';
+import { catalogueListsQueryKeys } from './get-catalogue-list';
 import { ApiCallbacks } from '@/app/core/shared/types';
-import { favouriteCataloguesQueryKeys } from './get-favourite-catalogues';
+import { favouriteCataloguesQueryKeys } from './get-favourite-catalogue-list';
 
 export const useRemoveCatalogueToFavourite = ({
   onSuccess,
