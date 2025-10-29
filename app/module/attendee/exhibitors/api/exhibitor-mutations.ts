@@ -1,5 +1,5 @@
 import { useCustomMutation } from '@/app/core/shared/hooks/use-mutate';
-import { ApiCallMethods } from '@/app/core/shared/types';
+import { ApiCallbacks } from '@/app/core/shared/types';
 
 export type ExhibitorFavouriteParams = {
   exhibitorId: string;
@@ -9,7 +9,7 @@ export const useAddExhibitorToFavourite = ({
   exhibitorId,
   onSuccess,
   onError
-}: ExhibitorFavouriteParams & ApiCallMethods<void>) => {
+}: ExhibitorFavouriteParams & ApiCallbacks<void>) => {
   const mutation = useCustomMutation();
 
   return {
@@ -36,7 +36,7 @@ export const useRemoveExhibitorFromFavourite = ({
   exhibitorId,
   onSuccess,
   onError
-}: ExhibitorFavouriteParams & ApiCallMethods<void>) => {
+}: ExhibitorFavouriteParams & ApiCallbacks<void>) => {
   const mutation = useCustomMutation();
 
   return {

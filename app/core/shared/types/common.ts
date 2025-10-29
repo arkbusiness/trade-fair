@@ -59,8 +59,7 @@ export enum SortOrderEnum {
   DESC = 'desc'
 }
 
-export type ApiCallMethods<T> = {
-  onSuccess: (data: T) => void;
-  // eslint-disable-next-line  @typescript-eslint/no-explicit-any
-  onError: (error: any) => void;
+export type ApiCallbacks<TData> = {
+  onSuccess: (data: TData) => void;
+  onError: (error: unknown) => void;
 };

@@ -1,6 +1,6 @@
 import { LinkButton } from '@/app/core/shared/components/atoms';
-import { useCatalogueById } from '../../api';
 import { ATTENDEE_APP_ROUTES } from '@/app/core/shared/constants';
+import { useCatalogueById } from '../../api';
 
 interface CatalogueDescriptionProps {
   catalogueId: string;

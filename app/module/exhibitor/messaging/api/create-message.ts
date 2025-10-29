@@ -2,14 +2,14 @@ export * from './create-message';
 
 import { useCustomMutation } from '@/app/core/shared/hooks/use-mutate';
 import { useMessageSlice } from '@/app/core/shared/slice';
-import { ApiCallMethods } from '@/app/core/shared/types';
+import { ApiCallbacks } from '@/app/core/shared/types';
 import { useQueryClient } from '@tanstack/react-query';
 import { exhibitorChatMessagesKey } from './get-exhibitor-chat-messages';
 
 export const useExhibitorCreateMessage = ({
   onSuccess,
   onError
-}: ApiCallMethods<void>) => {
+}: ApiCallbacks<void>) => {
   const queryClient = useQueryClient();
   const mutation = useCustomMutation();
   const { selectedUserId } = useMessageSlice();

@@ -17,7 +17,7 @@ interface ProductDetailsProps {
 }
 
 export const ProductDetails = ({ catalogueId }: ProductDetailsProps) => {
-  const { catalogue, refetchCatalogue } = useCatalogueById(catalogueId);
+  const { catalogue } = useCatalogueById(catalogueId);
   const exhibitor = catalogue?.exhibitor;
   const exhibitorId = catalogue?.exhibitorId;
   const isFavorited = catalogue?.isFavorite || false;
@@ -51,7 +51,6 @@ export const ProductDetails = ({ catalogueId }: ProductDetailsProps) => {
         <ProductFavoriteButton
           isProductFavorite={isFavorited}
           productId={catalogueId}
-          handleRefetch={refetchCatalogue}
         />
       </div>
 

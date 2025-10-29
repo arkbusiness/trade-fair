@@ -1,23 +1,19 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import {
-  useAddCatalogueToFavourite,
-  useRemoveCatalogueFromFavourite
-} from '../../api';
 import toast from 'react-hot-toast';
 import { errorHandler } from '@/app/core/shared/utils';
+import { useAddCatalogueToFavourite } from '../../api/add-catalogue-to-favourite';
+import { useRemoveCatalogueToFavourite } from '../../api';
 
 interface FavoriteButtonProps {
   isProductFavorite: boolean;
   productId: string;
-  handleRefetch: () => void;
 }
 
 export const ProductFavoriteButton = ({
   isProductFavorite,
-  productId,
-  handleRefetch
+  productId
 }: FavoriteButtonProps) => {
   const [isFavorited, setIsFavorited] = useState(isProductFavorite);
 
@@ -26,10 +22,8 @@ export const ProductFavoriteButton = ({
   }, [isProductFavorite]);
 
   const { addToFavouriteMutation } = useAddCatalogueToFavourite({
-    productId,
     onSuccess: () => {
       toast.success('Product added to favourite');
-      handleRefetch();
     },
     onError: (error) => {
       const errorMessage = errorHandler(error);
@@ -38,11 +32,9 @@ export const ProductFavoriteButton = ({
     }
   });
 
-  const { removeFromFavouriteMutation } = useRemoveCatalogueFromFavourite({
-    productId,
+  const { removeFromFavouriteMutation } = useRemoveCatalogueToFavourite({
     onSuccess: () => {
       toast.success('Product removed from favourite');
-      handleRefetch();
     },
     onError: (error) => {
       const errorMessage = errorHandler(error);
@@ -53,12 +45,12 @@ export const ProductFavoriteButton = ({
 
   const handleAddToFavorite = () => {
     setIsFavorited((prev) => !prev);
-    addToFavouriteMutation();
+    addToFavouriteMutation(productId);
   };
 
   const handleRemoveFromFavorite = () => {
     setIsFavorited((prev) => !prev);
-    removeFromFavouriteMutation();
+    removeFromFavouriteMutation(productId);
   };
 
   const handleClickFavourite = () => {

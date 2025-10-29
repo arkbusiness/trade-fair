@@ -1,5 +1,5 @@
 import { useCustomMutation } from '@/app/core/shared/hooks/use-mutate';
-import { ApiCallMethods } from '@/app/core/shared/types';
+import { ApiCallbacks } from '@/app/core/shared/types';
 
 export type BookAppointmentParams = {
   meetingId: string;
@@ -13,7 +13,7 @@ export const useAttendeeBookAppointment = ({
   meetingId,
   onSuccess,
   onError
-}: BookAppointmentParams & ApiCallMethods<void>) => {
+}: BookAppointmentParams & ApiCallbacks<void>) => {
   const mutation = useCustomMutation();
 
   return {
@@ -40,7 +40,7 @@ export const useAttendeeJoinWaitingList = ({
   exhibitorId,
   onSuccess,
   onError
-}: JoinWaitingListParams & ApiCallMethods<void>) => {
+}: JoinWaitingListParams & ApiCallbacks<void>) => {
   const mutation = useCustomMutation();
 
   return {

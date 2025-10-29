@@ -12,7 +12,7 @@ export const ExhibitorChatInput = () => {
     onSuccess: () => {
       setMessage('');
     },
-    onError: (error) => {
+    onError: (error: unknown) => {
       const errorMessage = errorHandler(error);
       toast.error(errorMessage);
     }

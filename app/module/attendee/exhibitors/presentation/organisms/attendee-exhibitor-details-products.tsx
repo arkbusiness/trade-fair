@@ -1,10 +1,10 @@
 'use client';
 
 import { Spinner } from '@/app/core/shared/components/atoms';
-import { useCatalogues } from '../../../catalogues/api';
 import { AttendeeProductCard } from '../molecules';
 import { useQueryFilters, useSetParams } from '@/app/core/shared/hooks';
 import { Pagination } from '@/app/core/shared/components/molecules';
+import { useCatalogueList } from '../../../catalogues/api';
 
 interface AttendeeExhibitorDetailsProductsProps {
   exhibitorId: string;
@@ -16,15 +16,15 @@ export const AttendeeExhibitorDetailsProducts = ({
   const { filter } = useQueryFilters(['page']);
   const { setMultipleParam, searchParamsObject } = useSetParams();
 
-  const exhibitorQuery = {
-    limit: '15',
+  const { catalogues, isLoading, paginationMeta } = useCatalogueList(
     exhibitorId,
-    page: searchParamsObject.page || '1',
-    ...filter
-  };
-
-  const { catalogues, isLoadingCatalogues, refetchCatalogues, paginationMeta } =
-    useCatalogues(exhibitorId, exhibitorQuery);
+    {
+      limit: '15',
+      exhibitorId,
+      page: searchParamsObject.page || '1',
+      ...filter
+    }
+  );
 
   const handlePageClick = (value: { selected: number }) => {
     const newPage = value.selected + 1;
@@ -40,22 +40,18 @@ export const AttendeeExhibitorDetailsProducts = ({
 
   return (
     <>
-      {isLoadingCatalogues && (
+      {isLoading && (
         <div className="mt-7.5">
           <Spinner />
         </div>
       )}
       <div className="grid grid-cols-[repeat(auto-fill,minmax(240px,1fr))] gap-x-6 gap-y-15 mt-7.5">
         {catalogues.map((catalogue) => (
-          <AttendeeProductCard
-            key={catalogue.id}
-            product={catalogue}
-            handleRefetchExhibitors={refetchCatalogues}
-          />
+          <AttendeeProductCard key={catalogue.id} product={catalogue} />
         ))}
       </div>
 
-      {!hasCatalogues && !isLoadingCatalogues && (
+      {!hasCatalogues && !isLoading && (
         <div className="mt-7.5 flex flex-col items-center justify-center py-12">
           <p className="text-gray-700 text-lg font-medium">
             No products available

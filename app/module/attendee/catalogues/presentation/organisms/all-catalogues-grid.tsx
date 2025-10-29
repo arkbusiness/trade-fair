@@ -7,10 +7,9 @@ import {
 } from '@/app/core/shared/components/molecules';
 import { useSetParams } from '@/app/core/shared/hooks';
 import { AttendeeProductCard } from '../../../exhibitors/presentation/molecules';
-import { useCatalogues } from '../../api';
 import { useSearchSlice } from '../../slice/search-slice';
 import { EmptyCatalogueState, NoProductsAvailable } from '../atoms';
-import { useEffect } from 'react';
+import { useCatalogueList } from '../../api';
 
 interface CataloguesGridProps {
   exhibitorId: string;
@@ -20,23 +19,16 @@ export const AllCataloguesGrid = ({ exhibitorId }: CataloguesGridProps) => {
   const { search } = useSearchSlice();
   const { setMultipleParam, searchParamsObject } = useSetParams();
 
-  const cataloguesQuery = {
+  const {
+    catalogues,
+    isLoading: isLoadingCatalogues,
+    isRefetching: isRefetchingCatalogues,
+    paginationMeta
+  } = useCatalogueList(exhibitorId, {
     page: searchParamsObject.page || '1',
     exhibitorId,
     search
-  };
-
-  const {
-    catalogues,
-    isLoadingCatalogues,
-    isRefetchingCatalogues,
-    refetchCatalogues,
-    paginationMeta
-  } = useCatalogues(exhibitorId, cataloguesQuery);
-
-  useEffect(() => {
-    refetchCatalogues();
-  }, []);
+  });
 
   const handlePageClick = (value: { selected: number }) => {
     const newPage = value.selected + 1;
@@ -72,7 +64,6 @@ export const AllCataloguesGrid = ({ exhibitorId }: CataloguesGridProps) => {
                 key={key}
                 product={catalogue}
                 showExhibitor={true}
-                handleRefetchExhibitors={refetchCatalogues}
               />
             );
           })}

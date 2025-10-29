@@ -46,7 +46,7 @@ export const AttendeeExhibitorCard = ({
         toast.success('Exhibitor added to favourite');
         handleRefetchExhibitors();
       },
-      onError: (error) => {
+      onError: (error: unknown) => {
         const errorMessage = errorHandler(error);
         toast.error(errorMessage);
         setIsLikedState(false);
@@ -61,7 +61,7 @@ export const AttendeeExhibitorCard = ({
       toast.success('Exhibitor removed from favourite');
       handleRefetchExhibitors();
     },
-    onError: (error) => {
+    onError: (error: unknown) => {
       const errorMessage = errorHandler(error);
       setIsLikedState(false);
       toast.error(errorMessage);

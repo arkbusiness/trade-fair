@@ -1,29 +1,30 @@
 import { useCustomMutation } from '@/app/core/shared/hooks/use-mutate';
-import { useMessageSlice } from '@/app/core/shared/slice';
-import { ApiCallbacks } from '@/app/core/shared/types';
 import { useQueryClient } from '@tanstack/react-query';
-import { chatMessagesKey } from './get-attendee-chat-messages';
+import { catalogueListsQueryKeys } from './get-catalogues';
+import { ApiCallbacks } from '@/app/core/shared/types';
+import { favouriteCataloguesQueryKeys } from './get-favourite-catalogues';
 
-export const useAttendeeCreateMessage = ({
+export const useAddCatalogueToFavourite = ({
   onSuccess,
   onError
 }: ApiCallbacks<void>) => {
   const queryClient = useQueryClient();
   const mutation = useCustomMutation();
-  const { selectedUserId } = useMessageSlice();
 
   return {
-    createMessageMutation: (payload: { content: string }) => {
+    addToFavouriteMutation: (productId: string) => {
       mutation.mutate(
         {
-          url: `/attendee/exhibitors/${selectedUserId}/messages`,
-          method: 'POST',
-          data: payload
+          url: `/attendee/product-favorite/${productId}`,
+          method: 'POST'
         },
         {
           onSuccess: () => {
             queryClient.invalidateQueries({
-              queryKey: [chatMessagesKey.base]
+              queryKey: [catalogueListsQueryKeys.base]
+            });
+            queryClient.invalidateQueries({
+              queryKey: [favouriteCataloguesQueryKeys.base]
             });
             onSuccess();
           },

@@ -12,7 +12,7 @@ import { useRouter } from 'nextjs-toploader/app';
 import { Inventory } from '@/app/module/exhibitor/inventory/hooks';
 import {
   useAddCatalogueToFavourite,
-  useRemoveCatalogueFromFavourite
+  useRemoveCatalogueToFavourite
 } from '../../../catalogues/api';
 
 type AttendeeProductCardProps = {
@@ -20,15 +20,13 @@ type AttendeeProductCardProps = {
   showExhibitor?: boolean;
   showFavouriteButton?: boolean;
   hasBeenFavourited?: boolean;
-  handleRefetchExhibitors: () => void;
 };
 
 export const AttendeeProductCard = ({
   product,
   showExhibitor = false,
   showFavouriteButton = true,
-  hasBeenFavourited = false,
-  handleRefetchExhibitors
+  hasBeenFavourited = false
 }: AttendeeProductCardProps) => {
   const router = useRouter();
 
@@ -39,14 +37,12 @@ export const AttendeeProductCard = ({
     setIsLikedState(isProductFavourited);
   }, [isProductFavourited]);
 
-  const { addToFavouriteMutation, isPending: isPendingAddToFavourite } =
+  const { addToFavouriteMutation, isLoading: isAddToFavouriteLoading } =
     useAddCatalogueToFavourite({
-      productId: product.id,
       onSuccess: () => {
         toast.success('Product added to favourite');
-        handleRefetchExhibitors();
       },
-      onError: (error) => {
+      onError: (error: unknown) => {
         const errorMessage = errorHandler(error);
         toast.error(errorMessage);
         setIsLikedState(false);
@@ -55,14 +51,12 @@ export const AttendeeProductCard = ({
 
   const {
     removeFromFavouriteMutation,
-    isPending: isPendingRemoveFromFavourite
-  } = useRemoveCatalogueFromFavourite({
-    productId: product.id,
+    isLoading: isRemoveFromFavouriteLoading
+  } = useRemoveCatalogueToFavourite({
     onSuccess: () => {
       toast.success('Product removed from favourite');
-      handleRefetchExhibitors();
     },
-    onError: (error) => {
+    onError: (error: unknown) => {
       const errorMessage = errorHandler(error);
       setIsLikedState(false);
       toast.error(errorMessage);
@@ -71,12 +65,12 @@ export const AttendeeProductCard = ({
 
   const handleAddToFavorite = () => {
     setIsLikedState((prev) => !prev);
-    addToFavouriteMutation();
+    addToFavouriteMutation(product.id);
   };
 
   const handleRemoveFromFavorite = () => {
     setIsLikedState((prev) => !prev);
-    removeFromFavouriteMutation();
+    removeFromFavouriteMutation(product.id);
   };
 
   const handleClickFavourite = () => {
@@ -95,7 +89,7 @@ export const AttendeeProductCard = ({
     router.push(ATTENDEE_APP_ROUTES.exhibitors.detail(product.exhibitorId));
   };
 
-  const isMutating = isPendingAddToFavourite || isPendingRemoveFromFavourite;
+  const isMutating = isAddToFavouriteLoading || isRemoveFromFavouriteLoading;
   const isFavourited = (isProductFavourited && !isMutating) || isLikedState;
   const exhibitorName = product?.exhibitor?.companyName;
 

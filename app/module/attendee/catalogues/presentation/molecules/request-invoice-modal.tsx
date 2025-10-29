@@ -43,7 +43,7 @@ export const RequestInvoiceModal = ({
       onClose();
       setShowSuccessModal(true);
     },
-    onError: (error) => {
+    onError: (error: unknown) => {
       const errorMessage = errorHandler(error);
       toast.error(errorMessage);
     }
