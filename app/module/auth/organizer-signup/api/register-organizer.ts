@@ -2,7 +2,6 @@ import { useCustomMutation } from '@/app/core/shared/hooks/use-mutate';
 import { ApiCallbacks } from '@/app/core/shared/types';
 
 export type OrganizerSignupPayload = {
-  token: string;
   contactPhone: string;
   companyName: string;
   country: string;
@@ -23,10 +22,10 @@ export const useOrganizerSignup = ({
   const mutation = useCustomMutation<OrganizerSignupResponse>();
 
   return {
-    signupMutation: (payload: OrganizerSignupPayload) =>
+    signupMutation: (payload: OrganizerSignupPayload, token: string) =>
       mutation.mutate(
         {
-          url: `/organizer/register/${payload.token}`,
+          url: `/organizer/register/${token}`,
           method: 'POST',
           data: payload
         },

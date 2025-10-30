@@ -132,7 +132,7 @@ export const OrganizerSignupForm = () => {
       password
     };
 
-    signupMutation(formValues);
+    signupMutation(formValues, token);
   };
 
   const watchedPhoneNo = watch('phoneNumber');

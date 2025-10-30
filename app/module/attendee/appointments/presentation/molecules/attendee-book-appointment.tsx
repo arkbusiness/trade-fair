@@ -22,7 +22,6 @@ export const AttendeeBookAppointment = ({
   onClose
 }: AttendeeBookAppointmentProps) => {
   const { bookAppointmentMutation, isPending } = useAttendeeBookAppointment({
-    meetingId: selectedSlot?.id || '',
     onSuccess: () => {
       toast.success('Meeting booked successfully');
       refetchSlots();
@@ -32,6 +31,12 @@ export const AttendeeBookAppointment = ({
       toast.error(errorHandler(error));
     }
   });
+
+  const handleBookAppointment = () => {
+    if (selectedSlot?.id) {
+      bookAppointmentMutation({ meetingId: selectedSlot.id });
+    }
+  };
 
   const { startTime, endTime } = selectedSlot || {};
 
@@ -51,21 +56,26 @@ export const AttendeeBookAppointment = ({
     >
       <div className="flex flex-col gap-[1.86rem] w-full text-left relative mt-8">
         <div className="px-8">
-          <div className="flex justify-between w-full">
-            <div className="flex gap-2 md:items-center flex-col md:flex-row">
+          <div className="flex justify-between items-center w-full">
+            <div className="flex gap-2 flex-col">
               <div className="flex gap-2 items-center">
-                <p className="font-semibold text-foreground">
-                  {startTime
-                    ? formatDate(startTime, false, 'MMM dd, yyyy : hh:mm a')
-                    : 'Unknown'}
+                <p className="text-foreground flex gap-2">
+                  <span className="font-semibold ">Start Time:</span>
+                  <span>
+                    {startTime
+                      ? formatDate(startTime, false, 'MMM dd, yyyy : hh:mm a')
+                      : 'Unknown'}
+                  </span>
                 </p>
               </div>
-              <span className="hidden md:flex">-</span>
               <div className="flex gap-2 items-center">
-                <p className="font-semibold text-foreground">
-                  {endTime
-                    ? formatDate(endTime, false, 'MMM dd, yyyy : hh:mm a')
-                    : 'Unknown'}
+                <p className="text-foreground flex gap-2">
+                  <span className="font-semibold ">End Time:</span>
+                  <span>
+                    {endTime
+                      ? formatDate(endTime, false, 'MMM dd, yyyy : hh:mm a')
+                      : 'Unknown'}
+                  </span>
                 </p>
               </div>
             </div>
@@ -92,7 +102,7 @@ export const AttendeeBookAppointment = ({
             type="submit"
             isLoading={isPending}
             disabled={isPending}
-            onClick={bookAppointmentMutation}
+            onClick={handleBookAppointment}
           >
             <span>Confirm meeting</span>
           </LoadingButton>

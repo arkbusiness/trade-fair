@@ -114,7 +114,6 @@ export const OrganizerOnboardingForm = () => {
           </div>
 
           {/* Event Name */}
-
           <div>
             <Input
               label="Event Name"
@@ -134,6 +133,7 @@ export const OrganizerOnboardingForm = () => {
             label="Start date"
             placeholderText="mm/dd/yyyy"
             showTimeSelect={true}
+            timeIntervals={10}
             max={watchedEndDate}
             handleChange={({ value }) => {
               setValue('eventStartDate', value as Date, {
@@ -154,6 +154,7 @@ export const OrganizerOnboardingForm = () => {
             label="End date"
             showTimeSelect={true}
             placeholderText="mm/dd/yyyy"
+            timeIntervals={10}
             min={watchedStartDate}
             handleChange={({ value }) => {
               setValue('eventEndDate', value as Date, {
