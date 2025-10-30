@@ -38,6 +38,7 @@ export const AttendeeOverviewExhibitors = () => {
                 companyName={exhibitor.companyName}
                 boothNumber={exhibitor.boothNumber}
                 description={exhibitor.publicDescription}
+                showFavouriteButton={false}
                 isLiked={isLiked}
               />
             );

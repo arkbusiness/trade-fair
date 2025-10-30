@@ -133,9 +133,7 @@ export const AttendeeExhibitorCard = ({
               </button>
             )}
           </div>
-          <p className="text-xs font-medium line-clamp-2 mt-2">
-            {description || 'N/A'}
-          </p>
+          <p className="text-xs font-medium line-clamp-2 mt-2">{description}</p>
           <div></div>
         </div>
       </CardContent>
