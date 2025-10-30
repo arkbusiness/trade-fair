@@ -2,10 +2,10 @@
 
 import { formatDate } from '@/app/core/shared/lib';
 import { cn } from '@/app/core/shared/utils';
-import { IAttendeeMeeting } from '../../../meetings/api';
+import { AttendeeMeeting } from '../../../meetings/api/get-attendee-appointments';
 
 interface AppointmentsListItemProps {
-  appointment: IAttendeeMeeting;
+  appointment: AttendeeMeeting;
   onClick: () => void;
 }
 

@@ -5,12 +5,12 @@ import { LoadingButton, Modal } from '@/app/core/shared/components/molecules';
 import { formatDate } from '@/app/core/shared/lib';
 import { errorHandler } from '@/app/core/shared/utils';
 import toast from 'react-hot-toast';
-import { IAttendeeMeeting } from '../../../meetings/api';
 import { useAttendeeBookAppointment } from '../../api';
+import { AttendeeMeeting } from '../../../meetings/api/get-attendee-appointments';
 
 interface AttendeeBookAppointmentProps {
   isOpen: boolean;
-  selectedSlot: IAttendeeMeeting | null;
+  selectedSlot: AttendeeMeeting | null;
   refetchSlots: () => void;
   onClose: () => void;
 }

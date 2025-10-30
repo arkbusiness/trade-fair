@@ -5,10 +5,10 @@ import { formatDate } from '@/app/core/shared/lib';
 import { SlotStatus } from '@/app/module/exhibitor/appointments/hooks';
 import { AppointmentStatusBadge } from '@/app/module/exhibitor/appointments/presentation/molecules';
 import { Calendar, User } from 'lucide-react';
-import { IAttendeeMeeting } from '../../api';
+import { AttendeeMeeting } from '../../api/get-attendee-appointments';
 
 interface AttendeeMeetingItemProps {
-  appointment: IAttendeeMeeting;
+  appointment: AttendeeMeeting;
   handleCancel: () => void;
 }
 

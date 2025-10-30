@@ -5,7 +5,7 @@ import {
   buildQueryParams,
   extractPaginationMeta
 } from '@/app/core/shared/utils';
-import { IAttendeeMeeting } from '../../meetings/api';
+import { AttendeeMeeting } from '../../meetings/api/get-attendee-appointments';
 
 export type AttendeeAppointmentsSlotsParams = {
   exhibitorId: string;
@@ -45,7 +45,7 @@ export const useAttendeeAppointmentsSlots = ({
     isLoading: isLoadingSlots,
     isRefetching: isRefetchingSlots,
     refetch
-  } = useCustomQuery<IPaginatedResponse<IAttendeeMeeting>>({
+  } = useCustomQuery<IPaginatedResponse<AttendeeMeeting>>({
     ...getAttendeeAppointmentSlotsQueryOptions({
       filter,
       exhibitorId
