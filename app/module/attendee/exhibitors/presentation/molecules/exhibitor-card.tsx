@@ -22,7 +22,6 @@ type AttendeeExhibitorCardProps = {
   isLiked?: boolean;
   allowNavigation?: boolean;
   showFavouriteButton?: boolean;
-  handleRefetchExhibitors: () => void;
 };
 
 export const AttendeeExhibitorCard = ({
@@ -33,18 +32,15 @@ export const AttendeeExhibitorCard = ({
   description,
   isLiked,
   allowNavigation = true,
-  showFavouriteButton = true,
-  handleRefetchExhibitors
+  showFavouriteButton = true
 }: AttendeeExhibitorCardProps) => {
   const router = useRouter();
   const [isLikedState, setIsLikedState] = useState(isLiked);
 
   const { addToFavouriteMutation, isPending: isPendingAddToFavourite } =
     useAddExhibitorToFavourite({
-      exhibitorId,
       onSuccess: () => {
         toast.success('Exhibitor added to favourite');
-        handleRefetchExhibitors();
       },
       onError: (error: unknown) => {
         const errorMessage = errorHandler(error);
@@ -56,10 +52,8 @@ export const AttendeeExhibitorCard = ({
     removeFromFavouriteMutation,
     isPending: isPendingRemoveFromFavourite
   } = useRemoveExhibitorFromFavourite({
-    exhibitorId,
     onSuccess: () => {
       toast.success('Exhibitor removed from favourite');
-      handleRefetchExhibitors();
     },
     onError: (error: unknown) => {
       const errorMessage = errorHandler(error);
@@ -76,12 +70,12 @@ export const AttendeeExhibitorCard = ({
 
   const handleAddToFavorite = () => {
     setIsLikedState((prev) => !prev);
-    addToFavouriteMutation();
+    addToFavouriteMutation({ exhibitorId });
   };
 
   const handleRemoveFromFavorite = () => {
     setIsLikedState((prev) => !prev);
-    removeFromFavouriteMutation();
+    removeFromFavouriteMutation({ exhibitorId });
   };
 
   const handleClickFavourite = () => {

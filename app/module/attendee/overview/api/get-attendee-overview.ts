@@ -1,7 +1,11 @@
 import { useCustomQuery } from '@/app/core/shared/hooks';
-import { attendeeOverviewService } from '../services';
 
-interface IAttendeeMetrics {
+export const attendeeOverviewQueryKeys = {
+  base: 'attendee-overview',
+  metrics: () => [attendeeOverviewQueryKeys.base, 'metrics']
+};
+
+export interface IAttendeeMetrics {
   organizer: {
     id: string;
     eventLogoUrl: string;
@@ -48,11 +52,13 @@ export const useAttendeeOverview = () => {
     isRefetching: isRefetchingOverviewStats,
     refetch
   } = useCustomQuery<IAttendeeMetrics>({
-    ...attendeeOverviewService.getMetrics(),
+    queryKey: attendeeOverviewQueryKeys.metrics(),
+    url: '/attendee/dashboard',
     options: {
       staleTime: Infinity
     }
   });
+
   return {
     overviewStats,
     isLoadingOverviewStats,

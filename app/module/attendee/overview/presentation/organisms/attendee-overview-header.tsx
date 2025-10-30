@@ -5,7 +5,7 @@ import { PinIcon, TimeIcon } from '@/app/core/shared/icons';
 import { formatDate } from '@/app/core/shared/lib';
 import { cn } from '@/app/core/shared/utils';
 import Image from 'next/image';
-import { useAttendeeOverview } from '../../hooks';
+import { useAttendeeOverview } from '../../api';
 import { CountdownBox, EndedBox, LiveBox } from '../atoms';
 
 export const AttendeeOverviewHeader = () => {

@@ -1,5 +1,14 @@
 import { buildQueryParams } from '@/app/core/shared/utils';
 
+// Exhibitors list
+export const attendeeExhibitorsQueryKeys = {
+  base: 'attendee-exhibitors',
+  lists: (filter: Record<string, string>) => [
+    attendeeExhibitorsQueryKeys.base,
+    { ...filter }
+  ]
+};
+
 export const getAttendeeExhibitorsQueryOptions = ({
   filter
 }: {
@@ -12,9 +21,38 @@ export const getAttendeeExhibitorsQueryOptions = ({
   });
 
   return {
-    queryKey: ['attendee-exhibitors', queryParams],
+    queryKey: attendeeExhibitorsQueryKeys.lists(filter),
     url: `/attendee/exhibitors${queryParams ? `?${queryParams}` : ''}`
   };
+};
+
+// Exhibitor by ID
+export const attendeeExhibitorByIdQueryKeys = {
+  base: 'attendee-exhibitor-details',
+  detail: (exhibitorId: string) => [
+    attendeeExhibitorByIdQueryKeys.base,
+    exhibitorId
+  ]
+};
+
+export const getAttendeeExhibitorByIdQueryOptions = ({
+  exhibitorId
+}: {
+  exhibitorId: string;
+}) => {
+  return {
+    queryKey: attendeeExhibitorByIdQueryKeys.detail(exhibitorId),
+    url: `/attendee/exhibitors/${exhibitorId}`
+  };
+};
+
+// Favourite exhibitors
+export const attendeeFavouriteExhibitorsQueryKeys = {
+  base: 'attendee-favourite-exhibitors',
+  lists: (filter: Record<string, string>) => [
+    attendeeFavouriteExhibitorsQueryKeys.base,
+    { ...filter }
+  ]
 };
 
 export const getAttendeeFavouriteExhibitorsQueryOptions = ({
@@ -29,20 +67,18 @@ export const getAttendeeFavouriteExhibitorsQueryOptions = ({
   });
 
   return {
-    queryKey: ['attendee-favourite-exhibitors', queryParams],
+    queryKey: attendeeFavouriteExhibitorsQueryKeys.lists(filter),
     url: `/attendee/favorite-exhibitors${queryParams ? `?${queryParams}` : ''}`
   };
 };
 
-export const getAttendeeExhibitorByIdQueryOptions = ({
-  exhibitorId
-}: {
-  exhibitorId: string;
-}) => {
-  return {
-    queryKey: ['attendee-exhibitor-details', exhibitorId],
-    url: `/attendee/exhibitors/${exhibitorId}`
-  };
+// Exhibitor scanned booth
+export const attendeeExhibitorScannedBoothQueryKeys = {
+  base: 'exhibitor-scanned',
+  detail: (exhibitorId: string) => [
+    attendeeExhibitorScannedBoothQueryKeys.base,
+    exhibitorId
+  ]
 };
 
 export const getAttendeeExhibitorScannedBoothOptions = ({
@@ -51,7 +87,7 @@ export const getAttendeeExhibitorScannedBoothOptions = ({
   exhibitorId: string;
 }) => {
   return {
-    queryKey: ['exhibitor-scanned', exhibitorId],
+    queryKey: attendeeExhibitorScannedBoothQueryKeys.detail(exhibitorId),
     url: `/attendee/exhibitors/${exhibitorId}/scanned`
   };
 };

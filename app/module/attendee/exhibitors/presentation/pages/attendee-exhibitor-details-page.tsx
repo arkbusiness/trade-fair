@@ -9,6 +9,7 @@ import {
   AttendeeExhibitorDetailsHeader
 } from '../molecules';
 import { AttendeeExhibitorDetailsTab } from '../organisms';
+import { attendeeExhibitorByIdQueryKeys } from '../../api/exhibitor-query-options';
 
 interface AttendeeExhibitorDetailsPageProps {
   id: string;
@@ -20,9 +21,7 @@ export const AttendeeExhibitorDetailsPage = async ({
   const queryClient = getQueryClient();
 
   await queryClient.prefetchQuery({
-    queryKey: getAttendeeExhibitorByIdQueryOptions({
-      exhibitorId: id
-    }).queryKey,
+    queryKey: attendeeExhibitorByIdQueryKeys.detail(id),
     queryFn: () => {
       return serverFetcher({
         url: getAttendeeExhibitorByIdQueryOptions({

@@ -10,7 +10,7 @@ import {
   InvoiceIcon,
   MetricCardSkeleton
 } from '@/app/core/shared/components/atoms';
-import { useAttendeeOverview } from '../../hooks';
+import { useAttendeeOverview } from '../../api';
 
 export const AttendeeOverviewStat = () => {
   const { overviewStats, isLoadingOverviewStats, isRefetchingOverviewStats } =
