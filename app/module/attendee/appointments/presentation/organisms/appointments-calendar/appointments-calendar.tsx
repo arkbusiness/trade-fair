@@ -6,6 +6,7 @@ import 'react-datepicker/dist/react-datepicker.css';
 import styles from './appointments-calendar.module.css';
 import { useSetParams } from '@/app/core/shared/hooks';
 import { format } from 'date-fns';
+import { useAttendeeOverview } from '@/app/module/attendee/overview/hooks';
 
 interface AppointmentsCalendarProps {
   title?: string;
@@ -16,6 +17,13 @@ export const AppointmentsCalendar: React.FC<AppointmentsCalendarProps> = ({
   title = 'Choose meeting date',
   onDateChange
 }) => {
+  const { overviewStats } = useAttendeeOverview();
+
+  const { eventStartDate, eventEndDate } = overviewStats?.organizer || {};
+
+  const startDate = eventStartDate;
+  const endDate = eventEndDate;
+
   const { setParam } = useSetParams();
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
 
@@ -42,6 +50,8 @@ export const AppointmentsCalendar: React.FC<AppointmentsCalendarProps> = ({
           onChange={handleDateChange}
           inline
           calendarClassName="custom-calendar"
+          minDate={startDate ? new Date(startDate) : undefined}
+          maxDate={endDate ? new Date(endDate) : undefined}
           dayClassName={(date) => {
             const isSelected =
               selectedDate &&

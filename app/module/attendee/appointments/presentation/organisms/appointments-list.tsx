@@ -5,7 +5,10 @@ import { Pagination } from '@/app/core/shared/components/molecules';
 import { useSetParams } from '@/app/core/shared/hooks';
 import { useState } from 'react';
 import { IAttendeeMeeting } from '../../../meetings/api';
-import { useAttendeeAppointmentsSlots } from '../../api';
+import {
+  attendeeAppointmentSlotsQueryKeys,
+  useAttendeeAppointmentsSlots
+} from '../../api';
 import {
   AppointmentsListItem,
   AttendeeBookAppointment,
@@ -13,8 +16,6 @@ import {
 } from '../molecules';
 import { X } from 'lucide-react';
 import { useQueryClient } from '@tanstack/react-query';
-import { getAttendeeAppointmentSlotsQueryOptions } from '../../api/appointments-query-options';
-
 interface AppointmentsListProps {
   exhibitorId: string;
 }
@@ -29,16 +30,11 @@ export const AppointmentsList = ({ exhibitorId }: AppointmentsListProps) => {
     date: searchParamsObject.date,
     page: searchParamsObject.page || '1'
   };
-  const {
-    slots,
-    isLoadingSlots,
-    isRefetchingSlots,
-    refetchSlots,
-    paginationMeta
-  } = useAttendeeAppointmentsSlots({
-    exhibitorId,
-    filter: exhibitorQuery
-  });
+  const { slots, isLoadingSlots, isRefetchingSlots, paginationMeta } =
+    useAttendeeAppointmentsSlots({
+      exhibitorId,
+      filter: exhibitorQuery
+    });
 
   const handleCloseModal = () => {
     if (isLoadingSlots) return;
@@ -65,15 +61,11 @@ export const AppointmentsList = ({ exhibitorId }: AppointmentsListProps) => {
     });
 
     queryClient.invalidateQueries({
-      queryKey: getAttendeeAppointmentSlotsQueryOptions({
-        filter: filters,
-        exhibitorId
-      }).queryKey
+      queryKey: [attendeeAppointmentSlotsQueryKeys.base]
     });
   };
 
   const handleRefetchSlots = () => {
-    refetchSlots();
     handleClearFilters();
   };
 

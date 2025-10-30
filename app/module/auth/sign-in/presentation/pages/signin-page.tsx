@@ -12,13 +12,8 @@ import {
   ORGANIZER_APP_ROUTES
 } from '@/app/core/shared/constants';
 import { useSetParams } from '@/app/core/shared/hooks';
-import { useCustomMutation } from '@/app/core/shared/hooks/use-mutate';
 import { errorHandler } from '@/app/core/shared/utils';
 import { AuthCard, AuthContainer } from '@/app/module/auth/components';
-import {
-  exhibitorAuthService,
-  organizerAuthService
-} from '@/app/module/auth/services';
 import {
   useExhibitorAuthStore,
   useOrganizerAuthStore
@@ -28,6 +23,7 @@ import Link from 'next/link';
 import { useRouter } from 'nextjs-toploader/app';
 import { useState } from 'react';
 import toast from 'react-hot-toast';
+import { useExhibitorSignin, useOrganizerSignin } from '../../api';
 import { AttendeeSigninForm, SigninForm } from '../organisms';
 import { ISigninFormValues } from '../organisms/sign-in-form';
 
@@ -58,50 +54,56 @@ export const SigninPage = () => {
   const [selectedTab, setSelectedTab] = useState(queryTab);
   const router = useRouter();
   const { handleSaveToken: handleOrganizerSaveToken } = useOrganizerAuthStore();
-
   const { handleSaveToken: handleExhibitorSaveToken } = useExhibitorAuthStore();
-  const mutation = useCustomMutation<{
-    accessToken: string;
-  }>();
+
+  const {
+    signinMutation: organizerSigninMutation,
+    isPending: isOrganizerPending
+  } = useOrganizerSignin({
+    onSuccess: (data) => {
+      const token = data?.accessToken;
+      if (token) {
+        handleOrganizerSaveToken({ accessToken: token });
+        router.push(ORGANIZER_APP_ROUTES.root());
+      } else {
+        toast.error('Something went wrong');
+      }
+    },
+    onError: (error) => {
+      const errorMessage = errorHandler(error);
+      toast.error(errorMessage);
+    }
+  });
+
+  const {
+    signinMutation: exhibitorSigninMutation,
+    isPending: isExhibitorPending
+  } = useExhibitorSignin({
+    onSuccess: (data) => {
+      const token = data?.accessToken;
+      if (token) {
+        handleExhibitorSaveToken({ accessToken: token });
+        router.push(EXHIBITOR_APP_ROUTES.root());
+      } else {
+        toast.error('Something went wrong');
+      }
+    },
+    onError: (error) => {
+      const errorMessage = errorHandler(error);
+      toast.error(errorMessage);
+    }
+  });
 
   const handleChangeTab = (value: TABS_ITEMS_ENUM) => {
     setSelectedTab(value);
   };
 
   const handleOrganizerSubmit = (values: ISigninFormValues) => {
-    mutation.mutate(organizerAuthService.signin(values), {
-      onError(error) {
-        const errorMessage = errorHandler(error);
-        toast.error(errorMessage);
-      },
-      onSuccess(data) {
-        const token = data?.accessToken;
-        if (token) {
-          handleOrganizerSaveToken({ accessToken: token });
-          router.push(ORGANIZER_APP_ROUTES.root());
-        } else {
-          toast.error('Something went wrong');
-        }
-      }
-    });
+    organizerSigninMutation(values);
   };
 
   const handleExhibitorSubmit = (values: ISigninFormValues) => {
-    mutation.mutate(exhibitorAuthService.signin(values), {
-      onError(error) {
-        const errorMessage = errorHandler(error);
-        toast.error(errorMessage);
-      },
-      onSuccess(data) {
-        const token = data?.accessToken;
-        if (token) {
-          handleExhibitorSaveToken({ accessToken: token });
-          router.push(EXHIBITOR_APP_ROUTES.root());
-        } else {
-          toast.error('Something went wrong');
-        }
-      }
-    });
+    exhibitorSigninMutation(values);
   };
 
   const handleDashboardRoute = () => {
@@ -173,7 +175,7 @@ export const SigninPage = () => {
               {/* Organizer */}
               <TabsContent value={TABS_ITEMS_ENUM.ORGANIZER}>
                 <SigninForm
-                  isLoading={mutation.isPending}
+                  isLoading={isOrganizerPending}
                   handleSubmitForm={handleOrganizerSubmit}
                 />
               </TabsContent>
@@ -181,7 +183,7 @@ export const SigninPage = () => {
               {/* Exhibitor */}
               <TabsContent value={TABS_ITEMS_ENUM.EXHIBITOR}>
                 <SigninForm
-                  isLoading={mutation.isPending}
+                  isLoading={isExhibitorPending}
                   handleSubmitForm={handleExhibitorSubmit}
                 />
               </TabsContent>

@@ -24,7 +24,6 @@ export const AttendeeJoinWaitlist = ({
   const [isOpen, setIsOpen] = useState(false);
 
   const { joinWaitingListMutation, isPending } = useAttendeeJoinWaitingList({
-    exhibitorId,
     onSuccess: () => {
       toast.success('You have been added to the waitlist');
       router.push(ATTENDEE_APP_ROUTES.meetings.root());
@@ -34,6 +33,10 @@ export const AttendeeJoinWaitlist = ({
       toast.error(errorHandler(error));
     }
   });
+
+  const handleJoinWaitlist = () => {
+    joinWaitingListMutation({ exhibitorId });
+  };
 
   return (
     <>
@@ -87,7 +90,7 @@ export const AttendeeJoinWaitlist = ({
               type="submit"
               isLoading={isPending}
               disabled={isPending}
-              onClick={joinWaitingListMutation}
+              onClick={handleJoinWaitlist}
             >
               <span>Join waitlist</span>
             </LoadingButton>

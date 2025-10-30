@@ -1,2 +1,3 @@
-export * from './appointments-queries';
-export * from './appointments-mutations';
+export * from './book-appointment';
+export * from './join-waitlist';
+export * from './get-appointment-slots';

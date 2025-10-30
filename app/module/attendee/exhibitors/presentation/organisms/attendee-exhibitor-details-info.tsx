@@ -38,7 +38,7 @@ export const AttendeeExhibitorDetailsInfo = ({ id }: { id: string }) => {
       <ContentCard title="About">
         <div className="pb-10">
           <p className="mt-4 text-sm">
-            {exhibitor?.publicDescription ?? 'No description available'}
+            {exhibitor?.publicDescription || 'No description available'}
           </p>
         </div>
       </ContentCard>
