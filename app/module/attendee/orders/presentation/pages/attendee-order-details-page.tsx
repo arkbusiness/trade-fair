@@ -1,5 +1,4 @@
 import { getQueryClient, serverFetcher } from '@/app/core/shared/lib';
-import { attendeeOrderQueryKeys } from '../../constants';
 import { notFound } from 'next/navigation';
 import { IOrderItem } from '@/app/module/exhibitor/orders/hooks';
 import { dehydrate, HydrationBoundary } from '@tanstack/react-query';
@@ -12,6 +11,7 @@ import {
   AttendeeOrderItems,
   AttendeeOrderTimeline
 } from '../molecules';
+import { attendeeOrderByIdQueryKeys } from '../../api/order-query-options';
 
 interface AttendeeOrderDetailPageProps {
   id: string;
@@ -23,7 +23,7 @@ export const AttendeeOrderDetailPage = async ({
   const queryClient = getQueryClient();
 
   await queryClient.prefetchQuery({
-    queryKey: attendeeOrderQueryKeys.byId(id),
+    queryKey: attendeeOrderByIdQueryKeys.detail(id),
     queryFn: () => {
       return serverFetcher({
         url: `/attendee/order/${id}`
@@ -32,7 +32,7 @@ export const AttendeeOrderDetailPage = async ({
   });
 
   const order = (await queryClient.getQueryData(
-    attendeeOrderQueryKeys.byId(id)
+    attendeeOrderByIdQueryKeys.detail(id)
   )) as IOrderItem;
 
   if (!order) {

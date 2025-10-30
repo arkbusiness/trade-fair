@@ -7,8 +7,8 @@ import { useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import * as yup from 'yup';
 import { useFileUploader } from '../../../../../core/shared/hooks/use-file-uploader';
-import { useCustomMutation } from '../../../../../core/shared/hooks/use-mutate';
 import { errorHandler } from '../../../../../core/shared/utils';
+import { useUploadOrderReceipt } from '../../api';
 
 const validationSchema = yup.object().shape({
   file: yup.mixed<File[]>().required('File is required')
@@ -27,8 +27,6 @@ export const AttendeeOrderReceiptUploadForm = ({
   isOpen,
   onClose
 }: AttendeeOrderReceiptUploadForm) => {
-  const mutation = useCustomMutation();
-
   const {
     setValue,
     formState: { errors },
@@ -47,7 +45,8 @@ export const AttendeeOrderReceiptUploadForm = ({
     getRootProps,
     isDragActive,
     maxSize,
-    onRemove
+    onRemove,
+    onClearAll
   } = useFileUploader({
     type: 'image',
     maxFiles: 1,
@@ -61,9 +60,26 @@ export const AttendeeOrderReceiptUploadForm = ({
     }
   });
 
+  const { uploadReceipt, isPending } = useUploadOrderReceipt({
+    orderId,
+    onSuccess: () => {
+      toast.success('Receipt uploaded successfully');
+      reset({
+        file: undefined
+      });
+      onClearAll();
+      onClose();
+    },
+    onError: (error) => {
+      const errorMessage = errorHandler(error);
+      toast.error(errorMessage);
+    }
+  });
+
   const handleCloseModal = () => {
-    if (mutation.isPending) return;
+    if (isPending) return;
     reset();
+    onClearAll();
     onClose();
   };
 
@@ -71,26 +87,7 @@ export const AttendeeOrderReceiptUploadForm = ({
     const formData = new FormData();
     formData.append('file', values.file[0]);
 
-    mutation.mutate(
-      {
-        url: `/attendee/order/${orderId}/payment-slip`,
-        method: 'PUT',
-        data: formData,
-        headers: {
-          'Content-Type': 'multipart/form-data'
-        }
-      },
-      {
-        onSuccess: () => {
-          toast.success('Receipt uploaded successfully');
-          handleCloseModal();
-        },
-        onError: (error) => {
-          const errorMessage = errorHandler(error);
-          toast.error(errorMessage);
-        }
-      }
-    );
+    uploadReceipt(formData);
   };
 
   const { file: fileError } = errors;
@@ -114,14 +111,14 @@ export const AttendeeOrderReceiptUploadForm = ({
         <form onSubmit={handleSubmit(onSubmit)} className="w-full p-4">
           <fieldset
             className="flex flex-col gap-[1.86rem] w-full text-left relative"
-            disabled={mutation.isPending}
+            disabled={isPending}
           >
             <div className="full flex flex-col gap-[0.5rem]">
               <FileUploader
                 maxFiles={1}
                 showPreview={true}
                 placeholder="PNG, JPEG, JPG"
-                isDisabled={mutation.isPending}
+                isDisabled={isPending}
                 type="image"
                 getInputProps={getInputProps}
                 getRootProps={getRootProps}
@@ -136,7 +133,7 @@ export const AttendeeOrderReceiptUploadForm = ({
             <LoadingButton
               variant="tertiary"
               type="submit"
-              isLoading={mutation.isPending}
+              isLoading={isPending}
               className="w-full"
             >
               Submit

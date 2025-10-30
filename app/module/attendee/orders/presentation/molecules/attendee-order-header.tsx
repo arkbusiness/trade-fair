@@ -22,10 +22,11 @@ export const AttendeeOrderDetailHeader = ({
   const { setSelectedUserId } = useMessageSlice();
   const router = useRouter();
   const [showUploadReceiptModal, setShowUploadReceiptModal] = useState(false);
-  const { order, refetchOrder } = useAttendeeOrderById(orderId);
+  const { order } = useAttendeeOrderById(orderId);
   const status = order ? order.status : '';
 
   const isCompleted = status === OrderStatus.COMPLETED;
+  const isCancelled = status === OrderStatus.CANCELLED;
 
   const handleContactExhibitor = () => {
     setSelectedUserId(order?.exhibitorId ?? '');
@@ -34,7 +35,6 @@ export const AttendeeOrderDetailHeader = ({
 
   const handleCloseModal = () => {
     setShowUploadReceiptModal(false);
-    refetchOrder();
   };
 
   const orderStatus = status?.toUpperCase() as OrderStatus;
@@ -54,17 +54,19 @@ export const AttendeeOrderDetailHeader = ({
             title="Back to Orders"
           />
           <div className="flex items-center gap-2">
-            <Button
-              variant="outline"
-              className="h-8.5 flex gap-x-1"
-              onClick={() => {
-                setShowUploadReceiptModal(true);
-              }}
-              disabled={isCompleted}
-            >
-              <FileUp size={16} />
-              <span>Upload Receipt</span>
-            </Button>
+            {!isCancelled && (
+              <Button
+                variant="outline"
+                className="h-8.5 flex gap-x-1"
+                onClick={() => {
+                  setShowUploadReceiptModal(true);
+                }}
+                disabled={isCompleted}
+              >
+                <FileUp size={16} />
+                <span>Upload Receipt</span>
+              </Button>
+            )}
 
             <Button
               variant="tertiary"
