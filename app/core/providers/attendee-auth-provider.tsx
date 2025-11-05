@@ -6,7 +6,7 @@ import { ReactNode, useEffect } from 'react';
 import { SplashScreen } from '../shared/components/atoms';
 import { ATTENDEE_APP_ROUTES } from '../shared/constants';
 import { useScrollToTop } from '../shared/hooks';
-import { useAttendeeUser } from '../shared/hooks/api/use-attendee-user';
+import { useAttendeeUser } from '../shared/api';
 
 export const AttendeeAuthProvider = ({ children }: { children: ReactNode }) => {
   const router = useRouter();

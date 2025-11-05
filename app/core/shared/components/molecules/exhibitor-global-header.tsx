@@ -4,7 +4,7 @@ import { AlignLeft } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { ORGANIZER_APP_ROUTES } from '../../constants';
-import { useExhibitorUser } from '../../hooks/api/use-exhibitor-user';
+import { useExhibitorUser } from '../../api/use-exhibitor-user';
 import { useSidebar } from '../atoms';
 import { ImagePlaceholder } from '../atoms/image-placeholder';
 

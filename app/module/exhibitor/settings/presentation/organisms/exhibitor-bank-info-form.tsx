@@ -8,7 +8,7 @@ import { useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import * as yup from 'yup';
 import { useUpdatePayment } from '../../api';
-import { useExhibitorUser } from '@/app/core/shared/hooks/api/use-exhibitor-user';
+import { useExhibitorUser } from '@/app/core/shared/api';
 
 const validationSchema = yup.object().shape({
   bankName: yup.string().required('Bank name is required'),

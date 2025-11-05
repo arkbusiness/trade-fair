@@ -9,10 +9,7 @@ import {
   Spinner
 } from '@/app/core/shared/components/atoms';
 import { BoothCategorySelect } from '@/app/core/shared/components/organisms';
-import {
-  useBoothCategories,
-  useOrganizerUser
-} from '@/app/core/shared/hooks/api';
+import { useBoothCategories, useOrganizerUser } from '@/app/core/shared/api';
 import { cn, formatCurrency } from '@/app/core/shared/utils';
 import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';

@@ -2,7 +2,7 @@ import { useCustomMutation } from '@/app/core/shared/hooks/use-mutate';
 import { ApiCallbacks } from '@/app/core/shared/types';
 import { useQueryClient } from '@tanstack/react-query';
 import type { UpdateEventPayload, UpdateEventResponse } from './types';
-import { organizerUserQueryKeys } from '@/app/core/shared/hooks/api';
+import { organizerUserQueryKeys } from '@/app/core/shared/api';
 import { overviewQueryKeys } from '../../overview/api/overview-query-options';
 
 export const useUpdateEvent = ({

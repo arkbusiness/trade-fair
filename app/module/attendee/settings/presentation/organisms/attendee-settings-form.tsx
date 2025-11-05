@@ -14,7 +14,7 @@ import {
   ErrorText,
   Input
 } from '@/app/core/shared/components/atoms';
-import { useAttendeeUser } from '@/app/core/shared/hooks/api';
+import { useAttendeeUser } from '@/app/core/shared/api';
 import { AttendeeSettingsHeader } from './attendee-settings-header';
 import { useUpdateAttendeeProfile } from '../../api';
 import {

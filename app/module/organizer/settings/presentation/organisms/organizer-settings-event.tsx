@@ -10,7 +10,7 @@ import {
   LoadingButton,
   OverlaySpinner
 } from '@/app/core/shared/components/molecules';
-import { useOrganizerUser } from '@/app/core/shared/hooks/api';
+import { useOrganizerUser } from '@/app/core/shared/api';
 import { errorHandler } from '@/app/core/shared/utils';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { formatISO } from 'date-fns';

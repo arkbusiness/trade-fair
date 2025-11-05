@@ -1,7 +1,7 @@
 'use client';
 
 import { usePathname } from 'next/navigation';
-import { useExhibitorUser } from '../../hooks/api/use-exhibitor-user';
+import { useExhibitorUser } from '../../api';
 import { AvatarMenu } from './avatar-menu';
 import { useExhibitorAuthStore } from '@/app/module/auth/store';
 import { EXHIBITOR_APP_ROUTES } from '../../constants';

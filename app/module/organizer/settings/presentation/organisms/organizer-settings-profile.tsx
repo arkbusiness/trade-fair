@@ -15,7 +15,7 @@ import {
   PhoneNumberInput,
   ProfileImageUploader
 } from '@/app/core/shared/components/molecules';
-import { useOrganizerUser } from '@/app/core/shared/hooks/api';
+import { useOrganizerUser } from '@/app/core/shared/api';
 import { errorHandler } from '@/app/core/shared/utils';
 import { useUpdateProfile } from '../../api';
 

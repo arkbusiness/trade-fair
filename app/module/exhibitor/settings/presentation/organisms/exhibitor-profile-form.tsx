@@ -3,7 +3,7 @@ import {
   LoadingButton,
   PhoneNumberInput
 } from '@/app/core/shared/components/molecules';
-import { useExhibitorUser } from '@/app/core/shared/hooks/api/use-exhibitor-user';
+import { useExhibitorUser } from '@/app/core/shared/api';
 import { errorHandler } from '@/app/core/shared/utils';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useForm } from 'react-hook-form';

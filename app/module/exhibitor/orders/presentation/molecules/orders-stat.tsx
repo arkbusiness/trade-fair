@@ -1,12 +1,12 @@
 'use client';
 
+import { useExhibitorUser } from '@/app/core/shared/api/use-exhibitor-user';
 import {
   Card,
   CardFooter,
   CardHeader,
   Skeleton
 } from '@/app/core/shared/components/atoms';
-import { useExhibitorUser } from '@/app/core/shared/hooks/api/use-exhibitor-user';
 import { formatCurrency } from '@/app/core/shared/utils';
 import { ShoppingCart, Users, Wallet } from 'lucide-react';
 

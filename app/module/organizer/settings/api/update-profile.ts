@@ -2,7 +2,7 @@ import { useCustomMutation } from '@/app/core/shared/hooks/use-mutate';
 import { ApiCallbacks } from '@/app/core/shared/types';
 import { useQueryClient } from '@tanstack/react-query';
 import type { UpdateProfilePayload, UpdateProfileResponse } from './types';
-import { organizerUserQueryKeys } from '@/app/core/shared/hooks/api';
+import { organizerUserQueryKeys } from '@/app/core/shared/api';
 
 export const useUpdateProfile = ({
   onSuccess,

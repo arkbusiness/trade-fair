@@ -1,4 +1,4 @@
-import { exhibitorUserQueryKeys } from '@/app/core/shared/hooks/api/use-exhibitor-user';
+import { exhibitorUserQueryKeys } from '@/app/core/shared/api';
 import { useCustomMutation } from '@/app/core/shared/hooks/use-mutate';
 import { ApiCallbacks } from '@/app/core/shared/types';
 import { useQueryClient } from '@tanstack/react-query';
