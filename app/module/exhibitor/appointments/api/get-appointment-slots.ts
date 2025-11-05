@@ -6,7 +6,7 @@ import {
   extractPaginationMeta
 } from '@/app/core/shared/utils';
 import { IAttendee } from '@/app/module/organizer/attendees/hooks';
-import { IExhibitor } from '@/app/module/organizer/exhibitors/hooks';
+import { IExhibitor } from '@/app/module/organizer/exhibitors/api';
 
 export enum SlotStatus {
   AVAILABLE = 'AVAILABLE',

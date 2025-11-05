@@ -1,7 +1,6 @@
 import { getQueryClient, serverFetcher } from '@/app/core/shared/lib';
 import { ExhibitorDetailHeader } from '../atoms';
 import { ExhibitorDetailHero } from '../molecules';
-import { organizerExhibitorsService } from '../../services';
 import { notFound } from 'next/navigation';
 import {
   Tabs,
@@ -13,6 +12,7 @@ import {
   ExhibitorProfileInformation,
   ExhibitorRegistrationDetails
 } from '../organisms';
+import { getExhibitorByIdQueryOptions } from '../../api/exhibitors-query-options';
 
 const TABS_ITEMS = [
   {
@@ -27,19 +27,18 @@ const TABS_ITEMS = [
 
 export const ExhibitorsDetailPage = async ({ id }: { id: string }) => {
   const queryClient = getQueryClient();
+  const queryOptions = getExhibitorByIdQueryOptions(id);
 
   await queryClient.prefetchQuery({
-    queryKey: organizerExhibitorsService.getExhibitorById(id).queryKey,
+    queryKey: queryOptions.queryKey,
     queryFn: () => {
       return serverFetcher({
-        url: organizerExhibitorsService.getExhibitorById(id).url
+        url: queryOptions.url
       });
     }
   });
 
-  const exhibitor = queryClient.getQueryData(
-    organizerExhibitorsService.getExhibitorById(id).queryKey
-  );
+  const exhibitor = queryClient.getQueryData(queryOptions.queryKey);
 
   if (!exhibitor) {
     return notFound();

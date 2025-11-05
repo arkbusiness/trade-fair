@@ -1,7 +1,7 @@
 'use client';
 
 import Image from 'next/image';
-import { useOrganizerExhibitorById } from '../../hooks';
+import { useOrganizerExhibitorById } from '../../api';
 import { ImagePlaceholder } from '@/app/core/shared/components/atoms/image-placeholder';
 
 export const ExhibitorDetailHero = ({ id }: { id: string }) => {

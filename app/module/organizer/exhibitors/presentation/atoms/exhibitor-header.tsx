@@ -6,7 +6,7 @@ import { ExportButton } from '@/app/core/shared/components/organisms/export-butt
 import { getQueryClient } from '@/app/core/shared/lib';
 import { Plus } from 'lucide-react';
 import { useState } from 'react';
-import { organizerExhibitorsService } from '../../services';
+import { exhibitorsQueryKeys } from '../../api/exhibitors-query-options';
 import { InviteExhibitorForm } from '../molecules';
 
 enum ModalType {
@@ -20,7 +20,7 @@ export const OrganizerExhibitorHeader = () => {
 
   const handleCloseModal = () => {
     queryClient.invalidateQueries({
-      queryKey: [...organizerExhibitorsService.getExhibitors().queryKey]
+      queryKey: [exhibitorsQueryKeys.base]
     });
     setActiveModal(ModalType.NONE);
   };
