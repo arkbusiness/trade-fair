@@ -1,7 +1,4 @@
-import { useCustomQuery } from '@/app/core/shared/hooks';
-import { organizerOverviewService } from '../services';
-
-interface IOrganizerMetrics {
+export interface IOrganizerMetrics {
   engagement: {
     loggedInAttendees: number;
     invitedAttendees: number;
@@ -41,23 +38,3 @@ interface IOrganizerMetrics {
     };
   };
 }
-
-export const useOrganizerOverview = (filter: Record<string, string> = {}) => {
-  const {
-    data: overviewStats,
-    isLoading: isLoadingOverviewStats,
-    isRefetching: isRefetchingOverviewStats,
-    refetch
-  } = useCustomQuery<IOrganizerMetrics>({
-    ...organizerOverviewService.getMetrics(filter),
-    options: {
-      staleTime: Infinity
-    }
-  });
-  return {
-    overviewStats,
-    isLoadingOverviewStats,
-    isRefetchingOverviewStats,
-    refetchOverviewStats: refetch
-  };
-};

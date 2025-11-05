@@ -4,7 +4,7 @@ import { Button } from '@/app/core/shared/components/atoms';
 import { Modal } from '@/app/core/shared/components/molecules';
 import { formatDate } from '@/app/core/shared/lib';
 import { cn } from '@/app/core/shared/utils';
-import { IExhibitor } from '../../hooks';
+import { IExhibitor } from '../../api';
 
 interface BoothDetailsProps {
   isOpen: boolean;

@@ -3,8 +3,6 @@
 import {
   Card,
   CardContent,
-  CardDescription,
-  CardHeader,
   ChartContainer,
   ChartTooltip,
   ChartTooltipContent,
@@ -19,7 +17,7 @@ import { cn, formatCurrency } from '@/app/core/shared/utils';
 import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { Bar, BarChart, XAxis, YAxis } from 'recharts';
-import { useOrganizerOverview } from '../../hooks';
+import { useOrganizerOverview } from '../../api';
 
 const currencyFormatter = (value: number, currency: string) => {
   return formatCurrency({ amount: value, currency });
@@ -73,12 +71,10 @@ export const OrganizerRevenueChart = () => {
   }));
 
   return (
-    <Card className="w-full justify-between">
-      <CardHeader className="relative">
+    <Card className="w-full justify-between min-h-[200px]">
+      <div className="relative px-4 mb-3">
         <div className="flex justify-between items-center gap-2 flex-wrap">
-          <CardDescription className="text-foreground font-medium text-base">
-            Revenue Chart
-          </CardDescription>
+          <p className="text-foreground font-medium text-base">Revenue Chart</p>
           <div
             className={cn('h-[37px] w-[110px]', {
               'w-auto': hasCategoryId
@@ -104,9 +100,9 @@ export const OrganizerRevenueChart = () => {
             />
           </div>
         </div>
-      </CardHeader>
+      </div>
       <CardContent>
-        <div className="flex flex-col gap-3 w-full">
+        <div className="flex flex-col gap-3 w-full overflow-hidden">
           {/* TODO: Missing in the api */}
           {/* <div className="my-3.5">
             <h3 className="text-foreground font-semibold text-xl">
