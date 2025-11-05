@@ -5,7 +5,7 @@ import {
   buildQueryParams,
   extractPaginationMeta
 } from '@/app/core/shared/utils';
-import { SlotStatus } from '@/app/module/exhibitor/appointments/hooks';
+import { SlotStatus } from '@/app/module/exhibitor/appointments/api';
 
 export interface AttendeeMeeting {
   id: string;

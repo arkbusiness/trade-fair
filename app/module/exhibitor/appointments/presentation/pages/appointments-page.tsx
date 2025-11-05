@@ -1,6 +1,6 @@
 'use client';
 
-import { useAppointmentEvent } from '../../hooks';
+import { useAppointmentEvent } from '../../api';
 import { AppointmentsStat } from '../molecules';
 import { AppointmentsHeader, AppointmentItems } from '../organisms';
 

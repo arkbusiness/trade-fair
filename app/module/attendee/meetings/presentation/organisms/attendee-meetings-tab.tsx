@@ -2,8 +2,7 @@
 
 import { BorderTab } from '@/app/core/shared/components/molecules';
 import { useSetParams } from '@/app/core/shared/hooks';
-import { SlotStatus } from '@/app/module/exhibitor/appointments/hooks';
-
+import { SlotStatus } from '@/app/module/exhibitor/appointments/api';
 enum AppointmentStatusEnum {
   ALL = 'ALL',
   AVAILABLE = SlotStatus.AVAILABLE,

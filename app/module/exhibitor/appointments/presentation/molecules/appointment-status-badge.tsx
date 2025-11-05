@@ -1,6 +1,6 @@
 'use client';
 
-import { SlotStatus } from '../../hooks';
+import { SlotStatus } from '../../api';
 import { cn } from '@/app/core/shared/utils';
 import { APPOINTMENT_STATUS_MAP } from '../organisms';
 

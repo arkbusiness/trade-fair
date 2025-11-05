@@ -7,7 +7,7 @@ import {
 } from '@/app/core/shared/components/molecules';
 import { useSetParams } from '@/app/core/shared/hooks';
 import { useState } from 'react';
-import { IAppointmentSlot, SlotStatus, useAppointmentSlot } from '../../hooks';
+import { IAppointmentSlot, SlotStatus, useAppointmentSlots } from '../../api';
 import { AppointmentDetail, AppointmentItem } from '../molecules';
 import { AppointmentCreateSlotForm } from './appointment-create-slot-form';
 import { AppointmentsTabs } from './appointments-tabs';
@@ -75,9 +75,8 @@ export const AppointmentItems = () => {
     slots,
     isLoadingAppointments,
     paginationMeta,
-    isRefetchingAppointments,
-    refetchAppointments
-  } = useAppointmentSlot({
+    isRefetchingAppointments
+  } = useAppointmentSlots({
     ...appointmentsQuery
   });
 
@@ -103,7 +102,6 @@ export const AppointmentItems = () => {
   };
 
   const handleClose = () => {
-    refetchAppointments();
     setActiveModal(ModalType.NONE);
     removeQueryParam('createSlot');
     setSelectedAppointment(null);
