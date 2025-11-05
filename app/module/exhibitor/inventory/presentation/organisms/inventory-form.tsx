@@ -277,7 +277,10 @@ export const InventoryForm = ({ isReadOnly, inventory }: InventoryForm) => {
     // Add custom attributes
     const validAttrs = (data.customAttrs ?? []).filter(
       (attr): attr is { key: string; value: string } =>
-        attr?.key !== undefined && attr?.value !== undefined
+        attr?.key !== undefined &&
+        attr?.value !== undefined &&
+        attr.key.trim() !== '' &&
+        attr.value.trim() !== ''
     );
     if (validAttrs.length > 0) {
       validAttrs.forEach((attr, attrIndex) => {
