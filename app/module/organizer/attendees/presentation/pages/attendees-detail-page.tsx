@@ -7,12 +7,12 @@ import {
   TabsList,
   TabsTrigger
 } from '@/app/core/shared/components/atoms';
-import { organizerAttendeesService } from '../../services';
 import { getQueryClient, serverFetcher } from '@/app/core/shared/lib';
 import {
   AttendeeProfileInformation,
   AttendeeRegistrationDetails
 } from '../organisms';
+import { getAttendeeByIdQueryOptions } from '../../api/attendees-query-options';
 
 const TABS_ITEMS = [
   {
@@ -27,19 +27,18 @@ const TABS_ITEMS = [
 
 export const AttendeesDetailPage = async ({ id }: { id: string }) => {
   const queryClient = getQueryClient();
+  const queryOptions = getAttendeeByIdQueryOptions(id);
 
   await queryClient.prefetchQuery({
-    queryKey: organizerAttendeesService.getAttendeeById(id).queryKey,
+    queryKey: queryOptions.queryKey,
     queryFn: () => {
       return serverFetcher({
-        url: organizerAttendeesService.getAttendeeById(id).url
+        url: queryOptions.url
       });
     }
   });
 
-  const attendee = queryClient.getQueryData(
-    organizerAttendeesService.getAttendeeById(id).queryKey
-  );
+  const attendee = queryClient.getQueryData(queryOptions.queryKey);
 
   if (!attendee) {
     return notFound();
