@@ -2,10 +2,7 @@ import { EMPTY_ARRAY } from '@/app/core/shared/constants';
 import { useCustomQuery } from '@/app/core/shared/hooks';
 import { IPaginatedResponse } from '@/app/core/shared/types';
 import { extractPaginationMeta } from '@/app/core/shared/utils';
-import {
-  IOrderItem,
-  IOrderTimeline
-} from '@/app/module/exhibitor/orders/hooks';
+import { IOrderItem, IOrderTimeline } from '@/app/module/exhibitor/orders/api';
 import { getAttendeeOrdersQueryOptions } from './order-query-options';
 
 export interface IAttendeeOrder {

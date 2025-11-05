@@ -1,7 +1,3 @@
-import { EMPTY_ARRAY } from '@/app/core/shared/constants';
-import { useCustomQuery } from '@/app/core/shared/hooks';
-import { extractPaginationMeta } from '@/app/core/shared/utils';
-import { orderService } from '../services';
 import { IAttendee } from '@/app/module/organizer/attendees/hooks';
 
 export enum OrderStatus {
@@ -98,7 +94,7 @@ export interface IOrder {
   };
 }
 
-interface IPaginatedMeta {
+export interface IPaginatedMeta {
   total: number;
   page: number;
   limit: number | string;
@@ -108,47 +104,3 @@ interface IPaginatedMeta {
 export interface IPaginatedResponse<T> extends IPaginatedMeta {
   data: T[];
 }
-
-export const useOrders = (filter: Record<string, string> = {}) => {
-  const {
-    data,
-    isLoading: isLoadingOrders,
-    isRefetching: isRefetchingOrders,
-    refetch
-  } = useCustomQuery<IOrder>({
-    ...orderService.getOrders(filter)
-  });
-
-  return {
-    orders: data?.orders?.data ?? EMPTY_ARRAY,
-    orderStats: {
-      totalSales: data?.totalSales ?? {},
-      totalTransactions: data?.totalTransactions ?? 0,
-      totalCustomers: data?.totalCustomers ?? 0
-    },
-    isLoadingOrders,
-    isRefetchingOrders,
-    paginationMeta: extractPaginationMeta(data?.orders),
-    refetchOrders: refetch
-  };
-};
-
-export const useOrderById = (orderId: string) => {
-  const {
-    data,
-    isLoading: isLoadingOrder,
-    isRefetching: isRefetchingOrder,
-    refetch
-  } = useCustomQuery<IOrderItems>({
-    ...orderService.getById(orderId),
-    options: {
-      enabled: !!orderId
-    }
-  });
-  return {
-    order: data,
-    isLoadingOrder,
-    isRefetchingOrder,
-    refetchOrder: refetch
-  };
-};

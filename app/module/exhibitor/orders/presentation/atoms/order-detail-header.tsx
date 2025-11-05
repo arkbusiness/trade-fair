@@ -7,7 +7,7 @@ import { useMessageSlice } from '@/app/core/shared/slice';
 import { cn } from '@/app/core/shared/utils';
 import { MessageCircleMore } from 'lucide-react';
 import { useRouter } from 'nextjs-toploader/app';
-import { OrderStatus, useOrderById } from '../../hooks';
+import { OrderStatus, useOrderById } from '../../api';
 import { ORDER_STATUS_MAP } from '../organisms/orders-table';
 
 interface OrderDetailHeaderProps {

@@ -5,7 +5,6 @@ import {
   ConfirmationModal,
   OverlaySpinner
 } from '@/app/core/shared/components/molecules';
-import { useCustomMutation } from '@/app/core/shared/hooks/use-mutate';
 import { errorHandler } from '@/app/core/shared/utils';
 import { FileUp } from 'lucide-react';
 import { useState } from 'react';
@@ -14,9 +13,9 @@ import {
   IOrderTracking,
   OrderStatus,
   useOrderById,
-  useOrders
-} from '../../hooks';
-import { orderService } from '../../services';
+  useOrders,
+  useUpdateOrderStatus
+} from '../../api';
 import { OrderDeliveryForm } from '../organisms';
 
 interface OrderStatusControlProps {
@@ -39,12 +38,22 @@ export const OrderStatusControl = ({ orderId }: OrderStatusControlProps) => {
   const [selectedOrderTracking, setSelectedOrderTracking] =
     useState<IOrderTracking | null>(null);
   const [activeModal, setActiveModal] = useState<ModalType>(ModalType.NONE);
-  const mutation = useCustomMutation();
+
+  const { updateOrderStatus, isPending } = useUpdateOrderStatus({
+    onSuccess: () => {
+      toast.success('Order status updated successfully.');
+      handleCloseModal();
+    },
+    onError: (error) => {
+      const errorMessage = errorHandler(error);
+      toast.error(errorMessage);
+    }
+  });
 
   const status = order?.status || '';
 
   const handleCloseModal = () => {
-    if (mutation.isPending) return;
+    if (isPending) return;
     refetchOrder();
     refetchOrders();
     setSelectedOrderTracking(null);
@@ -82,15 +91,9 @@ export const OrderStatusControl = ({ orderId }: OrderStatusControlProps) => {
   >;
 
   const handleUpdateStatus = (status: OrderStatus) => {
-    mutation.mutate(orderService.updateStatus(orderId, status), {
-      onError(error) {
-        const errorMessage = errorHandler(error);
-        toast.error(errorMessage);
-      },
-      onSuccess() {
-        toast.success('Order status updated successfully.');
-        handleCloseModal();
-      }
+    updateOrderStatus({
+      orderId,
+      status
     });
   };
 
@@ -134,7 +137,7 @@ export const OrderStatusControl = ({ orderId }: OrderStatusControlProps) => {
         }
         onClose={handleCloseModal}
         onConfirm={handleConfirm}
-        isLoading={mutation.isPending}
+        isLoading={isPending}
       />
 
       <OrderDeliveryForm

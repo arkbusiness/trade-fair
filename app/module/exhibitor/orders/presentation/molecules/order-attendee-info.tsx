@@ -2,7 +2,7 @@
 
 import { LinkButton } from '@/app/core/shared/components/atoms';
 import { DownloadIcon } from 'lucide-react';
-import { useOrderById } from '../../hooks';
+import { useOrderById } from '../../api';
 
 interface OrderAttendeeInfoProps {
   orderId: string;

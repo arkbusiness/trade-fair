@@ -1,5 +1,5 @@
 import { useCustomQuery } from '@/app/core/shared/hooks';
-import { IOrderTracking } from '@/app/module/exhibitor/orders/hooks';
+import { IOrderTracking } from '@/app/module/exhibitor/orders/api';
 import { IAttendeeOrder } from './get-attendee-orders';
 import { getAttendeeOrderByIdQueryOptions } from './order-query-options';
 

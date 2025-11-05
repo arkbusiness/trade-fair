@@ -1,5 +1,5 @@
 import { cn } from '@/app/core/shared/utils';
-import { IOrderItems } from '../../hooks';
+import type { IOrderItems } from '../../api';
 import { OrderItem } from '../molecules';
 
 interface OrderItemsProps {

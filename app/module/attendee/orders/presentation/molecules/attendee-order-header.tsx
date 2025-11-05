@@ -4,7 +4,7 @@ import { Button, GoBackButton } from '@/app/core/shared/components/atoms';
 import { ATTENDEE_APP_ROUTES } from '@/app/core/shared/constants';
 import { useMessageSlice } from '@/app/core/shared/slice';
 import { cn } from '@/app/core/shared/utils';
-import { OrderStatus } from '@/app/module/exhibitor/orders/hooks';
+import { OrderStatus } from '@/app/module/exhibitor/orders/api';
 import { ORDER_STATUS_MAP } from '@/app/module/exhibitor/orders/presentation/organisms';
 import { FileUp, MessageCircleMore } from 'lucide-react';
 import { useRouter } from 'nextjs-toploader/app';

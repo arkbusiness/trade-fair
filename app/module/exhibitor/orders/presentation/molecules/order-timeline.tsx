@@ -3,7 +3,7 @@
 import { formatDate } from '@/app/core/shared/lib';
 import { cn } from '@/app/core/shared/utils';
 import { Banknote, Check, PackageOpen, Truck } from 'lucide-react';
-import { OrderTimelineEnum, useOrderById } from '../../hooks';
+import { OrderTimelineEnum, useOrderById } from '../../api';
 
 const TIMELINE_ITEMS = [
   {

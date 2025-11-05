@@ -12,7 +12,6 @@ import {
   LoadingButton,
   Modal
 } from '@/app/core/shared/components/molecules';
-import { useCustomMutation } from '@/app/core/shared/hooks/use-mutate';
 import { errorHandler } from '@/app/core/shared/utils';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useForm } from 'react-hook-form';
@@ -22,8 +21,7 @@ import {
   parsePhoneNumber
 } from 'react-phone-number-input';
 import * as yup from 'yup';
-import { IOrderTracking, OrderStatus } from '../../hooks';
-import { orderService } from '../../services';
+import { IOrderTracking, OrderStatus, useUpdateOrderTracking } from '../../api';
 
 interface OrderDeliveryFormProps {
   isOpen: boolean;
@@ -80,7 +78,16 @@ export const OrderDeliveryForm = ({
   orderId,
   onClose
 }: OrderDeliveryFormProps) => {
-  const mutation = useCustomMutation();
+  const { updateOrderTracking, isPending } = useUpdateOrderTracking({
+    onSuccess: () => {
+      toast.success('Delivery details updated successfully.');
+      handleCloseModal();
+    },
+    onError: (error) => {
+      const errorMessage = errorHandler(error);
+      toast.error(errorMessage);
+    }
+  });
 
   const form = useForm<OrderDeliveryFormType>({
     resolver: yupResolver(validationSchema),
@@ -105,7 +112,7 @@ export const OrderDeliveryForm = ({
   } = form;
 
   const handleCloseModal = () => {
-    if (mutation.isPending) return;
+    if (isPending) return;
     reset();
     onClose();
   };
@@ -113,22 +120,16 @@ export const OrderDeliveryForm = ({
   const onSubmit = (data: OrderDeliveryFormType) => {
     if (!orderId) return;
 
-    const formValues = {
+    const tracking = {
       ...data,
       note: data.note || '',
       status: data.status || OrderStatus.SHIPPED,
       phone: parsePhoneNumber(data.phone)?.number as string
     };
 
-    mutation.mutate(orderService.updateTracking(orderId, formValues), {
-      onError(error) {
-        const errorMessage = errorHandler(error);
-        toast.error(errorMessage);
-      },
-      onSuccess() {
-        toast.success('Delivery details updated successfully.');
-        handleCloseModal();
-      }
+    updateOrderTracking({
+      orderId,
+      tracking
     });
   };
 
@@ -158,7 +159,7 @@ export const OrderDeliveryForm = ({
       >
         <fieldset
           className="w-full px-4 flex flex-col gap-[1.86rem]"
-          disabled={mutation.isPending}
+          disabled={isPending}
         >
           <div className="grid lg:grid-cols-2 gap-[1.86rem]">
             {/* Courier Name */}
@@ -251,7 +252,7 @@ export const OrderDeliveryForm = ({
             className="gap-[0.5rem] flex items-center h-8"
             type="button"
             onClick={handleCloseModal}
-            disabled={mutation.isPending}
+            disabled={isPending}
           >
             <span>Cancel</span>
           </Button>
@@ -260,8 +261,8 @@ export const OrderDeliveryForm = ({
             variant="tertiary"
             className="gap-[0.5rem] flex items-center h-8"
             type="submit"
-            isLoading={mutation.isPending}
-            disabled={mutation.isPending}
+            isLoading={isPending}
+            disabled={isPending}
           >
             <span>Update</span>
           </LoadingButton>

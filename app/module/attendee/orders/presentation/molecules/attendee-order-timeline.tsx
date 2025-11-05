@@ -4,7 +4,7 @@ import { formatDate } from '@/app/core/shared/lib';
 import { cn } from '@/app/core/shared/utils';
 import { Banknote, Check, PackageOpen, Truck } from 'lucide-react';
 import { useAttendeeOrderById } from '../../api';
-import { OrderTimelineEnum } from '@/app/module/exhibitor/orders/hooks';
+import { OrderTimelineEnum } from '@/app/module/exhibitor/orders/api';
 
 const TIMELINE_ITEMS = [
   {

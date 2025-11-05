@@ -14,7 +14,7 @@ import {
 } from '@/app/core/shared/hooks';
 import { formatDate } from '@/app/core/shared/lib';
 import { cn, formatCurrency } from '@/app/core/shared/utils';
-import { OrderStatus } from '@/app/module/exhibitor/orders/hooks';
+import { OrderStatus } from '@/app/module/exhibitor/orders/api';
 import { ORDER_STATUS_MAP } from '@/app/module/exhibitor/orders/presentation/organisms';
 import { ColumnDef } from '@tanstack/react-table';
 import Image from 'next/image';

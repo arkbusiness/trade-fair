@@ -1,6 +1,6 @@
 import { getQueryClient, serverFetcher } from '@/app/core/shared/lib';
 import { notFound } from 'next/navigation';
-import { IOrderItem } from '@/app/module/exhibitor/orders/hooks';
+import { IOrderItem } from '@/app/module/exhibitor/orders/api';
 import { dehydrate, HydrationBoundary } from '@tanstack/react-query';
 import {
   AttendeeOrderBankInfo,
