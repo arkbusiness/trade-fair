@@ -22,7 +22,6 @@ import {
   useTable,
   useTablePagination
 } from '@/app/core/shared/hooks';
-import { useCustomMutation } from '@/app/core/shared/hooks/use-mutate';
 import { formatDate } from '@/app/core/shared/lib';
 import { errorHandler, formatCurrency } from '@/app/core/shared/utils';
 import { ColumnDef } from '@tanstack/react-table';
@@ -31,9 +30,9 @@ import Image from 'next/image';
 import { useRouter } from 'nextjs-toploader/app';
 import { useState } from 'react';
 import toast from 'react-hot-toast';
-import { Inventory, useInventory } from '../../hooks';
-import { inventoryService } from '../../services';
+import { useInventory, useDeleteProduct } from '../../api';
 import { InventoryTableFilter } from '../molecules';
+import { Inventory } from '../../api/types';
 
 enum ModalType {
   NONE = 'NONE',
@@ -50,7 +49,6 @@ const INVENTORY_FILTER_LABEL_MAP = {
 
 export const InventoryTable = () => {
   const router = useRouter();
-  const mutation = useCustomMutation();
   const { setFilterParams, filter, handleClearFilter } = useQueryFilters([
     'page',
     ...Object.keys(INVENTORY_FILTER_LABEL_MAP)
@@ -63,7 +61,6 @@ export const InventoryTable = () => {
     inventory,
     isLoadingInventory,
     isRefetchingInventory,
-    refetchInventory,
     paginationMeta
   } = useInventory(filter);
 
@@ -213,9 +210,19 @@ export const InventoryTable = () => {
     }
   ];
 
+  const { deleteProduct, isPending: isDeleting } = useDeleteProduct({
+    onSuccess: () => {
+      toast.success('Product deleted successfully.');
+      setActiveModal(ModalType.NONE);
+    },
+    onError: (error) => {
+      const errorMessage = errorHandler(error);
+      toast.error(errorMessage);
+    }
+  });
+
   const handleCloseModal = () => {
-    if (mutation.isPending) return;
-    refetchInventory();
+    if (isDeleting) return;
     setActiveModal(ModalType.NONE);
   };
 
@@ -227,17 +234,7 @@ export const InventoryTable = () => {
 
   const handleConfirmDelete = () => {
     if (!selectedInventory) return;
-
-    mutation.mutate(inventoryService.deleteInventory(selectedInventory?.id), {
-      onError(error) {
-        const errorMessage = errorHandler(error);
-        toast.error(errorMessage);
-      },
-      onSuccess() {
-        toast.success('Product deleted successfully.');
-        handleCloseModal();
-      }
-    });
+    deleteProduct({ id: selectedInventory.id });
   };
 
   const handleConfirm = () => {
@@ -283,7 +280,7 @@ export const InventoryTable = () => {
         isOpen={activeModal === ModalType.DELETE_INVENTORY}
         onClose={handleCloseModal}
         onConfirm={handleConfirm}
-        isLoading={mutation.isPending}
+        isLoading={isDeleting}
       />
 
       <div className="flex flex-col gap-y-4">

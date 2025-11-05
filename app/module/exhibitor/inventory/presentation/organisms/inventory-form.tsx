@@ -20,18 +20,17 @@ import {
 import { ProductCategorySelect } from '@/app/core/shared/components/organisms';
 import { EXHIBITOR_APP_ROUTES } from '@/app/core/shared/constants';
 import { useFileUploader } from '@/app/core/shared/hooks/use-file-uploader';
-import { useCustomMutation } from '@/app/core/shared/hooks/use-mutate';
 import { errorHandler } from '@/app/core/shared/utils';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { formatISO } from 'date-fns';
+import { PlusIcon, TrashIcon } from 'lucide-react';
+import Image from 'next/image';
 import { useRouter } from 'nextjs-toploader/app';
 import { useFieldArray, useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import * as yup from 'yup';
-import { Inventory, useInventory } from '../../hooks';
-import { inventoryService } from '../../services';
-import { PlusIcon, TrashIcon } from 'lucide-react';
-import Image from 'next/image';
+import { useCreateProduct, useUpdateProduct } from '../../api';
+import { Inventory } from '../../api/types';
 
 interface InventoryForm {
   isReadOnly?: boolean;
@@ -142,9 +141,29 @@ const validationSchema = (isEdit: boolean) =>
 type InventoryFormValues = yup.InferType<ReturnType<typeof validationSchema>>;
 
 export const InventoryForm = ({ isReadOnly, inventory }: InventoryForm) => {
-  const { refetchInventory } = useInventory({});
   const router = useRouter();
-  const mutation = useCustomMutation();
+
+  const { createProduct, isPending: isCreating } = useCreateProduct({
+    onSuccess: () => {
+      toast.success('Product added successfully');
+      router.push(EXHIBITOR_APP_ROUTES.inventory.root());
+    },
+    onError: (error) => {
+      const errorMessage = errorHandler(error);
+      toast.error(errorMessage);
+    }
+  });
+
+  const { updateProduct, isPending: isUpdating } = useUpdateProduct({
+    onSuccess: () => {
+      toast.success('Product updated successfully');
+      router.push(EXHIBITOR_APP_ROUTES.inventory.root());
+    },
+    onError: (error) => {
+      const errorMessage = errorHandler(error);
+      toast.error(errorMessage);
+    }
+  });
 
   const form = useForm<InventoryFormValues>({
     defaultValues: {
@@ -277,36 +296,14 @@ export const InventoryForm = ({ isReadOnly, inventory }: InventoryForm) => {
 
   const handleCreateProduct = (data: InventoryFormValues) => {
     const formData = buildFormData(data);
-
-    mutation.mutate(inventoryService.createInventory(formData), {
-      onError(error) {
-        const errorMessage = errorHandler(error);
-        toast.error(errorMessage);
-      },
-      onSuccess() {
-        toast.success('Product added successfully');
-        refetchInventory();
-        router.push(EXHIBITOR_APP_ROUTES.inventory.root());
-      }
-    });
+    createProduct(formData);
   };
 
   const handleUpdateProduct = (data: InventoryFormValues) => {
     if (!inventory?.id) return;
 
     const formData = buildFormData(data);
-
-    mutation.mutate(inventoryService.updateInventory(inventory.id, formData), {
-      onError(error) {
-        const errorMessage = errorHandler(error);
-        toast.error(errorMessage);
-      },
-      onSuccess() {
-        toast.success('Product updated successfully');
-        refetchInventory();
-        router.push(EXHIBITOR_APP_ROUTES.inventory.root());
-      }
-    });
+    updateProduct({ productId: inventory.id, data: formData });
   };
 
   const onSubmit = (data: InventoryFormValues) => {
@@ -350,11 +347,26 @@ export const InventoryForm = ({ isReadOnly, inventory }: InventoryForm) => {
 
   return (
     <>
-      {mutation.isPending && <OverlaySpinner />}
+      {(isCreating || isUpdating) && <OverlaySpinner />}
       <form onSubmit={handleSubmit(onSubmit)} className="w-full">
+        {isReadOnly ? (
+          <></>
+        ) : (
+          <div className="flex justify-end lg:mt-[3.38rem] mt-[3.38rem] mb-4">
+            <LoadingButton
+              type="submit"
+              variant="tertiary"
+              isLoading={isCreating || isUpdating}
+              disabled={isCreating || isUpdating}
+              className="h-8"
+            >
+              {inventory ? 'Update Product' : 'Add Product'}
+            </LoadingButton>
+          </div>
+        )}
         <fieldset
           className="grid lg:grid-cols-[1fr_32.43rem] gap-x-[0.90rem] gap-y-5 w-full"
-          disabled={mutation.isPending}
+          disabled={isCreating || isUpdating}
         >
           {/* Section 1 */}
           <div className="rounded-[8px] border border-input bg-background py-[2.19rem] px-6 flex flex-col gap-6">
@@ -733,21 +745,6 @@ export const InventoryForm = ({ isReadOnly, inventory }: InventoryForm) => {
             </div>
           </div>
         </fieldset>
-        {isReadOnly ? (
-          <></>
-        ) : (
-          <div className="flex justify-end lg:mt-[3.38rem] mt-[3.38rem]">
-            <LoadingButton
-              type="submit"
-              variant="tertiary"
-              isLoading={mutation.isPending}
-              disabled={mutation.isPending}
-              className="h-8"
-            >
-              {inventory ? 'Update Product' : 'Add Product'}
-            </LoadingButton>
-          </div>
-        )}
       </form>
     </>
   );

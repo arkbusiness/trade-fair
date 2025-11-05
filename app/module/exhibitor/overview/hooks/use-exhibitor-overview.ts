@@ -1,6 +1,6 @@
 import { useCustomQuery } from '@/app/core/shared/hooks';
 import { exhibitorOverviewService } from '../services';
-import { InventoryStatus } from '../../inventory/hooks';
+import { InventoryStatus } from '../../inventory/api/types';
 
 export interface IExhibitorLatestOrder {
   id: string;

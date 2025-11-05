@@ -1,12 +1,12 @@
 import { getQueryClient, serverFetcher } from '@/app/core/shared/lib';
-import { inventoryService } from '../../services';
-import { Inventory } from '../../hooks';
 import { notFound } from 'next/navigation';
 import { dehydrate, HydrationBoundary } from '@tanstack/react-query';
 import { DashboardToolbar } from '@/app/core/shared/components/molecules';
 import { InventoryForm } from '../organisms';
 import { GoBackButton } from '@/app/core/shared/components/atoms';
 import { EXHIBITOR_APP_ROUTES } from '@/app/core/shared/constants';
+import { getProductByIdQueryOptions } from '../../api/product-query-options';
+import type { Inventory } from '../../api/types';
 
 interface InventoryDetailsPageProps {
   id: string;
@@ -16,18 +16,19 @@ export const InventoryDetailsPage = async ({
   id
 }: InventoryDetailsPageProps) => {
   const queryClient = getQueryClient();
+  const queryOptions = getProductByIdQueryOptions(id);
 
   await queryClient.prefetchQuery({
-    queryKey: inventoryService.getById(id).queryKey,
+    queryKey: queryOptions.queryKey,
     queryFn: () => {
       return serverFetcher({
-        url: inventoryService.getById(id).url
+        url: queryOptions.url
       });
     }
   });
 
   const inventory = (await queryClient.getQueryData(
-    inventoryService.getById(id).queryKey
+    queryOptions.queryKey
   )) as Inventory;
 
   if (!inventory) {

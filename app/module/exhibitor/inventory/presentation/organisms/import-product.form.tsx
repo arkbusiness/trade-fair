@@ -12,11 +12,10 @@ import { CloudDownload } from 'lucide-react';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import * as yup from 'yup';
-import { useCustomMutation } from '../../../../../core/shared/hooks/use-mutate';
 import { ACCEPT_DOCUMENT } from '../../../../../core/shared/hooks/use-file-uploader';
 import toast from 'react-hot-toast';
 import { errorHandler } from '../../../../../core/shared/utils';
-import { inventoryService } from '@/app/module/exhibitor/inventory/services';
+import { useImportProductsCsv } from '../../api';
 
 const validationSchema = yup.object().shape({
   file: yup.mixed<File[]>().required('File is required')
@@ -25,17 +24,22 @@ const validationSchema = yup.object().shape({
 type ImportFormValues = yup.InferType<typeof validationSchema>;
 
 interface ImportFormProps {
-  onSuccess: () => void;
-
   sampleFileUrl: string;
 }
 
-export const ImportProductForm = ({
-  onSuccess,
-  sampleFileUrl
-}: ImportFormProps) => {
-  const mutation = useCustomMutation();
+export const ImportProductForm = ({ sampleFileUrl }: ImportFormProps) => {
   const [openModal, setOpenModal] = useState(false);
+
+  const { importProductsCsv, isPending } = useImportProductsCsv({
+    onSuccess: () => {
+      toast.success('File imported successfully');
+      handleCloseModal();
+    },
+    onError: (error) => {
+      const errorMessage = errorHandler(error);
+      toast.error(errorMessage);
+    }
+  });
   const {
     setValue,
     formState: { errors },
@@ -54,21 +58,7 @@ export const ImportProductForm = ({
   };
 
   const onSubmit = (values: ImportFormValues) => {
-    const updatedValues = {
-      ...values,
-      file: values.file[0]
-    };
-    mutation.mutate(inventoryService.csvImport(updatedValues), {
-      onSuccess: () => {
-        toast.success('File imported successfully');
-        handleCloseModal();
-        onSuccess();
-      },
-      onError: (error) => {
-        const errorMessage = errorHandler(error);
-        toast.error(errorMessage);
-      }
-    });
+    importProductsCsv({ file: values.file[0] });
   };
 
   const { file: fileError } = errors;
@@ -110,7 +100,7 @@ export const ImportProductForm = ({
         <form onSubmit={handleSubmit(onSubmit)} className="w-full p-4">
           <fieldset
             className="flex flex-col gap-[1.86rem] w-full text-left relative"
-            disabled={mutation.isPending}
+            disabled={isPending}
           >
             {/* Document */}
             <div className="full flex flex-col gap-[0.5rem]">
@@ -140,7 +130,7 @@ export const ImportProductForm = ({
             <LoadingButton
               variant="tertiary"
               type="submit"
-              isLoading={mutation.isPending}
+              isLoading={isPending}
               className="w-full"
             >
               Submit

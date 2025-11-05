@@ -1,7 +1,6 @@
 'use client';
 
-import { IProductCategory } from '@/app/module/exhibitor/categories/hooks';
-import { productCategoriesService } from '@/app/module/exhibitor/categories/services';
+import { IProductCategory } from '@/app/module/exhibitor/categories/api';
 import { useQueryClient } from '@tanstack/react-query';
 import { UseFormReturn } from 'react-hook-form';
 import { GroupBase, Props as SelectProps } from 'react-select';
@@ -56,8 +55,7 @@ export const ProductCategorySelect = ({
       queryKey,
       queryFn: async () =>
         clientFetcher({
-          url: productCategoriesService.getCategories({ search, limit: '50' })
-            .url,
+          url: `/exhibitor/product-categories?search=${search}&limit=50`,
           method: 'GET'
         })
     });
