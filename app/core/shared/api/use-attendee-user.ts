@@ -4,8 +4,8 @@ import {
 } from '@/app/module/auth/store';
 import { useQuery } from '@tanstack/react-query';
 import { AxiosError } from 'axios';
-import { DEFAULT_CURRENCY } from '../../constants';
-import { clientAxios } from '../../lib';
+import { DEFAULT_CURRENCY } from '../constants';
+import { clientAxios } from '../lib';
 
 export const attendeeUserQueryKeys = {
   profile: ['attendee-profile'] as const

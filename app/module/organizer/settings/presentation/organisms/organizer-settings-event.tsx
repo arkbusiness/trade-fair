@@ -11,8 +11,6 @@ import {
   OverlaySpinner
 } from '@/app/core/shared/components/molecules';
 import { useOrganizerUser } from '@/app/core/shared/hooks/api';
-import { useCustomMutation } from '@/app/core/shared/hooks/use-mutate';
-import { organizerUserService } from '@/app/core/shared/services';
 import { errorHandler } from '@/app/core/shared/utils';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { formatISO } from 'date-fns';
@@ -20,6 +18,7 @@ import { useRef } from 'react';
 import { useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import * as yup from 'yup';
+import { useUpdateEvent } from '../../api';
 
 const validationSchema = yup.object().shape({
   file: yup.mixed().nullable(),
@@ -48,7 +47,18 @@ type IEventFormValues = yup.InferType<typeof validationSchema>;
 export const OrganizerSettingsEvent = () => {
   const formRef = useRef<HTMLFormElement>(null);
   const { user, refetchUser } = useOrganizerUser();
-  const mutation = useCustomMutation();
+
+  const { updateEvent, isPending } = useUpdateEvent({
+    onSuccess: () => {
+      toast.success('Event info updated successfully');
+      refetchUser();
+    },
+    onError: (error) => {
+      const errorMessage = errorHandler(error);
+      toast.error(errorMessage);
+    }
+  });
+
   const form = useForm<IEventFormValues>({
     values: {
       eventName: user?.eventName ?? '',
@@ -83,36 +93,25 @@ export const OrganizerSettingsEvent = () => {
   } = errors;
 
   const onSubmit = (values: IEventFormValues) => {
-    const formValues = {
+    updateEvent({
       eventName: values.eventName,
       venueName: values.venueName,
       eventStartDate: formatISO(values.eventStartDate),
       eventEndDate: formatISO(values.eventEndDate),
-      file: values.file as File | null as never
-    };
-
-    mutation.mutate(organizerUserService.updateEvent(formValues), {
-      onError(error) {
-        const errorMessage = errorHandler(error);
-        toast.error(errorMessage);
-      },
-      onSuccess() {
-        toast.success('Event info updated successfully');
-        refetchUser();
-      }
+      file: values.file as File | null
     });
   };
 
   return (
     <>
-      {mutation.isPending && <OverlaySpinner />}
+      {isPending && <OverlaySpinner />}
       <div className="px-8">
         <div className="flex flex-col gap-1">
           <h3 className="text-lg font-semibold text-foreground">Event info</h3>
           <p className="text-sm font-light">Update your event info here</p>
         </div>
         <form ref={formRef} onSubmit={handleSubmit(onSubmit)} className="mt-5">
-          <fieldset className="w-full" disabled={mutation.isPending}>
+          <fieldset className="w-full" disabled={isPending}>
             <div className="h-[clamp(10rem,_30vw,_25rem)]">
               <p className="text-sm font-semibold mb-2">Event banner</p>
               <CoverImageUploader
@@ -212,8 +211,8 @@ export const OrganizerSettingsEvent = () => {
               type="submit"
               variant="tertiary"
               className="h-10 rounded-[8px]"
-              isLoading={mutation.isPending}
-              disabled={mutation.isPending}
+              isLoading={isPending}
+              disabled={isPending}
             >
               Save changes
             </LoadingButton>

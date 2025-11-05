@@ -1,26 +1,26 @@
+import {
+  IExhibitorAuthUser,
+  useExhibitorAuthStore
+} from '@/app/module/auth/store';
 import { useQuery } from '@tanstack/react-query';
 import { AxiosError } from 'axios';
-import { clientAxios } from '../../lib';
-import {
-  IOrganizerAuthUser,
-  useOrganizerAuthStore
-} from '@/app/module/auth/store';
-import { COUNTRY_DETAILS, DEFAULT_CURRENCY } from '../../constants';
+import { clientAxios } from '../lib';
+import { COUNTRY_DETAILS, DEFAULT_CURRENCY } from '../constants';
 
-const organizerUserQueryKeys = {
-  profile: ['organizer-profile'] as const
+export const exhibitorUserQueryKeys = {
+  profile: ['exhibitor-profile'] as const
 };
 
-export const useOrganizerUser = () => {
-  const { accessToken, handleLogOut } = useOrganizerAuthStore();
+export const useExhibitorUser = () => {
+  const { accessToken, handleLogOut } = useExhibitorAuthStore();
 
-  const fetchUser = async (): Promise<IOrganizerAuthUser | null> => {
+  const fetchUser = async (): Promise<IExhibitorAuthUser | null> => {
     try {
       const response = await clientAxios({
         method: 'get',
-        url: '/organizer/profile'
+        url: `/exhibitor`
       });
-      const responseData = response.data as IOrganizerAuthUser;
+      const responseData = response.data as IExhibitorAuthUser;
 
       return responseData;
     } catch (error: unknown) {
@@ -40,8 +40,8 @@ export const useOrganizerUser = () => {
     isLoading: isLoadingUser,
     refetch: refetchUser,
     ...queryMeta
-  } = useQuery<IOrganizerAuthUser | null>({
-    queryKey: organizerUserQueryKeys.profile,
+  } = useQuery<IExhibitorAuthUser | null>({
+    queryKey: exhibitorUserQueryKeys.profile,
     queryFn: () => fetchUser(),
     staleTime: Infinity,
     retry: 2,
@@ -57,8 +57,8 @@ export const useOrganizerUser = () => {
 
   return {
     user,
-    isLoadingUser,
     currency: getCurrency(user?.country || ''),
+    isLoadingUser,
     refetchUser,
     ...queryMeta
   };

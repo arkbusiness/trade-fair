@@ -1,7 +1,7 @@
-import { EMPTY_ARRAY } from '../../constants';
-import { IPaginatedResponse } from '../../types';
-import { buildQueryParams, extractPaginationMeta } from '../../utils';
-import { useCustomQuery } from '../use-custom-query';
+import { EMPTY_ARRAY } from '../constants';
+import { useCustomQuery } from '../hooks';
+import { IPaginatedResponse } from '../types';
+import { buildQueryParams, extractPaginationMeta } from '../utils';
 
 export interface IBoothCategory {
   id: string;
