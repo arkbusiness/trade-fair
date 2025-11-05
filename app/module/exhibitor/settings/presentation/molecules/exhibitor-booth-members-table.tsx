@@ -12,7 +12,6 @@ import {
   useTable,
   useTablePagination
 } from '@/app/core/shared/hooks';
-import { useCustomMutation } from '@/app/core/shared/hooks/use-mutate';
 import { distanceFormat, formatDate } from '@/app/core/shared/lib';
 import { errorHandler } from '@/app/core/shared/utils';
 import { ColumnDef } from '@tanstack/react-table';
@@ -21,9 +20,9 @@ import { useState } from 'react';
 import toast from 'react-hot-toast';
 import {
   IExhibitorBoothMembers,
-  useExhibitorBoothMembers
-} from '../../hooks/use-settings';
-import { exhibitorSettingsService } from '../../services';
+  useExhibitorBoothMembers,
+  useDeleteBoothMember
+} from '../../api';
 
 enum ModalType {
   DELETE_BOOTH_MEMBER = 'DELETE_BOOTH_MEMBER',
@@ -31,7 +30,17 @@ enum ModalType {
 }
 
 export const ExhibitorBoothMembersTable = () => {
-  const mutation = useCustomMutation();
+  const { deleteBoothMember, isPending } = useDeleteBoothMember({
+    onSuccess: () => {
+      toast.success('Booth member deleted successfully');
+      refetchBoothMembers();
+      handleCloseModal();
+    },
+    onError: (error) => {
+      const errorMessage = errorHandler(error);
+      toast.error(errorMessage);
+    }
+  });
   const [selectedMember, setSelectedMember] =
     useState<IExhibitorBoothMembers | null>(null);
   const [activeModal, setActiveModal] = useState<ModalType>(ModalType.NONE);
@@ -127,26 +136,15 @@ export const ExhibitorBoothMembersTable = () => {
   ];
 
   const handleCloseModal = () => {
+    if (isPending) return;
+    setSelectedMember(null);
     setActiveModal(ModalType.NONE);
     refetchBoothMembers();
   };
 
   const handleDeleteBoothMember = () => {
     if (!selectedMember?.id) return;
-
-    mutation.mutate(
-      exhibitorSettingsService.deleteBoothMember(selectedMember.id),
-      {
-        onError(error) {
-          const errorMessage = errorHandler(error);
-          toast.error(errorMessage);
-        },
-        onSuccess() {
-          toast.success('Booth member deleted successfully.');
-          handleCloseModal();
-        }
-      }
-    );
+    deleteBoothMember({ id: selectedMember.id });
   };
 
   const { table } = useTable({
@@ -170,7 +168,7 @@ export const ExhibitorBoothMembersTable = () => {
         onClose={handleCloseModal}
         title="Delete Booth Member"
         description="Are you sure you want to delete this booth member?"
-        isLoading={mutation.isPending}
+        isLoading={isPending}
         onConfirm={() => handleDeleteBoothMember()}
       />
       <div className="px-5 mt-12 flex-1">

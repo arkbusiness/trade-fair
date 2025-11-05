@@ -43,17 +43,3 @@ export const organizerUserService = {
     }
   })
 };
-
-export const exhibitorUserService = {
-  getUser: () => ({
-    url: `/exhibitor`,
-    queryKey: ['exhibitor-profile']
-  })
-};
-
-export const attendeeUserService = {
-  getUser: () => ({
-    url: `/attendee/me`,
-    queryKey: ['attendee-profile']
-  })
-};

@@ -5,14 +5,16 @@ import {
   ProfileImageUploader
 } from '@/app/core/shared/components/molecules';
 import { useExhibitorUser } from '@/app/core/shared/hooks/api/use-exhibitor-user';
-import { useCustomMutation } from '@/app/core/shared/hooks/use-mutate';
 import { errorHandler } from '@/app/core/shared/utils';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import * as yup from 'yup';
-import { useInvoiceTemplates } from '../../hooks/use-settings';
-import { exhibitorSettingsService } from '../../services';
+import {
+  useInvoiceTemplates,
+  useCreateInvoiceTemplate,
+  useUpdateInvoiceTemplate
+} from '../../api';
 
 const validationSchema = yup.object().shape({
   additionalInformation: yup.string()
@@ -22,14 +24,32 @@ type IExhibitorInvoiceInfoFormValues = yup.InferType<typeof validationSchema>;
 
 export const ExhibitorInvoiceInfoForm = () => {
   const { user } = useExhibitorUser();
-  const {
-    refetchInvoiceTemplates,
-    invoiceTemplates,
-    isLoadingInvoiceTemplates,
-    isRefetchingInvoiceTemplates
-  } = useInvoiceTemplates();
+  const { invoiceTemplates } = useInvoiceTemplates();
 
-  const mutation = useCustomMutation();
+  const { createInvoiceTemplate, isPending: isCreating } =
+    useCreateInvoiceTemplate({
+      onSuccess: () => {
+        toast.success('Invoice template created successfully');
+      },
+      onError: (error) => {
+        const errorMessage = errorHandler(error);
+        toast.error(errorMessage);
+      }
+    });
+
+  const { updateInvoiceTemplate, isPending: isUpdating } =
+    useUpdateInvoiceTemplate({
+      onSuccess: () => {
+        toast.success('Invoice template updated successfully');
+      },
+      onError: (error) => {
+        const errorMessage = errorHandler(error);
+        toast.error(errorMessage);
+      }
+    });
+
+  const isPending = isCreating || isUpdating;
+
   const {
     handleSubmit,
     register,
@@ -43,43 +63,17 @@ export const ExhibitorInvoiceInfoForm = () => {
   });
 
   const onCreateInvoiceTemplate = (data: IExhibitorInvoiceInfoFormValues) => {
-    mutation.mutate(
-      exhibitorSettingsService.createInvoiceTemplate({
-        additionalInformation: data.additionalInformation || ''
-      }),
-      {
-        onError(error) {
-          const errorMessage = errorHandler(error);
-          toast.error(errorMessage);
-        },
-        onSuccess() {
-          toast.success('Invoice template created successfully');
-          refetchInvoiceTemplates();
-        }
-      }
-    );
+    createInvoiceTemplate({
+      additionalInformation: data.additionalInformation || ''
+    });
   };
 
   const onUpdateInvoiceTemplate = (data: IExhibitorInvoiceInfoFormValues) => {
     if (!invoiceTemplates?.id) return;
-    mutation.mutate(
-      exhibitorSettingsService.updateInvoiceTemplate(
-        invoiceTemplates.id || '',
-        {
-          additionalInformation: data.additionalInformation || ''
-        }
-      ),
-      {
-        onError(error) {
-          const errorMessage = errorHandler(error);
-          toast.error(errorMessage);
-        },
-        onSuccess() {
-          toast.success('Invoice template updated successfully');
-          refetchInvoiceTemplates();
-        }
-      }
-    );
+    updateInvoiceTemplate({
+      id: invoiceTemplates.id,
+      additionalInformation: data.additionalInformation || ''
+    });
   };
 
   const onSubmit = (data: IExhibitorInvoiceInfoFormValues) => {
@@ -94,12 +88,7 @@ export const ExhibitorInvoiceInfoForm = () => {
     }
   };
 
-  console.log(invoiceTemplates);
-
-  const isLoading =
-    isLoadingInvoiceTemplates ||
-    isRefetchingInvoiceTemplates ||
-    mutation.isPending;
+  const isLoading = isPending;
 
   return (
     <>
@@ -129,7 +118,7 @@ export const ExhibitorInvoiceInfoForm = () => {
         </div>
         <fieldset
           className="w-full px-3 flex flex-col gap-6 mt-6"
-          disabled={mutation.isPending}
+          disabled={isPending}
         >
           {/* Logo */}
           <div className="flex flex-col gap-1 items-center py-6 border-t">

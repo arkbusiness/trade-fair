@@ -1,23 +1,24 @@
 import { useQuery } from '@tanstack/react-query';
 import { AxiosError } from 'axios';
 import { clientAxios } from '../../lib';
-import { organizerUserService } from '../../services';
 import {
   IOrganizerAuthUser,
   useOrganizerAuthStore
 } from '@/app/module/auth/store';
 import { COUNTRY_DETAILS, DEFAULT_CURRENCY } from '../../constants';
 
+const organizerUserQueryKeys = {
+  profile: ['organizer-profile'] as const
+};
+
 export const useOrganizerUser = () => {
   const { accessToken, handleLogOut } = useOrganizerAuthStore();
 
-  const fetchUser = async (
-    errorCallback?: () => void
-  ): Promise<IOrganizerAuthUser | null> => {
+  const fetchUser = async (): Promise<IOrganizerAuthUser | null> => {
     try {
       const response = await clientAxios({
         method: 'get',
-        url: organizerUserService.getUser().url
+        url: '/organizer/profile'
       });
       const responseData = response.data as IOrganizerAuthUser;
 
@@ -27,7 +28,7 @@ export const useOrganizerUser = () => {
         const status = error?.response?.status;
 
         if (status === 401 || status === 500) {
-          errorCallback?.();
+          handleLogOut();
         }
       }
       throw error;
@@ -40,11 +41,8 @@ export const useOrganizerUser = () => {
     refetch: refetchUser,
     ...queryMeta
   } = useQuery<IOrganizerAuthUser | null>({
-    queryKey: organizerUserService.getUser().queryKey,
-    queryFn: () =>
-      fetchUser(() => {
-        handleLogOut();
-      }),
+    queryKey: organizerUserQueryKeys.profile,
+    queryFn: () => fetchUser(),
     staleTime: Infinity,
     retry: 2,
     enabled: !!accessToken

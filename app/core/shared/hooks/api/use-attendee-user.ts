@@ -6,7 +6,10 @@ import { useQuery } from '@tanstack/react-query';
 import { AxiosError } from 'axios';
 import { DEFAULT_CURRENCY } from '../../constants';
 import { clientAxios } from '../../lib';
-import { attendeeUserService } from '../../services';
+
+export const attendeeUserQueryKeys = {
+  profile: ['attendee-profile'] as const
+};
 
 export const useAttendeeUser = () => {
   const { accessToken, handleLogOut } = useAttendeeAuthStore();
@@ -17,7 +20,7 @@ export const useAttendeeUser = () => {
     try {
       const response = await clientAxios({
         method: 'get',
-        url: attendeeUserService.getUser().url
+        url: `/attendee/me`
       });
       const responseData = response.data as IAttendeeAuthUser;
 
@@ -40,7 +43,7 @@ export const useAttendeeUser = () => {
     refetch: refetchUser,
     ...queryMeta
   } = useQuery<IAttendeeAuthUser | null>({
-    queryKey: attendeeUserService.getUser().queryKey,
+    queryKey: attendeeUserQueryKeys.profile,
     queryFn: () =>
       fetchUser(() => {
         handleLogOut();

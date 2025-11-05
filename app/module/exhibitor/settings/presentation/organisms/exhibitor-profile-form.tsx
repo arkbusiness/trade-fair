@@ -4,7 +4,6 @@ import {
   PhoneNumberInput
 } from '@/app/core/shared/components/molecules';
 import { useExhibitorUser } from '@/app/core/shared/hooks/api/use-exhibitor-user';
-import { useCustomMutation } from '@/app/core/shared/hooks/use-mutate';
 import { errorHandler } from '@/app/core/shared/utils';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useForm } from 'react-hook-form';
@@ -14,7 +13,7 @@ import {
   parsePhoneNumber
 } from 'react-phone-number-input';
 import * as yup from 'yup';
-import { exhibitorSettingsService } from '../../services';
+import { useUpdateProfile } from '../../api';
 
 const validationSchema = yup.object().shape({
   contactName: yup.string().trim(),
@@ -39,9 +38,17 @@ const validationSchema = yup.object().shape({
 type IExhibitorProfileFormValues = yup.InferType<typeof validationSchema>;
 
 export const ExhibitorProfileForm = () => {
-  const { user, refetchUser } = useExhibitorUser();
+  const { user } = useExhibitorUser();
 
-  const mutation = useCustomMutation();
+  const { updateProfile, isPending } = useUpdateProfile({
+    onSuccess: () => {
+      toast.success('Profile updated successfully');
+    },
+    onError: (error) => {
+      const errorMessage = errorHandler(error);
+      toast.error(errorMessage);
+    }
+  });
   const {
     setValue,
     handleSubmit,
@@ -57,22 +64,11 @@ export const ExhibitorProfileForm = () => {
   });
 
   const onSubmit = (data: IExhibitorProfileFormValues) => {
-    const formValues = {
+    updateProfile({
       contactName: data.contactName ?? '',
       contactPhone: data.contactPhone
         ? parsePhoneNumber(data.contactPhone)?.number
         : ''
-    };
-
-    mutation.mutate(exhibitorSettingsService.updateProfile(formValues), {
-      onError(error) {
-        const errorMessage = errorHandler(error);
-        toast.error(errorMessage);
-      },
-      onSuccess() {
-        toast.success('Profile updated successfully');
-        refetchUser();
-      }
     });
   };
 
@@ -93,8 +89,8 @@ export const ExhibitorProfileForm = () => {
             variant="tertiary"
             className="h-[35px]"
             type="submit"
-            isLoading={mutation.isPending}
-            disabled={mutation.isPending}
+            isLoading={isPending}
+            disabled={isPending}
           >
             Save changes
           </LoadingButton>
@@ -102,7 +98,7 @@ export const ExhibitorProfileForm = () => {
       </div>
       <fieldset
         className="w-full px-8 flex flex-col gap-6 mt-6"
-        disabled={mutation.isPending}
+        disabled={isPending}
       >
         {/* Full name */}
         <div className="grid md:grid-cols-[12.5rem_1fr] gap-x-8 w-full border-t  py-6">

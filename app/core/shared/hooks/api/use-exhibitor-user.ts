@@ -5,19 +5,20 @@ import {
 import { useQuery } from '@tanstack/react-query';
 import { AxiosError } from 'axios';
 import { clientAxios } from '../../lib';
-import { exhibitorUserService } from '../../services';
 import { COUNTRY_DETAILS, DEFAULT_CURRENCY } from '../../constants';
+
+export const exhibitorUserQueryKeys = {
+  profile: ['exhibitor-profile'] as const
+};
 
 export const useExhibitorUser = () => {
   const { accessToken, handleLogOut } = useExhibitorAuthStore();
 
-  const fetchUser = async (
-    errorCallback?: () => void
-  ): Promise<IExhibitorAuthUser | null> => {
+  const fetchUser = async (): Promise<IExhibitorAuthUser | null> => {
     try {
       const response = await clientAxios({
         method: 'get',
-        url: exhibitorUserService.getUser().url
+        url: `/exhibitor`
       });
       const responseData = response.data as IExhibitorAuthUser;
 
@@ -27,7 +28,7 @@ export const useExhibitorUser = () => {
         const status = error?.response?.status;
 
         if (status === 401 || status === 500) {
-          errorCallback?.();
+          handleLogOut();
         }
       }
       throw error;
@@ -40,11 +41,8 @@ export const useExhibitorUser = () => {
     refetch: refetchUser,
     ...queryMeta
   } = useQuery<IExhibitorAuthUser | null>({
-    queryKey: exhibitorUserService.getUser().queryKey,
-    queryFn: () =>
-      fetchUser(() => {
-        handleLogOut();
-      }),
+    queryKey: exhibitorUserQueryKeys.profile,
+    queryFn: () => fetchUser(),
     staleTime: Infinity,
     retry: 2,
     enabled: !!accessToken

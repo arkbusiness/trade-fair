@@ -1,7 +1,6 @@
 import { EMPTY_ARRAY } from '../../constants';
-import { boothCategoriesService } from '../../services';
 import { IPaginatedResponse } from '../../types';
-import { extractPaginationMeta } from '../../utils';
+import { buildQueryParams, extractPaginationMeta } from '../../utils';
 import { useCustomQuery } from '../use-custom-query';
 
 export interface IBoothCategory {
@@ -10,14 +9,27 @@ export interface IBoothCategory {
   organizerId: string;
 }
 
+const boothCategoriesQueryKeys = {
+  base: ['booth-categories'] as const,
+  all: (queryParams: string) =>
+    [...boothCategoriesQueryKeys.base, queryParams] as const,
+  byId: (id: string) =>
+    [...boothCategoriesQueryKeys.base, 'details', id] as const
+};
+
 export const useBoothCategories = (filter: Record<string, string> = {}) => {
+  const queryParams = buildQueryParams({
+    params: filter
+  });
+
   const {
     data: categories,
     isLoading: isLoadingCategories,
     isRefetching: isRefetchingCategories,
     refetch
   } = useCustomQuery<IPaginatedResponse<IBoothCategory>>({
-    ...boothCategoriesService.getAll(filter),
+    url: `/organizer/category${queryParams ? `?${queryParams}` : ''}`,
+    queryKey: boothCategoriesQueryKeys.all(queryParams),
     options: {
       staleTime: Infinity
     }
@@ -42,7 +54,8 @@ export const useBoothCategoryById = (id: string) => {
     isRefetching: isRefetchingCategory,
     refetch
   } = useCustomQuery<IBoothCategory>({
-    ...boothCategoriesService.getById(id),
+    url: `/organizer/category/${id}`,
+    queryKey: boothCategoriesQueryKeys.byId(id),
     options: {
       staleTime: Infinity
     }
