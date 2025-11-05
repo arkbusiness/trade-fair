@@ -1,7 +1,7 @@
 'use client';
 
 import { BoxIcon, Calendar, NotebookPen } from 'lucide-react';
-import { useExhibitorOverview } from '../../hooks';
+import { useExhibitorOverview } from '../../api';
 import { StatCard, StatCardSkeleton } from '../atoms';
 
 export const ExhibitorOverviewStat = () => {

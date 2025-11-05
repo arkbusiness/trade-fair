@@ -7,7 +7,7 @@ import {
   Spinner
 } from '@/app/core/shared/components/atoms';
 import { Bar, BarChart, XAxis, YAxis } from 'recharts';
-import { useExhibitorOverview } from '../../hooks';
+import { useExhibitorOverview } from '../../api';
 import { formatCurrency } from '@/app/core/shared/utils';
 import { useExhibitorUser } from '@/app/core/shared/hooks/api/use-exhibitor-user';
 

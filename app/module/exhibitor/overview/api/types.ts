@@ -1,5 +1,3 @@
-import { useCustomQuery } from '@/app/core/shared/hooks';
-import { exhibitorOverviewService } from '../services';
 import { InventoryStatus } from '../../inventory/api/types';
 
 export interface IExhibitorLatestOrder {
@@ -58,23 +56,3 @@ export interface IExhibitorMetrics {
     message: string;
   };
 }
-
-export const useExhibitorOverview = (filter: Record<string, string> = {}) => {
-  const {
-    data: overviewStats,
-    isLoading: isLoadingOverviewStats,
-    isRefetching: isRefetchingOverviewStats,
-    refetch
-  } = useCustomQuery<IExhibitorMetrics>({
-    ...exhibitorOverviewService.getMetrics(filter),
-    options: {
-      staleTime: Infinity
-    }
-  });
-  return {
-    overviewStats,
-    isLoadingOverviewStats,
-    isRefetchingOverviewStats,
-    refetchOverviewStats: refetch
-  };
-};

@@ -2,6 +2,7 @@ import { useCustomMutation } from '@/app/core/shared/hooks/use-mutate';
 import { ApiCallbacks } from '@/app/core/shared/types';
 import { useQueryClient } from '@tanstack/react-query';
 import { appointmentSlotsQueryKeys, SlotStatus } from './get-appointment-slots';
+import { appointmentStatsQueryKeys } from './get-appointment-stats';
 
 export type CompleteAppointmentSlotPayload = {
   slotId: string;
@@ -32,6 +33,9 @@ export const useCompleteAppointmentSlot = ({
           onSuccess: (data) => {
             queryClient.invalidateQueries({
               queryKey: [appointmentSlotsQueryKeys.base]
+            });
+            queryClient.invalidateQueries({
+              queryKey: [appointmentStatsQueryKeys.base]
             });
             onSuccess(data);
           },

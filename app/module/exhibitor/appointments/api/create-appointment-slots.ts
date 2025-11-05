@@ -3,6 +3,7 @@ import { ApiCallbacks } from '@/app/core/shared/types';
 import { useQueryClient } from '@tanstack/react-query';
 import { appointmentSlotsQueryKeys } from './get-appointment-slots';
 import { appointmentStatsQueryKeys } from './get-appointment-stats';
+import { exhibitorOverviewQueryKeys } from '../../overview/api/overview-query-options';
 
 export type AppointmentSlotInput = {
   startTime: string;
@@ -44,6 +45,9 @@ export const useCreateAppointmentSlots = ({
             });
             queryClient.invalidateQueries({
               queryKey: [appointmentStatsQueryKeys.base]
+            });
+            queryClient.invalidateQueries({
+              queryKey: [exhibitorOverviewQueryKeys.base]
             });
             onSuccess(data);
           },

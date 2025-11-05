@@ -2,6 +2,7 @@ import { useCustomMutation } from '@/app/core/shared/hooks/use-mutate';
 import { ApiCallbacks } from '@/app/core/shared/types';
 import { useQueryClient } from '@tanstack/react-query';
 import { productQueryKeys } from './product-query-options';
+import { exhibitorOverviewQueryKeys } from '../../overview/api/overview-query-options';
 
 export type CreateProductPayload = FormData;
 
@@ -35,6 +36,9 @@ export const useCreateProduct = ({
           onSuccess: (data) => {
             queryClient.invalidateQueries({
               queryKey: [productQueryKeys.base]
+            });
+            queryClient.invalidateQueries({
+              queryKey: [exhibitorOverviewQueryKeys.base]
             });
             onSuccess(data);
           },
