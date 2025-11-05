@@ -12,6 +12,10 @@ export interface IBooth {
   assignedAt?: string;
   categoryName: string;
   categoryId: string;
+  category: {
+    id: string;
+    name: string;
+  };
   organizerId: string;
   logoUrl?: string | null;
   exhibitorName?: string | null;

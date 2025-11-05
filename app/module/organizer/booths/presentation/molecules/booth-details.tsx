@@ -107,7 +107,7 @@ export const BoothDetails = ({
 
                 <LabelValueCard
                   label="Booth Category"
-                  value={booth?.categoryName ?? 'N/A'}
+                  value={booth?.category?.name ?? 'N/A'}
                 />
               </div>
             </div>
