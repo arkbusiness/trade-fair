@@ -6,7 +6,7 @@ import {
 } from '@/app/core/shared/components/molecules';
 import { formatDate } from '@/app/core/shared/lib';
 import { Calendar, CreditCard } from 'lucide-react';
-import { useOrganizerExhibitorById } from '../../hooks';
+import { useOrganizerExhibitorById } from '../../api';
 
 export const ExhibitorRegistrationDetails = ({ id }: { id: string }) => {
   const { exhibitor } = useOrganizerExhibitorById(id);

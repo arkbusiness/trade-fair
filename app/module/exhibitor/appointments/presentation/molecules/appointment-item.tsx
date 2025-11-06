@@ -2,7 +2,7 @@
 
 import { Button } from '@/app/core/shared/components/atoms';
 import { User } from 'lucide-react';
-import { IAppointmentSlot, SlotStatus } from '../../hooks';
+import { IAppointmentSlot, SlotStatus } from '../../api';
 import { AppointmentStatusBadge } from './appointment-status-badge';
 import { AppointmentTimeInfo } from './appointment-time-info';
 
@@ -40,7 +40,7 @@ export const AppointmentItem = ({
       attendee: attendee?.contactName ?? 'Unknown'
     },
     [SlotStatus.AVAILABLE]: {
-      title: `Slot-#${appointment?.id?.slice(0, 5)}`,
+      title: `Slot-#${appointment?.id?.slice(-5)}`,
       image: <User size={15} />,
       attendee: 'Not Booked'
     }

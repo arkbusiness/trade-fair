@@ -7,7 +7,7 @@ import {
   Skeleton
 } from '@/app/core/shared/components/atoms';
 import { Calendar, Check, Clock6, Users, X } from 'lucide-react';
-import { useAppointmentsStats } from '../../hooks';
+import { useAppointmentsStats } from '../../api';
 
 export const AppointmentsStat = () => {
   const { appointmentsStats, isLoadingAppointmentsStats } =

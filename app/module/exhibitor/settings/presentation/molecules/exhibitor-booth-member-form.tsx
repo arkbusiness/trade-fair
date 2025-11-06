@@ -1,18 +1,18 @@
 'use client';
 
-import { Button, ErrorText, Input } from '@/app/core/shared/components/atoms';
+import { ErrorText, Input } from '@/app/core/shared/components/atoms';
+import { Button } from '@/app/core/shared/components/atoms/button';
 import {
   LoadingButton,
   Modal,
   PasswordInput
 } from '@/app/core/shared/components/molecules';
-import { useCustomMutation } from '@/app/core/shared/hooks/use-mutate';
 import { errorHandler } from '@/app/core/shared/utils';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import * as yup from 'yup';
-import { exhibitorSettingsService } from '../../services';
+import { useAddBoothMember } from '../../api';
 
 interface ExhibitorBoothMemberFormProps {
   isOpen: boolean;
@@ -34,7 +34,17 @@ export const ExhibitorBoothMemberForm = ({
   isOpen,
   onClose
 }: ExhibitorBoothMemberFormProps) => {
-  const mutation = useCustomMutation();
+  const { addBoothMember, isPending } = useAddBoothMember({
+    onSuccess: () => {
+      toast.success('Booth member added successfully');
+      form.reset();
+      onClose();
+    },
+    onError: (error) => {
+      const errorMessage = errorHandler(error);
+      toast.error(errorMessage);
+    }
+  });
   const form = useForm<ExhibitorBoothMemberFormValues>({
     defaultValues: {
       email: '',
@@ -50,26 +60,15 @@ export const ExhibitorBoothMemberForm = ({
   } = form;
 
   const handleCloseModal = () => {
-    if (mutation.isPending) return;
+    if (isPending) return;
     form.reset();
     onClose();
   };
 
   const onSubmit = (values: ExhibitorBoothMemberFormValues) => {
-    const formValues = {
+    addBoothMember({
       email: values.email,
       password: values.password
-    };
-    mutation.mutate(exhibitorSettingsService.addBoothMember(formValues), {
-      onError(error) {
-        const errorMessage = errorHandler(error);
-        toast.error(errorMessage);
-      },
-      onSuccess() {
-        toast.success('Booth member added successfully');
-        form.reset();
-        handleCloseModal();
-      }
     });
   };
 
@@ -102,7 +101,7 @@ export const ExhibitorBoothMemberForm = ({
             <Input
               label="Email"
               hasError={!!emailError?.message?.length}
-              disabled={mutation.isPending}
+              disabled={isPending}
               {...form.register('email')}
             />
             <ErrorText message={emailError?.message} />
@@ -113,7 +112,7 @@ export const ExhibitorBoothMemberForm = ({
             <PasswordInput
               label="Password"
               hasError={!!passwordError?.message?.length}
-              disabled={mutation.isPending}
+              disabled={isPending}
               {...form.register('password')}
             />
             <ErrorText message={passwordError?.message} />
@@ -124,7 +123,7 @@ export const ExhibitorBoothMemberForm = ({
             <PasswordInput
               label="Confirm Password"
               hasError={!!confirmPasswordError?.message?.length}
-              disabled={mutation.isPending}
+              disabled={isPending}
               {...form.register('confirmPassword')}
             />
             <ErrorText message={confirmPasswordError?.message} />
@@ -137,7 +136,7 @@ export const ExhibitorBoothMemberForm = ({
             className="gap-[0.5rem] flex items-center h-8"
             type="button"
             onClick={handleCloseModal}
-            disabled={mutation.isPending}
+            disabled={isPending}
           >
             <span>Cancel</span>
           </Button>
@@ -146,8 +145,8 @@ export const ExhibitorBoothMemberForm = ({
             variant="tertiary"
             className="gap-[0.5rem] flex items-center h-8"
             type="submit"
-            isLoading={mutation.isPending}
-            disabled={mutation.isPending}
+            isLoading={isPending}
+            disabled={isPending}
           >
             <span>Save changes</span>
           </LoadingButton>

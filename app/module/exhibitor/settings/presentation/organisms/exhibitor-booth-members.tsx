@@ -6,8 +6,6 @@ import {
   ExhibitorBoothMemberForm,
   ExhibitorBoothMembersTable
 } from '../molecules';
-import { useExhibitorBoothMembers } from '../../hooks/use-settings';
-import { useQueryFilters } from '@/app/core/shared/hooks';
 
 enum ModalType {
   ADD_BOOTH_MEMBER = 'ADD_BOOTH_MEMBER',
@@ -15,13 +13,10 @@ enum ModalType {
 }
 
 export const ExhibitorBoothMembers = () => {
-  const { filter } = useQueryFilters(['page']);
-  const { refetchBoothMembers } = useExhibitorBoothMembers(filter);
   const [modalType, setModalType] = useState<ModalType>(ModalType.NONE);
 
   const handleCloseModal = () => {
     setModalType(ModalType.NONE);
-    refetchBoothMembers();
   };
 
   return (

@@ -3,7 +3,7 @@
 import { Text } from '@/app/core/shared/components/atoms';
 import { DataTable } from '@/app/core/shared/components/molecules';
 import { useTable, useTablePagination } from '@/app/core/shared/hooks';
-import { IOrderItem } from '@/app/module/exhibitor/orders/hooks';
+import { IOrderItem } from '@/app/module/exhibitor/orders/api';
 import { ColumnDef } from '@tanstack/react-table';
 import { useAttendeeOrderById } from '../../api';
 import { formatCurrency } from '@/app/core/shared/utils';

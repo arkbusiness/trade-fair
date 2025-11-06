@@ -6,15 +6,17 @@ import {
   ErrorText
 } from '@/app/core/shared/components/atoms';
 import { LoadingButton, Modal } from '@/app/core/shared/components/molecules';
-import { useCustomMutation } from '@/app/core/shared/hooks/use-mutate';
 import { errorHandler } from '@/app/core/shared/utils';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { formatISO } from 'date-fns';
 import { useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import * as yup from 'yup';
-import { IAppointmentSlot, useAppointmentEvent } from '../../hooks';
-import { appointmentsService } from '../../services/appointments.service';
+import {
+  IAppointmentSlot,
+  useAppointmentEvent,
+  useUpdateAppointmentSlot
+} from '../../api';
 
 interface AppointmentSlotFormProps {
   isOpen: boolean;
@@ -51,7 +53,17 @@ export const AppointmentUpdateSlotForm = ({
   const { eventStartDate, eventEndDate, isLoadingAppointmentEvent } =
     useAppointmentEvent();
 
-  const mutation = useCustomMutation();
+  const { updateAppointmentSlot, isPending } = useUpdateAppointmentSlot({
+    onSuccess: () => {
+      toast.success('Time slot updated successfully');
+      form.reset();
+      handleCloseModal();
+    },
+    onError: (error) => {
+      const errorMessage = errorHandler(error);
+      toast.error(errorMessage);
+    }
+  });
   const form = useForm<AppointmentSlotFormValues>({
     values: {
       startDate: appointment?.startTime
@@ -73,30 +85,17 @@ export const AppointmentUpdateSlotForm = ({
   } = form;
 
   const handleCloseModal = () => {
-    if (mutation.isPending) return;
+    if (isPending) return;
     onClose();
   };
 
   const onSubmit = (values: AppointmentSlotFormValues) => {
     if (!appointment?.id) return;
-    const formValues = {
+    updateAppointmentSlot({
+      slotId: appointment.id,
       startTime: formatISO(values.startDate),
       endTime: formatISO(values.endDate)
-    };
-    mutation.mutate(
-      appointmentsService.updateSlot(appointment?.id, formValues),
-      {
-        onError(error) {
-          const errorMessage = errorHandler(error);
-          toast.error(errorMessage);
-        },
-        onSuccess() {
-          toast.success('Time slot updated successfully');
-          form.reset();
-          handleCloseModal();
-        }
-      }
-    );
+    });
   };
 
   const { startDate: startDateError, endDate: endDateError } = errors ?? {};
@@ -133,7 +132,7 @@ export const AppointmentUpdateSlotForm = ({
                 showTimeSelect
                 timeIntervals={5}
                 inputClassName="text-xs!"
-                isDisabled={mutation.isPending || isLoadingAppointmentEvent}
+                isDisabled={isPending || isLoadingAppointmentEvent}
                 min={eventStartDate}
                 handleChange={({ value }) => {
                   setValue('startDate', value as Date, {
@@ -157,7 +156,7 @@ export const AppointmentUpdateSlotForm = ({
                 timeIntervals={5}
                 inputClassName="text-xs!"
                 max={eventEndDate}
-                isDisabled={mutation.isPending || isLoadingAppointmentEvent}
+                isDisabled={isPending || isLoadingAppointmentEvent}
                 handleChange={({ value }) => {
                   setValue('endDate', value as Date, {
                     shouldValidate: true,
@@ -177,7 +176,7 @@ export const AppointmentUpdateSlotForm = ({
             className="gap-[0.5rem] flex items-center h-8"
             type="button"
             onClick={handleCloseModal}
-            disabled={mutation.isPending || isLoadingAppointmentEvent}
+            disabled={isPending || isLoadingAppointmentEvent}
           >
             <span>Cancel</span>
           </Button>
@@ -186,8 +185,8 @@ export const AppointmentUpdateSlotForm = ({
             variant="tertiary"
             className="gap-[0.5rem] flex items-center h-8"
             type="submit"
-            isLoading={mutation.isPending}
-            disabled={mutation.isPending || isLoadingAppointmentEvent}
+            isLoading={isPending}
+            disabled={isPending || isLoadingAppointmentEvent}
           >
             <span>Save changes</span>
           </LoadingButton>

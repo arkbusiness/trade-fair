@@ -12,7 +12,7 @@ import {
   User,
   Users
 } from 'lucide-react';
-import { useOrganizerOverview } from '../../hooks';
+import { useOrganizerOverview } from '../../api';
 
 export const OrganizerOverviewStat = () => {
   const { overviewStats, isLoadingOverviewStats, isRefetchingOverviewStats } =

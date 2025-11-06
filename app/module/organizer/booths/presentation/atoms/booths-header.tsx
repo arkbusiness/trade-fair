@@ -6,7 +6,7 @@ import { ExportButton } from '@/app/core/shared/components/organisms/export-butt
 import { getQueryClient } from '@/app/core/shared/lib';
 import { Plus } from 'lucide-react';
 import { useState } from 'react';
-import { boothsService } from '../../services';
+import { boothsQueryKeys } from '../../api/booths-query-options';
 import { BoothForm } from '../molecules';
 import { ImportBoothForm } from '../organisms';
 
@@ -21,7 +21,7 @@ export const BoothsHeader = () => {
 
   const closeModal = () => {
     queryClient.invalidateQueries({
-      queryKey: [...boothsService.getBooths().queryKey]
+      queryKey: [boothsQueryKeys.base]
     });
     setActiveModal(ModalType.NONE);
   };

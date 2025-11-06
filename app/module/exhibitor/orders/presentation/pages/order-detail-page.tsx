@@ -1,8 +1,8 @@
 import { getQueryClient, serverFetcher } from '@/app/core/shared/lib';
 import { dehydrate, HydrationBoundary } from '@tanstack/react-query';
 import { notFound } from 'next/navigation';
-import { IOrderItems } from '../../hooks';
-import { orderService } from '../../services';
+import { getOrderByIdQueryOptions } from '../../api/order-query-options';
+import type { IOrderItems } from '../../api';
 import { OrderDetailHeader } from '../atoms';
 import { OrderItems } from '../organisms';
 import {
@@ -19,17 +19,19 @@ interface OrderDetailsPageProps {
 export const OrderDetailsPage = async ({ id }: OrderDetailsPageProps) => {
   const queryClient = getQueryClient();
 
+  const queryOptions = getOrderByIdQueryOptions(id);
+
   await queryClient.prefetchQuery({
-    queryKey: orderService.getById(id).queryKey,
+    queryKey: queryOptions.queryKey,
     queryFn: () => {
       return serverFetcher({
-        url: orderService.getById(id).url
+        url: queryOptions.url
       });
     }
   });
 
   const order = (await queryClient.getQueryData(
-    orderService.getById(id).queryKey
+    queryOptions.queryKey
   )) as IOrderItems;
 
   if (!order) {

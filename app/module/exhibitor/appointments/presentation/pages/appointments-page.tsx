@@ -1,11 +1,9 @@
 'use client';
 
-import { useAppointmentEvent } from '../../hooks';
 import { AppointmentsStat } from '../molecules';
-import { AppointmentsHeader, AppointmentItems } from '../organisms';
+import { AppointmentItems, AppointmentsHeader } from '../organisms';
 
 export const AppointmentsPage = () => {
-  useAppointmentEvent();
   return (
     <div className="flex flex-col gap-7 mt-7">
       <AppointmentsHeader />

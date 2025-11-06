@@ -11,7 +11,7 @@ import {
   getConvertedPrice
 } from '@/app/core/shared/utils';
 import { CurrencyConverter } from '@/app/core/shared/components/organisms';
-import { useAttendeeUser } from '@/app/core/shared/hooks/api';
+import { useAttendeeUser } from '@/app/core/shared/api';
 import { useCurrencyRateSlice } from '@/app/core/shared/slice/currency-rate-slice';
 import { ArrowLeftRight } from 'lucide-react';
 import { OrderSuccessModal } from './order-success-modal';

@@ -9,7 +9,8 @@ import { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 
 import { useRouter } from 'nextjs-toploader/app';
-import { Inventory } from '@/app/module/exhibitor/inventory/hooks';
+
+import { Inventory } from '@/app/module/exhibitor/inventory/api/types';
 import {
   useAddCatalogueToFavourite,
   useRemoveCatalogueToFavourite

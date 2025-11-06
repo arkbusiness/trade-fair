@@ -2,7 +2,7 @@
 import type * as React from 'react';
 import { Sidebar, SidebarContent, SidebarFooter } from '../atoms';
 import { OrganizerSidebarItems, SidebarUser } from '../molecules';
-import { useOrganizerUser } from '../../hooks/api';
+import { useOrganizerUser } from '../../api';
 import { useOrganizerAuthStore } from '@/app/module/auth/store';
 import { ORGANIZER_APP_ROUTES } from '../../constants';
 import { OrganizerSettingsPage } from '../../types';

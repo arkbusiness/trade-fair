@@ -3,7 +3,7 @@
 import { useAttendeeAuthStore } from '@/app/module/auth/store';
 import { usePathname } from 'next/navigation';
 import { ATTENDEE_APP_ROUTES } from '../../constants';
-import { useAttendeeUser } from '../../hooks/api';
+import { useAttendeeUser } from '../../api';
 import { AvatarMenu } from './avatar-menu';
 import { useSidebar } from '../atoms';
 import { AlignLeft } from 'lucide-react';

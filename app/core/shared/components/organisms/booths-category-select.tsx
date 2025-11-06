@@ -3,7 +3,7 @@
 import { useQueryClient } from '@tanstack/react-query';
 import { UseFormReturn } from 'react-hook-form';
 import { GroupBase, Props as SelectProps } from 'react-select';
-import { IBoothCategory } from '../../hooks/api';
+import { IBoothCategory } from '../../api';
 import { clientFetcher } from '../../lib';
 import { IPaginatedResponse } from '../../types';
 import { buildQueryParams } from '../../utils';

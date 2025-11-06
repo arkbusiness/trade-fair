@@ -4,21 +4,13 @@ import { Card, CardContent, Spinner } from '@/app/core/shared/components/atoms';
 import { ATTENDEE_APP_ROUTES } from '@/app/core/shared/constants';
 import { ChevronRight } from 'lucide-react';
 import Link from 'next/link';
-import { AttendeeExhibitorCard } from '../../../exhibitors/presentation/molecules';
 import { useAttendeeExhibitors } from '../../../exhibitors/api';
-import { useAttendeeOverview } from '../../hooks';
+import { AttendeeExhibitorCard } from '../../../exhibitors/presentation/molecules';
 
 export const AttendeeOverviewExhibitors = () => {
-  const { refetchOverviewStats } = useAttendeeOverview();
-  const { exhibitors, isLoadingExhibitor, refetchExhibitor } =
-    useAttendeeExhibitors({
-      limit: '4'
-    });
-
-  const handleRefetch = () => {
-    refetchExhibitor();
-    refetchOverviewStats();
-  };
+  const { exhibitors, isLoadingExhibitor } = useAttendeeExhibitors({
+    limit: '4'
+  });
 
   const isLoading = isLoadingExhibitor;
 
@@ -46,8 +38,8 @@ export const AttendeeOverviewExhibitors = () => {
                 companyName={exhibitor.companyName}
                 boothNumber={exhibitor.boothNumber}
                 description={exhibitor.publicDescription}
+                showFavouriteButton={false}
                 isLiked={isLiked}
-                handleRefetchExhibitors={handleRefetch}
               />
             );
           })}

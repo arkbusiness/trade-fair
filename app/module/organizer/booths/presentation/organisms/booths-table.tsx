@@ -26,10 +26,13 @@ import { ColumnDef } from '@tanstack/react-table';
 import { CirclePlus, MoreHorizontal } from 'lucide-react';
 import Image from 'next/image';
 import { useState } from 'react';
-import { IBooth, useBooths } from '../../hooks';
+import {
+  IBooth,
+  useBooths,
+  useDeleteBooth,
+  useUnassignExhibitor
+} from '../../api';
 import { AssignExhibitorForm, BoothDetails, BoothForm } from '../molecules';
-import { useCustomMutation } from '@/app/core/shared/hooks/use-mutate';
-import { boothsService } from '../../services';
 import toast from 'react-hot-toast';
 
 enum ModalType {
@@ -58,21 +61,39 @@ const TABLE_TABS = [
 ];
 
 export const BoothsTable = () => {
-  const mutation = useCustomMutation();
   const { setFilterParams, filter } = useQueryFilters([
     'filter',
     'search',
     'page'
   ]);
 
+  const { deleteBooth, isPending: isDeleting } = useDeleteBooth({
+    onSuccess: () => {
+      toast.success('Booth deleted successfully.');
+      handleCloseModal();
+    },
+    onError: (error) => {
+      const errorMessage = errorHandler(error);
+      toast.error(errorMessage);
+    }
+  });
+
+  const { unassignExhibitor, isPending: isUnassigning } = useUnassignExhibitor({
+    onSuccess: () => {
+      toast.success('Booth unassigned successfully.');
+      handleCloseModal();
+    },
+    onError: (error) => {
+      const errorMessage = errorHandler(error);
+      toast.error(errorMessage);
+    }
+  });
+
+  const isPending = isDeleting || isUnassigning;
+
   const [selectedBooth, setSelectedBooth] = useState<IBooth | null>(null);
-  const {
-    booths,
-    isLoadingBooths,
-    isRefetchingBooths,
-    refetchBooths,
-    paginationMeta
-  } = useBooths(filter);
+  const { booths, isLoadingBooths, isRefetchingBooths, paginationMeta } =
+    useBooths(filter);
 
   const [activeModal, setActiveModal] = useState<ModalType>(ModalType.NONE);
 
@@ -132,6 +153,7 @@ export const BoothsTable = () => {
                   className="flex gap-1 text-light-blue-2 font-medium text-xs items-center cursor-pointer"
                   onClick={() => {
                     setActiveModal(ModalType.ASSIGN_EXHIBITOR);
+                    setSelectedBooth(row.original);
                   }}
                 >
                   <CirclePlus className="stroke-light-blue-2" size={18} />
@@ -300,8 +322,7 @@ export const BoothsTable = () => {
   ];
 
   const handleCloseModal = () => {
-    if (mutation.isPending) return;
-    refetchBooths();
+    if (isPending) return;
     setActiveModal(ModalType.NONE);
   };
 
@@ -330,32 +351,12 @@ export const BoothsTable = () => {
 
   const handleConfirmDelete = () => {
     if (!selectedBooth) return;
-
-    mutation.mutate(boothsService.deleteBooth(selectedBooth?.id), {
-      onError(error) {
-        const errorMessage = errorHandler(error);
-        toast.error(errorMessage);
-      },
-      onSuccess() {
-        toast.success('Booth deleted successfully.');
-        handleCloseModal();
-      }
-    });
+    deleteBooth({ id: selectedBooth.id });
   };
 
   const handleConfirmUnassign = () => {
     if (!selectedBooth) return;
-
-    mutation.mutate(boothsService.unassignExhibitor(selectedBooth?.id), {
-      onError(error) {
-        const errorMessage = errorHandler(error);
-        toast.error(errorMessage);
-      },
-      onSuccess() {
-        toast.success('Booth unassigned successfully.');
-        handleCloseModal();
-      }
-    });
+    unassignExhibitor({ id: selectedBooth.id });
   };
 
   const handleConfirm = () => {
@@ -401,26 +402,26 @@ export const BoothsTable = () => {
     { title: string; description: string; onConfirm: () => void }
   >;
 
+  const isOpenBoothForm =
+    activeModal === ModalType.ADD_BOOTH || activeModal === ModalType.EDIT_BOOTH;
+
   return (
     <>
       <BoothForm
-        isOpen={
-          activeModal === ModalType.ADD_BOOTH ||
-          activeModal === ModalType.EDIT_BOOTH
-        }
+        isOpen={isOpenBoothForm && !!selectedBooth}
         onClose={handleCloseModal}
         selectedBooth={selectedBooth}
       />
 
       <BoothDetails
-        isOpen={activeModal === ModalType.VIEW_BOOTH}
+        isOpen={activeModal === ModalType.VIEW_BOOTH && !!selectedBooth}
         handleClose={handleCloseModal}
         handleEdit={handleEditBooth}
         selectedBoothId={selectedBooth?.id ?? ''}
       />
 
       <AssignExhibitorForm
-        isOpen={activeModal === ModalType.ASSIGN_EXHIBITOR}
+        isOpen={activeModal === ModalType.ASSIGN_EXHIBITOR && !!selectedBooth}
         onClose={handleCloseModal}
         selectedBooth={selectedBooth}
       />
@@ -434,7 +435,7 @@ export const BoothsTable = () => {
         }
         onClose={handleCloseModal}
         onConfirm={handleConfirm}
-        isLoading={mutation.isPending}
+        isLoading={isPending}
       />
 
       <div className="flex flex-col gap-y-4">

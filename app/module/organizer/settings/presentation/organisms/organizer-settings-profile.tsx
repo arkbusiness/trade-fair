@@ -15,10 +15,9 @@ import {
   PhoneNumberInput,
   ProfileImageUploader
 } from '@/app/core/shared/components/molecules';
-import { useCustomMutation } from '@/app/core/shared/hooks/use-mutate';
-import { useOrganizerUser } from '@/app/core/shared/hooks/api';
-import { organizerUserService } from '@/app/core/shared/services';
+import { useOrganizerUser } from '@/app/core/shared/api';
 import { errorHandler } from '@/app/core/shared/utils';
+import { useUpdateProfile } from '../../api';
 
 const validationSchema = yup.object().shape({
   contactName: yup.string().trim().required('Name is required'),
@@ -49,7 +48,18 @@ type FormValues = yup.InferType<typeof validationSchema>;
 
 export const OrganizerSettingsProfile = () => {
   const { user, refetchUser } = useOrganizerUser();
-  const mutation = useCustomMutation();
+
+  const { updateProfile, isPending } = useUpdateProfile({
+    onSuccess: () => {
+      toast.success('Profile updated successfully');
+      refetchUser();
+    },
+    onError: (error) => {
+      const errorMessage = errorHandler(error);
+      toast.error(errorMessage);
+    }
+  });
+
   const {
     handleSubmit,
     setValue,
@@ -82,22 +92,14 @@ export const OrganizerSettingsProfile = () => {
   } = errors;
 
   const onSubmit = (values: FormValues) => {
-    mutation.mutate(
-      organizerUserService.updateUser({
-        ...values,
-        file: values.file as File | null
-      }),
-      {
-        onError(error) {
-          const errorMessage = errorHandler(error);
-          toast.error(errorMessage);
-        },
-        onSuccess() {
-          toast.success('Profile updated successfully');
-          refetchUser();
-        }
-      }
-    );
+    updateProfile({
+      contactName: values.contactName,
+      contactPhone: values.contactPhone,
+      companyName: values.companyName,
+      country: values.country,
+      officialEmail: values.officialEmail,
+      file: values.file as File | null
+    });
   };
 
   return (
@@ -113,7 +115,7 @@ export const OrganizerSettingsProfile = () => {
           </p>
         </div>
         <form onSubmit={handleSubmit(onSubmit)} className="mt-5">
-          <fieldset className="w-full px-8" disabled={mutation.isPending}>
+          <fieldset className="w-full px-8" disabled={isPending}>
             <div className="flex items-center gap-4 mb-7 relative  flex-col">
               <div className="w-[clamp(100px,_30vw,_160px)] h-[clamp(100px,_30vw,_160px)] overflow-hidden">
                 <ProfileImageUploader
@@ -240,8 +242,8 @@ export const OrganizerSettingsProfile = () => {
               type="submit"
               variant="tertiary"
               className="h-10 rounded-[8px]"
-              isLoading={mutation.isPending}
-              disabled={mutation.isPending}
+              isLoading={isPending}
+              disabled={isPending}
             >
               Save changes
             </LoadingButton>

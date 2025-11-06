@@ -1,7 +1,7 @@
 'use client';
 
 import { ChatBubble, Spinner } from '@/app/core/shared/components/atoms';
-import { useAttendeeUser } from '@/app/core/shared/hooks/api';
+import { useAttendeeUser } from '@/app/core/shared/api';
 import { useMessageSlice } from '@/app/core/shared/slice';
 import { useEffect, useRef } from 'react';
 import { useInView } from 'react-intersection-observer';

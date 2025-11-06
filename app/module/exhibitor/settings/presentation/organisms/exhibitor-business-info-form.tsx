@@ -8,14 +8,13 @@ import {
   ProfileImageUploader
 } from '@/app/core/shared/components/molecules';
 import { COUNTRY_DETAILS } from '@/app/core/shared/constants';
-import { useExhibitorUser } from '@/app/core/shared/hooks/api/use-exhibitor-user';
-import { useCustomMutation } from '@/app/core/shared/hooks/use-mutate';
+import { useExhibitorUser } from '@/app/core/shared/api';
 import { errorHandler } from '@/app/core/shared/utils';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import * as yup from 'yup';
-import { exhibitorSettingsService } from '../../services';
+import { useUpdateBusinessInfo } from '../../api';
 
 const validationSchema = yup.object().shape({
   publicDescription: yup.string(),
@@ -29,9 +28,17 @@ const validationSchema = yup.object().shape({
 type IExhibitorBusinessInfoFormValues = yup.InferType<typeof validationSchema>;
 
 export const ExhibitorBusinessInfoForm = () => {
-  const { user, currency, refetchUser } = useExhibitorUser();
+  const { user, currency } = useExhibitorUser();
 
-  const mutation = useCustomMutation();
+  const { updateBusinessInfo, isPending } = useUpdateBusinessInfo({
+    onSuccess: () => {
+      toast.success('Business information updated successfully');
+    },
+    onError: (error) => {
+      const errorMessage = errorHandler(error);
+      toast.error(errorMessage);
+    }
+  });
   const {
     handleSubmit,
     register,
@@ -50,25 +57,18 @@ export const ExhibitorBusinessInfoForm = () => {
   });
 
   const onSubmit = (data: IExhibitorBusinessInfoFormValues) => {
-    const formValues = {
-      publicDescription: data.publicDescription || '',
-      websiteUrl: data.websiteUrl || '',
-      companyName: data.companyName || '',
-      country: data.country || null,
-      currency: data.currency || null,
-      file: data.file as File | null
-    };
+    const formData = new FormData();
+    formData.append('publicDescription', data.publicDescription || '');
+    formData.append('websiteUrl', data.websiteUrl || '');
+    formData.append('boothName', data.companyName || '');
+    formData.append('country', data.country || '');
+    formData.append('currency', data.currency || '');
 
-    mutation.mutate(exhibitorSettingsService.updateBusinessInfo(formValues), {
-      onError(error) {
-        const errorMessage = errorHandler(error);
-        toast.error(errorMessage);
-      },
-      onSuccess() {
-        toast.success('Business information updated successfully');
-        refetchUser();
-      }
-    });
+    if (data.file) {
+      formData.append('file', data.file as File);
+    }
+
+    updateBusinessInfo(formData);
   };
 
   const watchedCurrency = watch('currency') ?? '';
@@ -91,8 +91,8 @@ export const ExhibitorBusinessInfoForm = () => {
             variant="tertiary"
             className="h-[35px]"
             type="submit"
-            isLoading={mutation.isPending}
-            disabled={mutation.isPending}
+            isLoading={isPending}
+            disabled={isPending}
           >
             Save changes
           </LoadingButton>
@@ -100,7 +100,7 @@ export const ExhibitorBusinessInfoForm = () => {
       </div>
       <fieldset
         className="w-full px-3 flex flex-col gap-6 mt-6"
-        disabled={mutation.isPending}
+        disabled={isPending}
       >
         <div className="flex flex-col gap-1 items-center">
           <ProfileImageUploader

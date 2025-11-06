@@ -15,8 +15,8 @@ import {
   ReceiptText,
   Truck
 } from 'lucide-react';
-import { InventoryStatus } from '../../../inventory/hooks';
-import { IExhibitorLatestOrder, useExhibitorOverview } from '../../hooks';
+import { IExhibitorLatestOrder, useExhibitorOverview } from '../../api';
+import { InventoryStatus } from '../../../inventory/api/types';
 
 export const RecentOrdersTable = () => {
   const { isLoadingOverviewStats, isRefetchingOverviewStats, overviewStats } =

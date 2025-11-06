@@ -5,13 +5,12 @@ import {
   LoadingButton,
   PasswordInput
 } from '@/app/core/shared/components/molecules';
-import { useCustomMutation } from '@/app/core/shared/hooks/use-mutate';
-import { organizerUserService } from '@/app/core/shared/services';
 import { errorHandler } from '@/app/core/shared/utils';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import * as yup from 'yup';
+import { useChangePassword } from '../../api';
 
 const validationSchema = yup.object().shape({
   currentPassword: yup.string().required('Current password is required'),
@@ -34,7 +33,6 @@ const validationSchema = yup.object().shape({
 type IFormValues = yup.InferType<typeof validationSchema>;
 
 export const OrganizerSettingsPassword = () => {
-  const mutation = useCustomMutation();
   const {
     handleSubmit,
     formState: { errors },
@@ -49,6 +47,17 @@ export const OrganizerSettingsPassword = () => {
     resolver: yupResolver(validationSchema)
   });
 
+  const { changePassword, isPending } = useChangePassword({
+    onSuccess: () => {
+      toast.success('Password updated successfully');
+      reset();
+    },
+    onError: (error) => {
+      const errorMessage = errorHandler(error);
+      toast.error(errorMessage);
+    }
+  });
+
   const {
     currentPassword: currentPasswordError,
     newPassword: newPasswordError,
@@ -56,19 +65,9 @@ export const OrganizerSettingsPassword = () => {
   } = errors;
 
   const onSubmit = (values: IFormValues) => {
-    const formValues = {
+    changePassword({
       currentPassword: values.currentPassword,
       newPassword: values.newPassword
-    };
-    mutation.mutate(organizerUserService.changePassword(formValues), {
-      onError(error) {
-        const errorMessage = errorHandler(error);
-        toast.error(errorMessage);
-      },
-      onSuccess() {
-        toast.success('Password updated successfully');
-        reset();
-      }
     });
   };
 
@@ -82,7 +81,7 @@ export const OrganizerSettingsPassword = () => {
           <p className="text-sm font-light">Update your password here</p>
         </div>
         <form onSubmit={handleSubmit(onSubmit)} className="mt-5">
-          <fieldset className="w-full" disabled={mutation.isPending}>
+          <fieldset className="w-full" disabled={isPending}>
             {/* Current Password */}
             <div className="grid md:grid-cols-[1fr_2fr] gap-x-8 max-w-[55.43rem] w-full border-t py-6">
               <div className="hidden md:block">
@@ -133,8 +132,8 @@ export const OrganizerSettingsPassword = () => {
               type="submit"
               variant="tertiary"
               className="h-10 rounded-[8px]"
-              isLoading={mutation.isPending}
-              disabled={mutation.isPending}
+              isLoading={isPending}
+              disabled={isPending}
             >
               Save changes
             </LoadingButton>

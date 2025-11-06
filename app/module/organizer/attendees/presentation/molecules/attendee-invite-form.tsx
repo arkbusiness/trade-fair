@@ -1,13 +1,12 @@
 'use client';
 import { Button, ErrorText, Input } from '@/app/core/shared/components/atoms';
 import { LoadingButton, Modal } from '@/app/core/shared/components/molecules';
-import { useCustomMutation } from '@/app/core/shared/hooks/use-mutate';
 import { errorHandler } from '@/app/core/shared/utils';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import * as yup from 'yup';
-import { organizerAttendeesService } from '../../services';
+import { useInviteAttendee } from '../../api';
 
 interface InviteAttendeeFormProps {
   isOpen: boolean;
@@ -24,7 +23,16 @@ export const InviteAttendeeForm = ({
   isOpen,
   onClose
 }: InviteAttendeeFormProps) => {
-  const mutation = useCustomMutation();
+  const { inviteAttendee, isPending } = useInviteAttendee({
+    onSuccess: () => {
+      toast.success('Invite sent.');
+      handleCloseModal();
+    },
+    onError: (error) => {
+      const errorMessage = errorHandler(error);
+      toast.error(errorMessage);
+    }
+  });
 
   const form = useForm<InviteAttendeeFormType>({
     resolver: yupResolver(validationSchema),
@@ -42,22 +50,13 @@ export const InviteAttendeeForm = ({
   } = form;
 
   const handleCloseModal = () => {
-    if (mutation.isPending) return;
+    if (isPending) return;
     reset();
     onClose();
   };
 
   const onSubmit = (data: InviteAttendeeFormType) => {
-    mutation.mutate(organizerAttendeesService.inviteAttendee(data), {
-      onError(error) {
-        const errorMessage = errorHandler(error);
-        toast.error(errorMessage);
-      },
-      onSuccess() {
-        toast.success('Invite sent.');
-        handleCloseModal();
-      }
-    });
+    inviteAttendee(data);
   };
 
   const { email: emailError } = errors;
@@ -75,7 +74,7 @@ export const InviteAttendeeForm = ({
         className="flex flex-col gap-[1.86rem] w-full text-left relative"
         onSubmit={handleSubmit(onSubmit)}
       >
-        <fieldset className="w-full px-4" disabled={mutation.isPending}>
+        <fieldset className="w-full px-4" disabled={isPending}>
           {/* Email */}
           <div>
             <Input
@@ -93,7 +92,7 @@ export const InviteAttendeeForm = ({
             className="gap-[0.5rem] flex items-center h-8"
             type="button"
             onClick={handleCloseModal}
-            disabled={mutation.isPending}
+            disabled={isPending}
           >
             <span>Cancel</span>
           </Button>
@@ -102,8 +101,8 @@ export const InviteAttendeeForm = ({
             variant="tertiary"
             className="gap-[0.5rem] flex items-center h-8"
             type="submit"
-            isLoading={mutation.isPending}
-            disabled={mutation.isPending}
+            isLoading={isPending}
+            disabled={isPending}
           >
             Send Invite
           </LoadingButton>

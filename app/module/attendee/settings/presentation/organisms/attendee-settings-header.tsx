@@ -1,7 +1,7 @@
 'use client';
 
 import { ProfileImageUploader } from '@/app/core/shared/components/molecules';
-import { useAttendeeUser } from '@/app/core/shared/hooks/api';
+import { useAttendeeUser } from '@/app/core/shared/api';
 
 interface IAttendeeSettingsHeader {
   handleImageUpload: (file: File) => void;

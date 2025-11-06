@@ -2,14 +2,13 @@
 import { Button, ErrorText, Input } from '@/app/core/shared/components/atoms';
 import { LoadingButton, Modal } from '@/app/core/shared/components/molecules';
 import { BoothsSelect } from '@/app/core/shared/components/organisms';
-import { useCustomMutation } from '@/app/core/shared/hooks/use-mutate';
 import { errorHandler } from '@/app/core/shared/utils';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import * as yup from 'yup';
-import { IBooth } from '../../../booths/hooks';
-import { organizerExhibitorsService } from '../../services';
+import { IBooth } from '../../../booths/api';
+import { useInviteExhibitor } from '../../api';
 
 interface InviteExhibitorFormProps {
   isOpen: boolean;
@@ -27,7 +26,16 @@ export const InviteExhibitorForm = ({
   isOpen,
   onClose
 }: InviteExhibitorFormProps) => {
-  const mutation = useCustomMutation();
+  const { inviteExhibitor, isPending } = useInviteExhibitor({
+    onSuccess: () => {
+      toast.success('Invite sent.');
+      handleCloseModal();
+    },
+    onError: (error) => {
+      const errorMessage = errorHandler(error);
+      toast.error(errorMessage);
+    }
+  });
 
   const form = useForm<InviteExhibitorFormType>({
     resolver: yupResolver(validationSchema),
@@ -46,25 +54,15 @@ export const InviteExhibitorForm = ({
   } = form;
 
   const handleCloseModal = () => {
-    if (mutation.isPending) return;
+    if (isPending) return;
     reset();
     onClose();
   };
 
   const onSubmit = (data: InviteExhibitorFormType) => {
-    const formValues = {
-      ...data,
-      boothNumber: data.boothNumber?.number as string
-    };
-    mutation.mutate(organizerExhibitorsService.inviteExhibitor(formValues), {
-      onError(error) {
-        const errorMessage = errorHandler(error);
-        toast.error(errorMessage);
-      },
-      onSuccess() {
-        toast.success('Invite sent.');
-        handleCloseModal();
-      }
+    inviteExhibitor({
+      boothNumber: data.boothNumber?.number as string,
+      email: data.email
     });
   };
 
@@ -83,7 +81,7 @@ export const InviteExhibitorForm = ({
         className="flex flex-col gap-[1.86rem] w-full text-left relative"
         onSubmit={handleSubmit(onSubmit)}
       >
-        <fieldset className="w-full px-4" disabled={mutation.isPending}>
+        <fieldset className="w-full px-4" disabled={isPending}>
           <div className="grid lg:grid-cols-2 gap-[1.86rem]">
             {/* Booth */}
             <div>
@@ -120,7 +118,7 @@ export const InviteExhibitorForm = ({
             className="gap-[0.5rem] flex items-center h-8"
             type="button"
             onClick={handleCloseModal}
-            disabled={mutation.isPending}
+            disabled={isPending}
           >
             <span>Cancel</span>
           </Button>
@@ -129,8 +127,8 @@ export const InviteExhibitorForm = ({
             variant="tertiary"
             className="gap-[0.5rem] flex items-center h-8"
             type="submit"
-            isLoading={mutation.isPending}
-            disabled={mutation.isPending}
+            isLoading={isPending}
+            disabled={isPending}
           >
             Send Invite
           </LoadingButton>

@@ -4,7 +4,6 @@ import { Button, Spinner } from '@/app/core/shared/components/atoms';
 import { Pagination } from '@/app/core/shared/components/molecules';
 import { useSetParams } from '@/app/core/shared/hooks';
 import { useState } from 'react';
-import { IAttendeeMeeting } from '../../../meetings/api';
 import {
   attendeeAppointmentSlotsQueryKeys,
   useAttendeeAppointmentsSlots
@@ -16,13 +15,14 @@ import {
 } from '../molecules';
 import { X } from 'lucide-react';
 import { useQueryClient } from '@tanstack/react-query';
+import { AttendeeMeeting } from '../../../meetings/api/get-attendee-appointments';
 interface AppointmentsListProps {
   exhibitorId: string;
 }
 
 export const AppointmentsList = ({ exhibitorId }: AppointmentsListProps) => {
   const queryClient = useQueryClient();
-  const [selectedSlot, setSelectedSlot] = useState<IAttendeeMeeting | null>(
+  const [selectedSlot, setSelectedSlot] = useState<AttendeeMeeting | null>(
     null
   );
   const { searchParamsObject, setMultipleParam } = useSetParams();

@@ -5,7 +5,7 @@ import {
   buildQueryParams,
   extractPaginationMeta
 } from '@/app/core/shared/utils';
-import { Inventory } from '@/app/module/exhibitor/inventory/hooks';
+import { Inventory } from '@/app/module/exhibitor/inventory/api/types';
 
 const DEFAULT_PAGE_SIZE = '15';
 

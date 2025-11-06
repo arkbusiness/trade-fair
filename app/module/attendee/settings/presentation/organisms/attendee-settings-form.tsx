@@ -14,9 +14,9 @@ import {
   ErrorText,
   Input
 } from '@/app/core/shared/components/atoms';
-import { useAttendeeUser } from '@/app/core/shared/hooks/api';
-import { useCustomMutation } from '@/app/core/shared/hooks/use-mutate';
+import { useAttendeeUser } from '@/app/core/shared/api';
 import { AttendeeSettingsHeader } from './attendee-settings-header';
+import { useUpdateAttendeeProfile } from '../../api';
 import {
   CurrencySelector,
   LoadingButton,
@@ -50,8 +50,17 @@ type FormValues = yup.InferType<typeof validationSchema> & {
 };
 
 export const AttendeeSettingsForm = () => {
-  const mutation = useCustomMutation();
   const { user, refetchUser, currency } = useAttendeeUser();
+  const { updateProfile, isPending } = useUpdateAttendeeProfile({
+    onSuccess: () => {
+      refetchUser();
+      toast.success('Profile updated successfully');
+    },
+    onError: (error) => {
+      const errorMessage = errorHandler(error);
+      toast.error(errorMessage);
+    }
+  });
   const {
     setValue,
     watch,
@@ -93,26 +102,7 @@ export const AttendeeSettingsForm = () => {
       formData.append('file', values.file);
     }
 
-    mutation.mutate(
-      {
-        url: '/attendee/profile',
-        method: 'PATCH',
-        data: formData,
-        headers: {
-          'Content-Type': 'multipart/form-data'
-        }
-      },
-      {
-        onError(error) {
-          const errorMessage = errorHandler(error);
-          toast.error(errorMessage);
-        },
-        onSuccess() {
-          refetchUser();
-          toast.success('Profile updated successfully');
-        }
-      }
-    );
+    updateProfile(formData);
   };
 
   const watchedCurrency = watch('currency');
@@ -135,7 +125,7 @@ export const AttendeeSettingsForm = () => {
       >
         <fieldset
           className="flex flex-col gap-[1.86rem] w-full"
-          disabled={mutation.isPending}
+          disabled={isPending}
         >
           <AttendeeSettingsHeader
             handleImageUpload={(file) => {
@@ -251,8 +241,8 @@ export const AttendeeSettingsForm = () => {
             <LoadingButton
               type="submit"
               variant="tertiary"
-              isLoading={mutation.isPending}
-              disabled={mutation.isPending}
+              isLoading={isPending}
+              disabled={isPending}
             >
               Save changes
             </LoadingButton>

@@ -2,7 +2,8 @@
 
 import toast from 'react-hot-toast';
 import { useCartSlice } from '../../slice/cart-slice';
-import { Inventory } from '@/app/module/exhibitor/inventory/hooks';
+
+import { Inventory } from '@/app/module/exhibitor/inventory/api/types';
 import { Minus, Plus } from 'lucide-react';
 import { cn } from '@/app/core/shared/utils';
 

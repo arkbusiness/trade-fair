@@ -1,5 +1,5 @@
 import { useCustomQuery } from '@/app/core/shared/hooks';
-import { Inventory } from '@/app/module/exhibitor/inventory/hooks';
+import { Inventory } from '@/app/module/exhibitor/inventory/api/types';
 import { getCatalogueQueryOptions } from './catalogue-query-options';
 
 export const useCatalogueById = (catalogueId: string) => {

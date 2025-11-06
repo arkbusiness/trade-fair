@@ -6,7 +6,7 @@ import { formatDate } from '@/app/core/shared/lib';
 import Image from 'next/image';
 import { CountdownBox, EndedBox, LiveBox } from '../atoms';
 import { OrganizerDashboardExport } from '../molecules';
-import { useOrganizerUser } from '@/app/core/shared/hooks/api';
+import { useOrganizerUser } from '@/app/core/shared/api';
 import { cn } from '@/app/core/shared/utils';
 import { ORGANIZER_APP_ROUTES } from '@/app/core/shared/constants';
 import { OrganizerSettingsPage } from '@/app/core/shared/types';

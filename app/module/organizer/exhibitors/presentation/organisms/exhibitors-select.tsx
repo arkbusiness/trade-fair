@@ -7,7 +7,7 @@ import { IPaginatedResponse } from '@/app/core/shared/types';
 import { buildQueryParams } from '@/app/core/shared/utils';
 import { useQueryClient } from '@tanstack/react-query';
 import { UseFormReturn } from 'react-hook-form';
-import { IExhibitor } from '../../hooks';
+import { IExhibitor } from '../../api';
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 interface ExhibitorsSelectProps {

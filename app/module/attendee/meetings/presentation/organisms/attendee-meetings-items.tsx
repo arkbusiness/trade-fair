@@ -7,18 +7,17 @@ import {
 } from '@/app/core/shared/components/molecules';
 import { useSetParams } from '@/app/core/shared/hooks';
 import { Calendar } from 'lucide-react';
-import { IAttendeeMeeting } from '../../api';
 import { AttendeeMeetingItem } from '../molecules';
 import { useState } from 'react';
-import { useCustomMutation } from '@/app/core/shared/hooks/use-mutate';
 import { errorHandler } from '@/app/core/shared/utils';
 import toast from 'react-hot-toast';
+import { useCancelAppointment } from '../../api/cancel-appointment';
+import { AttendeeMeeting } from '../../api/get-attendee-appointments';
 
 interface AttendeeMeetingsItemsProps {
-  appointments: IAttendeeMeeting[];
+  appointments: AttendeeMeeting[];
   isLoading: boolean;
   pageCount: number;
-  handleRefetch: () => void;
   page: number;
 }
 
@@ -31,13 +30,22 @@ export const AttendeeMeetingsItems = ({
   appointments,
   isLoading,
   pageCount,
-  handleRefetch,
   page
 }: AttendeeMeetingsItemsProps) => {
   const [toBeCancelledId, setToBeCancelledId] = useState('');
-  const mutation = useCustomMutation();
   const [modalType, setModalType] = useState<ModalType>(ModalType.NONE);
   const { setMultipleParam, searchParamsObject } = useSetParams();
+
+  const { cancelAppointment, isPending } = useCancelAppointment({
+    onSuccess: () => {
+      toast.success('Appointment cancelled successfully');
+      setModalType(ModalType.NONE);
+    },
+    onError: (error) => {
+      const errorMessage = errorHandler(error);
+      toast.error(errorMessage);
+    }
+  });
 
   const hasAppointments = appointments?.length > 0;
 
@@ -52,34 +60,14 @@ export const AttendeeMeetingsItems = ({
   };
 
   const handleCloseModal = () => {
-    if (mutation.isPending) return;
+    if (isPending) return;
     setModalType(ModalType.NONE);
-    handleRefetch();
-  };
-
-  const handleCancelAppointment = (id: string) => {
-    mutation.mutate(
-      {
-        url: `/attendee/appointments/${id}/cancel`,
-        method: 'DELETE'
-      },
-      {
-        onError(error) {
-          const errorMessage = errorHandler(error);
-          toast.error(errorMessage);
-        },
-        onSuccess() {
-          toast.success('Appointment cancelled successfully');
-          handleCloseModal();
-        }
-      }
-    );
   };
 
   const handleConfirmCancel = (id: string) => {
     switch (modalType) {
       case ModalType.CANCEL_APPOINTMENT:
-        handleCancelAppointment(id);
+        cancelAppointment(id);
         break;
       default:
         break;
@@ -93,7 +81,7 @@ export const AttendeeMeetingsItems = ({
         onClose={handleCloseModal}
         title="Cancel Appointment"
         description="Are you sure you want to cancel this appointment?"
-        isLoading={mutation.isPending}
+        isLoading={isPending}
         onConfirm={() => handleConfirmCancel(toBeCancelledId)}
       />
       {isLoading && (

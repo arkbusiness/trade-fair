@@ -27,6 +27,7 @@ interface UseFileUploaderReturn {
   maxSize: number;
   open: () => void;
   onRemove: (key: string) => void;
+  onClearAll: () => void;
 }
 
 export const ACCEPT_IMAGE = {
@@ -142,6 +143,20 @@ export const useFileUploader = ({
     [files, setFiles, onValueChange, type]
   );
 
+  const onClearAll = useCallback(() => {
+    if (!files) return;
+
+    // Revoke all preview URLs for images
+    files.forEach((file) => {
+      if (type === 'image' && hasPreview(file)) {
+        URL.revokeObjectURL(file.preview);
+      }
+    });
+
+    setFiles([]);
+    onValueChange?.([]);
+  }, [files, setFiles, onValueChange, type]);
+
   useEffect(() => {
     return () => {
       if (!files) return;
@@ -162,6 +177,7 @@ export const useFileUploader = ({
     getRootProps,
     getInputProps,
     isDragActive,
-    onRemove
+    onRemove,
+    onClearAll
   };
 };

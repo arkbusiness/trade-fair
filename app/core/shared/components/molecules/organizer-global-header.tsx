@@ -3,7 +3,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { ORGANIZER_APP_ROUTES } from '../../constants';
-import { useOrganizerUser } from '../../hooks/api';
+import { useOrganizerUser } from '../../api';
 import { formatDate } from '../../lib';
 import { AvatarMenu } from './avatar-menu';
 import { useSidebar } from '../atoms';

@@ -2,14 +2,12 @@
 import { Button, ErrorText, Input } from '@/app/core/shared/components/atoms';
 import { LoadingButton, Modal } from '@/app/core/shared/components/molecules';
 import { BoothCategorySelect } from '@/app/core/shared/components/organisms';
-import { useCustomMutation } from '@/app/core/shared/hooks/use-mutate';
 import { errorHandler } from '@/app/core/shared/utils';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import * as yup from 'yup';
-import { IBooth } from '../../hooks';
-import { boothsService } from '../../services';
+import { IBooth, useCreateBooth, useUpdateBooth } from '../../api';
 
 interface BoothFormProps {
   isOpen: boolean;
@@ -40,8 +38,29 @@ export const BoothForm = ({
   selectedBooth,
   onClose
 }: BoothFormProps) => {
-  const mutation = useCustomMutation();
+  const { createBooth, isPending: isCreating } = useCreateBooth({
+    onSuccess: () => {
+      toast.success('Booth created successfully.');
+      handleCloseModal();
+    },
+    onError: (error) => {
+      const errorMessage = errorHandler(error);
+      toast.error(errorMessage);
+    }
+  });
 
+  const { updateBooth, isPending: isUpdating } = useUpdateBooth({
+    onSuccess: () => {
+      toast.success('Booth updated successfully.');
+      handleCloseModal();
+    },
+    onError: (error) => {
+      const errorMessage = errorHandler(error);
+      toast.error(errorMessage);
+    }
+  });
+
+  const isPending = isCreating || isUpdating;
   const isAssigned = !!selectedBooth?.assignedAt;
 
   const form = useForm<BoothFormType>({
@@ -66,25 +85,15 @@ export const BoothForm = ({
   } = form;
 
   const handleCloseModal = () => {
-    if (mutation.isPending) return;
+    if (isPending) return;
     reset();
     onClose();
   };
 
   const handleCreateBooth = (data: BoothFormType) => {
-    const formValues = {
-      ...data,
+    createBooth({
+      number: data.number,
       categoryId: data.categoryId?.id as string
-    };
-    mutation.mutate(boothsService.createBooth(formValues), {
-      onError(error) {
-        const errorMessage = errorHandler(error);
-        toast.error(errorMessage);
-      },
-      onSuccess() {
-        toast.success('Booth created successfully.');
-        handleCloseModal();
-      }
     });
   };
 
@@ -111,15 +120,9 @@ export const BoothForm = ({
       return;
     }
 
-    mutation.mutate(boothsService.updateBooth(selectedBooth?.id, formValues), {
-      onError(error) {
-        const errorMessage = errorHandler(error);
-        toast.error(errorMessage);
-      },
-      onSuccess() {
-        toast.success('Booth updated successfully.');
-        handleCloseModal();
-      }
+    updateBooth({
+      id: selectedBooth.id,
+      ...formValues
     });
   };
 
@@ -146,7 +149,7 @@ export const BoothForm = ({
         className="flex flex-col gap-[1.86rem] w-full text-left relative"
         onSubmit={handleSubmit(onSubmit)}
       >
-        <fieldset className="w-full px-4" disabled={mutation.isPending}>
+        <fieldset className="w-full px-4" disabled={isPending}>
           <div className="grid lg:grid-cols-2 gap-[1.86rem]">
             {/* Company Name */}
             <div>
@@ -184,7 +187,7 @@ export const BoothForm = ({
             className="gap-[0.5rem] flex items-center h-8"
             type="button"
             onClick={handleCloseModal}
-            disabled={mutation.isPending}
+            disabled={isPending}
           >
             <span>Cancel</span>
           </Button>
@@ -193,8 +196,8 @@ export const BoothForm = ({
             variant="tertiary"
             className="gap-[0.5rem] flex items-center h-8"
             type="submit"
-            isLoading={mutation.isPending}
-            disabled={mutation.isPending}
+            isLoading={isPending}
+            disabled={isPending}
           >
             <span>{selectedBooth ? 'Update' : 'Add'}</span>
           </LoadingButton>

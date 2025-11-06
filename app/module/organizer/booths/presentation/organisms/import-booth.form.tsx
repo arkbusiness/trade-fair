@@ -12,11 +12,10 @@ import { CloudDownload } from 'lucide-react';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import * as yup from 'yup';
-import { useCustomMutation } from '../../../../../core/shared/hooks/use-mutate';
 import { ACCEPT_DOCUMENT } from '../../../../../core/shared/hooks/use-file-uploader';
 import toast from 'react-hot-toast';
 import { errorHandler } from '../../../../../core/shared/utils';
-import { boothsService } from '@/app/module/organizer/booths/services';
+import { useImportBooths } from '../../api';
 
 const validationSchema = yup.object().shape({
   file: yup.mixed<File[]>().required('File is required')
@@ -34,8 +33,19 @@ export const ImportBoothForm = ({
   onSuccess,
   sampleFileUrl
 }: ImportFormProps) => {
-  const mutation = useCustomMutation();
   const [openModal, setOpenModal] = useState(false);
+
+  const { importBooths, isPending } = useImportBooths({
+    onSuccess: () => {
+      toast.success('File imported successfully');
+      handleCloseModal();
+      onSuccess();
+    },
+    onError: (error) => {
+      const errorMessage = errorHandler(error);
+      toast.error(errorMessage);
+    }
+  });
   const {
     setValue,
     formState: { errors },
@@ -54,21 +64,7 @@ export const ImportBoothForm = ({
   };
 
   const onSubmit = (values: ImportFormValues) => {
-    const updatedValues = {
-      ...values,
-      file: values.file[0]
-    };
-    mutation.mutate(boothsService.importFile(updatedValues), {
-      onSuccess: () => {
-        toast.success('File imported successfully');
-        handleCloseModal();
-        onSuccess();
-      },
-      onError: (error) => {
-        const errorMessage = errorHandler(error);
-        toast.error(errorMessage);
-      }
-    });
+    importBooths({ file: values.file[0] });
   };
 
   const { file: fileError } = errors;
@@ -110,7 +106,7 @@ export const ImportBoothForm = ({
         <form onSubmit={handleSubmit(onSubmit)} className="w-full p-4">
           <fieldset
             className="flex flex-col gap-[1.86rem] w-full text-left relative"
-            disabled={mutation.isPending}
+            disabled={isPending}
           >
             {/* Document */}
             <div className="full flex flex-col gap-[0.5rem]">
@@ -140,7 +136,7 @@ export const ImportBoothForm = ({
             <LoadingButton
               variant="tertiary"
               type="submit"
-              isLoading={mutation.isPending}
+              isLoading={isPending}
               className="w-full"
             >
               Submit

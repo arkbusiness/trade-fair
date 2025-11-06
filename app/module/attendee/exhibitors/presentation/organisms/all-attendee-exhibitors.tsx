@@ -19,7 +19,7 @@ export const AllAttendeeExhibitors = ({
     page: searchParamsObject.page || '1',
     search: filter.search || ''
   };
-  const { exhibitors, isLoadingExhibitor, paginationMeta, refetchExhibitor } =
+  const { exhibitors, isLoadingExhibitor, paginationMeta } =
     useAttendeeExhibitors(exhibitorQuery);
 
   const handlePageClick = (value: { selected: number }) => {
@@ -61,7 +61,6 @@ export const AllAttendeeExhibitors = ({
               description={exhibitor.publicDescription}
               isLiked={isLiked}
               allowNavigation={true}
-              handleRefetchExhibitors={refetchExhibitor}
             />
           );
         })}

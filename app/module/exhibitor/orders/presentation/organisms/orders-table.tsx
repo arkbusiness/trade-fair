@@ -19,7 +19,7 @@ import { cn, formatCurrency } from '@/app/core/shared/utils';
 import { ColumnDef } from '@tanstack/react-table';
 import Image from 'next/image';
 import { useRouter } from 'nextjs-toploader/app';
-import { IOrderItems, OrderStatus, useOrders } from '../../hooks';
+import { IOrderItems, OrderStatus, useOrders } from '../../api';
 import { ExhibitorOrdersStat, OrdersTableFilter } from '../molecules';
 
 const ORDER_TAB_LIST = [

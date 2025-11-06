@@ -1,14 +1,12 @@
 'use client';
 import { Button, ErrorText } from '@/app/core/shared/components/atoms';
 import { LoadingButton, Modal } from '@/app/core/shared/components/molecules';
-import { useCustomMutation } from '@/app/core/shared/hooks/use-mutate';
 import { errorHandler } from '@/app/core/shared/utils';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import * as yup from 'yup';
-import { IBooth } from '../../hooks';
-import { boothsService } from '../../services';
+import { IBooth, useAssignExhibitor } from '../../api';
 import { ExhibitorsSelect } from '../../../exhibitors/presentation/organisms';
 
 interface AssignExhibitorFormProps {
@@ -33,7 +31,16 @@ export const AssignExhibitorForm = ({
   selectedBooth,
   onClose
 }: AssignExhibitorFormProps) => {
-  const mutation = useCustomMutation();
+  const { assignExhibitor, isPending } = useAssignExhibitor({
+    onSuccess: () => {
+      toast.success('Exhibitor assigned successfully.');
+      handleCloseModal();
+    },
+    onError: (error) => {
+      const errorMessage = errorHandler(error);
+      toast.error(errorMessage);
+    }
+  });
 
   const form = useForm<AssignExhibitorFormType>({
     resolver: yupResolver(validationSchema),
@@ -50,30 +57,17 @@ export const AssignExhibitorForm = ({
   } = form;
 
   const handleCloseModal = () => {
-    if (mutation.isPending) return;
+    if (isPending) return;
     reset();
     onClose();
   };
 
   const handleAssignExhibitor = (data: AssignExhibitorFormType) => {
-    if (!selectedBooth?.id) return;
-    const formValues = {
-      ...data,
+    if (!selectedBooth) return;
+    assignExhibitor({
+      id: selectedBooth.id,
       exhibitorId: data.exhibitorId?.id as string
-    };
-    mutation.mutate(
-      boothsService.assignExhibitor(selectedBooth?.id, formValues),
-      {
-        onError(error) {
-          const errorMessage = errorHandler(error);
-          toast.error(errorMessage);
-        },
-        onSuccess() {
-          toast.success('Exhibitor assigned successfully.');
-          handleCloseModal();
-        }
-      }
-    );
+    });
   };
 
   const onSubmit = (data: AssignExhibitorFormType) => {
@@ -95,10 +89,7 @@ export const AssignExhibitorForm = ({
         className="flex flex-col flex-1 h-full gap-[1.86rem] w-full text-left relative"
         onSubmit={handleSubmit(onSubmit)}
       >
-        <fieldset
-          className="w-full px-4 h-[150px]"
-          disabled={mutation.isPending}
-        >
+        <fieldset className="w-full px-4 h-[150px]" disabled={isPending}>
           <div>
             <ExhibitorsSelect
               form={form}
@@ -121,7 +112,7 @@ export const AssignExhibitorForm = ({
             className="gap-[0.5rem] flex items-center h-8"
             type="button"
             onClick={handleCloseModal}
-            disabled={mutation.isPending}
+            disabled={isPending}
           >
             <span>Cancel</span>
           </Button>
@@ -130,8 +121,8 @@ export const AssignExhibitorForm = ({
             variant="tertiary"
             className="gap-[0.5rem] flex items-center h-8"
             type="submit"
-            isLoading={mutation.isPending}
-            disabled={mutation.isPending}
+            isLoading={isPending}
+            disabled={isPending}
           >
             <span>Send Invite</span>
           </LoadingButton>

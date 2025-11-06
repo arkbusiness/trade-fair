@@ -2,13 +2,13 @@
 
 import { BoardIcon, Button } from '@/app/core/shared/components/atoms';
 import { formatDate } from '@/app/core/shared/lib';
-import { SlotStatus } from '@/app/module/exhibitor/appointments/hooks';
 import { AppointmentStatusBadge } from '@/app/module/exhibitor/appointments/presentation/molecules';
 import { Calendar, User } from 'lucide-react';
-import { IAttendeeMeeting } from '../../api';
+import { AttendeeMeeting } from '../../api/get-attendee-appointments';
+import { SlotStatus } from '@/app/module/exhibitor/appointments/api';
 
 interface AttendeeMeetingItemProps {
-  appointment: IAttendeeMeeting;
+  appointment: AttendeeMeeting;
   handleCancel: () => void;
 }
 
@@ -47,7 +47,7 @@ export const AttendeeMeetingItem = ({
     }
   };
 
-  const content = mapContent[status];
+  const content = mapContent[status as SlotStatus];
 
   const isWaitlisted = status === SlotStatus.WAITLISTED;
   const isBooked = status === SlotStatus.BOOKED;

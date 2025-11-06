@@ -4,7 +4,7 @@ import { LinkButton, Spinner } from '@/app/core/shared/components/atoms';
 import { EXHIBITOR_APP_ROUTES } from '@/app/core/shared/constants';
 import { formatSchedule } from '@/app/core/shared/lib';
 import { Clock } from 'lucide-react';
-import { useExhibitorOverview } from '../../hooks';
+import { useExhibitorOverview } from '../../api';
 
 export const RecentAppointments = () => {
   const { isLoadingOverviewStats, isRefetchingOverviewStats, overviewStats } =
@@ -16,9 +16,9 @@ export const RecentAppointments = () => {
 
   return (
     <div className="rounded-[8px] border border-input bg-background flex flex-col">
-      <h2 className="text-lg font-semibold text-foreground px-3.5 py-4.5 border-b">
-        Upcoming Appointments
-      </h2>
+      <div className="flex justify-between items-center gap-5 px-3.5 py-4.5 border-b">
+        <h2 className="text-lg font-semibold text-foreground">Appointments</h2>
+      </div>
       <div className="mt-7 px-6 flex-1">
         <div className="flex gap-6 flex-col">
           {isLoading && <Spinner />}
@@ -47,17 +47,6 @@ export const RecentAppointments = () => {
                         }
                       </p>
                     </div>
-                  </div>
-                  <div>
-                    <LinkButton
-                      variant="outline"
-                      className="border-light-blue text-light-blue h-[29px] hover:bg-light-blue hover:text-background"
-                      href={EXHIBITOR_APP_ROUTES.attendees.appointment.details(
-                        item.id
-                      )}
-                    >
-                      Details
-                    </LinkButton>
                   </div>
                 </div>
               );

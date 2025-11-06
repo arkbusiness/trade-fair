@@ -6,8 +6,7 @@ import 'react-datepicker/dist/react-datepicker.css';
 import styles from './appointments-calendar.module.css';
 import { useSetParams } from '@/app/core/shared/hooks';
 import { format } from 'date-fns';
-import { useAttendeeOverview } from '@/app/module/attendee/overview/hooks';
-
+import { useAttendeeOverview } from '@/app/module/attendee/overview/api';
 interface AppointmentsCalendarProps {
   title?: string;
   onDateChange?: (date: Date | null) => void;

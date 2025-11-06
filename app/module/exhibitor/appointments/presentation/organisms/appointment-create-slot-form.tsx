@@ -11,7 +11,6 @@ import {
   Modal,
   OverlaySpinner
 } from '@/app/core/shared/components/molecules';
-import { useCustomMutation } from '@/app/core/shared/hooks/use-mutate';
 import { cn, errorHandler } from '@/app/core/shared/utils';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { formatISO } from 'date-fns';
@@ -19,8 +18,7 @@ import { PlusIcon, TrashIcon } from 'lucide-react';
 import { useFieldArray, useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import * as yup from 'yup';
-import { appointmentsService } from '../../services/appointments.service';
-import { useAppointmentEvent } from '../../hooks';
+import { useAppointmentEvent, useCreateAppointmentSlots } from '../../api';
 
 interface AppointmentSlotFormProps {
   isOpen: boolean;
@@ -63,7 +61,17 @@ export const AppointmentCreateSlotForm = ({
   const { eventStartDate, eventEndDate, isLoadingAppointmentEvent } =
     useAppointmentEvent();
 
-  const mutation = useCustomMutation();
+  const { createAppointmentSlots, isPending } = useCreateAppointmentSlots({
+    onSuccess: () => {
+      toast.success('Time slot created successfully');
+      form.reset();
+      handleCloseModal();
+    },
+    onError: (error) => {
+      const errorMessage = errorHandler(error);
+      toast.error(errorMessage);
+    }
+  });
   const form = useForm<AppointmentSlotFormValues>({
     values: {
       slots: [
@@ -90,26 +98,16 @@ export const AppointmentCreateSlotForm = ({
   });
 
   const handleCloseModal = () => {
-    if (mutation.isPending) return;
+    if (isPending) return;
     onClose();
   };
 
   const onSubmit = (values: AppointmentSlotFormValues) => {
-    const formValues = values.slots.map((slot) => ({
+    const slots = values.slots.map((slot) => ({
       startTime: formatISO(slot.startDate),
       endTime: formatISO(slot.endDate)
     }));
-    mutation.mutate(appointmentsService.createSlot(formValues), {
-      onError(error) {
-        const errorMessage = errorHandler(error);
-        toast.error(errorMessage);
-      },
-      onSuccess() {
-        toast.success('Time slot created successfully');
-        form.reset();
-        handleCloseModal();
-      }
-    });
+    createAppointmentSlots({ slots });
   };
 
   const handleAddNewItem = () => {
@@ -170,9 +168,7 @@ export const AppointmentCreateSlotForm = ({
                           timeIntervals={5}
                           inputClassName="text-xs!"
                           min={eventStartDate}
-                          isDisabled={
-                            mutation.isPending || isLoadingAppointmentEvent
-                          }
+                          isDisabled={isPending || isLoadingAppointmentEvent}
                           handleChange={({ value }) => {
                             setValue(
                               `slots.${index}.startDate`,
@@ -198,9 +194,7 @@ export const AppointmentCreateSlotForm = ({
                           showTimeSelect
                           timeIntervals={5}
                           inputClassName="text-xs!"
-                          isDisabled={
-                            mutation.isPending || isLoadingAppointmentEvent
-                          }
+                          isDisabled={isPending || isLoadingAppointmentEvent}
                           max={eventEndDate}
                           handleChange={({ value }) => {
                             setValue(`slots.${index}.endDate`, value as Date, {
@@ -222,7 +216,7 @@ export const AppointmentCreateSlotForm = ({
                             aria-label="Remove item"
                             className="w-8 h-8"
                             onClick={() => remove(index)}
-                            disabled={mutation.isPending}
+                            disabled={isPending}
                           >
                             <TrashIcon className="size-4 text-tertiary" />
                           </Button>
@@ -239,7 +233,7 @@ export const AppointmentCreateSlotForm = ({
                 onClick={handleAddNewItem}
                 variant="outline"
                 type="button"
-                disabled={mutation.isPending || isLoadingAppointmentEvent}
+                disabled={isPending || isLoadingAppointmentEvent}
                 className="text-foreground h-[33px]"
               >
                 <span>Add slot</span>
@@ -254,7 +248,7 @@ export const AppointmentCreateSlotForm = ({
               className="gap-[0.5rem] flex items-center h-8"
               type="button"
               onClick={handleCloseModal}
-              disabled={mutation.isPending || isLoadingAppointmentEvent}
+              disabled={isPending || isLoadingAppointmentEvent}
             >
               <span>Cancel</span>
             </Button>
@@ -263,8 +257,8 @@ export const AppointmentCreateSlotForm = ({
               variant="tertiary"
               className="gap-[0.5rem] flex items-center h-8"
               type="submit"
-              isLoading={mutation.isPending}
-              disabled={mutation.isPending || isLoadingAppointmentEvent}
+              isLoading={isPending}
+              disabled={isPending || isLoadingAppointmentEvent}
             >
               <span>Save changes</span>
             </LoadingButton>

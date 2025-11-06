@@ -5,14 +5,18 @@ import {
   LoadingButton,
   Modal
 } from '@/app/core/shared/components/molecules';
-import { useCustomMutation } from '@/app/core/shared/hooks/use-mutate';
 import { formatDate, formatSchedule, formatTime } from '@/app/core/shared/lib';
 import { errorHandler } from '@/app/core/shared/utils';
 import { Calendar, Clock } from 'lucide-react';
 import { useState } from 'react';
 import toast from 'react-hot-toast';
-import { IAppointmentSlot, SlotStatus } from '../../hooks';
-import { appointmentsService } from '../../services/appointments.service';
+import {
+  IAppointmentSlot,
+  SlotStatus,
+  useCancelAppointmentSlot,
+  useCompleteAppointmentSlot,
+  useDeleteAppointmentSlot
+} from '../../api';
 import { AppointmentStatusBadge } from './appointment-status-badge';
 
 interface AppointmentDetailProps {
@@ -36,14 +40,51 @@ export const AppointmentDetail = ({
   handleEdit
 }: AppointmentDetailProps) => {
   const [activeModal, setActiveModal] = useState<ModalType>(ModalType.NONE);
-  const mutation = useCustomMutation();
+
+  const { cancelAppointmentSlot, isPending: isCancelling } =
+    useCancelAppointmentSlot({
+      onSuccess: () => {
+        toast.success('Appointment cancelled successfully.');
+        handleCloseModal();
+      },
+      onError: (error) => {
+        const errorMessage = errorHandler(error);
+        toast.error(errorMessage);
+      }
+    });
+
+  const { completeAppointmentSlot, isPending: isCompleting } =
+    useCompleteAppointmentSlot({
+      onSuccess: () => {
+        toast.success('Appointment completed successfully.');
+        handleCloseModal();
+      },
+      onError: (error) => {
+        const errorMessage = errorHandler(error);
+        toast.error(errorMessage);
+      }
+    });
+
+  const { deleteAppointmentSlot, isPending: isDeleting } =
+    useDeleteAppointmentSlot({
+      onSuccess: () => {
+        toast.success('Appointment deleted successfully.');
+        handleCloseModal();
+      },
+      onError: (error) => {
+        const errorMessage = errorHandler(error);
+        toast.error(errorMessage);
+      }
+    });
+
+  const isPending = isCancelling || isCompleting || isDeleting;
 
   const { attendee, status, startTime, endTime } = appointment || {};
   const isBooked = status === SlotStatus.BOOKED;
   const isAvailable = status === SlotStatus.AVAILABLE;
 
   const handleCloseModal = () => {
-    if (mutation.isPending) return;
+    if (isPending) return;
     setActiveModal(ModalType.NONE);
     onClose();
   };
@@ -75,53 +116,17 @@ export const AppointmentDetail = ({
 
   const handleCancelSlot = () => {
     if (!appointment?.id) return;
-    mutation.mutate(
-      appointmentsService.cancelAppointmentSlot(appointment?.id),
-      {
-        onError(error) {
-          const errorMessage = errorHandler(error);
-          toast.error(errorMessage);
-        },
-        onSuccess() {
-          toast.success('Appointment cancelled successfully.');
-          handleCloseModal();
-        }
-      }
-    );
+    cancelAppointmentSlot({ slotId: appointment.id });
   };
 
   const handleCompleteSlot = () => {
     if (!appointment?.id) return;
-    mutation.mutate(
-      appointmentsService.completeAppointmentSlot(appointment?.id),
-      {
-        onError(error) {
-          const errorMessage = errorHandler(error);
-          toast.error(errorMessage);
-        },
-        onSuccess() {
-          toast.success('Appointment completed successfully.');
-          handleCloseModal();
-        }
-      }
-    );
+    completeAppointmentSlot({ slotId: appointment.id });
   };
 
   const handleDeleteSlot = () => {
     if (!appointment?.id) return;
-    mutation.mutate(
-      appointmentsService.deleteAppointmentSlot(appointment?.id),
-      {
-        onError(error) {
-          const errorMessage = errorHandler(error);
-          toast.error(errorMessage);
-        },
-        onSuccess() {
-          toast.success('Appointment deleted successfully.');
-          handleCloseModal();
-        }
-      }
-    );
+    deleteAppointmentSlot({ slotId: appointment.id });
   };
 
   const handleConfirm = () => {
@@ -141,7 +146,7 @@ export const AppointmentDetail = ({
   };
 
   const isDisableButtons =
-    mutation.isPending ||
+    isPending ||
     status === SlotStatus.COMPLETED ||
     status === SlotStatus.CANCELLED;
 
@@ -152,7 +157,7 @@ export const AppointmentDetail = ({
         onClose={handleCloseModal}
         title={confirmModal[activeModal].title}
         description={confirmModal[activeModal].description}
-        isLoading={mutation.isPending}
+        isLoading={isPending}
         onConfirm={handleConfirm}
       />
       <Modal
@@ -220,7 +225,7 @@ export const AppointmentDetail = ({
               variant="tertiary"
               className="gap-[0.5rem] flex items-center h-8"
               type="submit"
-              isLoading={mutation.isPending}
+              isLoading={isPending}
               disabled={isDisableButtons}
               onClick={() => setActiveModal(ModalType.MARK_AS_COMPLETED)}
             >
@@ -233,7 +238,7 @@ export const AppointmentDetail = ({
               variant="tertiary"
               className="gap-[0.5rem] flex items-center h-8"
               type="submit"
-              isLoading={mutation.isPending}
+              isLoading={isPending}
               onClick={() => setActiveModal(ModalType.DELETE_SLOT)}
             >
               <span>Delete slot</span>
@@ -245,7 +250,7 @@ export const AppointmentDetail = ({
               variant="outline"
               className="gap-[0.5rem] flex items-center h-8"
               type="submit"
-              isLoading={mutation.isPending}
+              isLoading={isPending}
               onClick={handleEdit}
             >
               <span>Edit slot</span>

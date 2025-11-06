@@ -74,7 +74,6 @@ export const FavouriteAttendeeExhibitors = ({
                 isLiked={isLiked}
                 allowNavigation={true}
                 showFavouriteButton={false}
-                handleRefetchExhibitors={refetchExhibitor}
               />
             );
           })}

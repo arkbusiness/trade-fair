@@ -5,13 +5,12 @@ import {
   LoadingButton,
   PasswordInput
 } from '@/app/core/shared/components/molecules';
-import { useCustomMutation } from '@/app/core/shared/hooks/use-mutate';
 import { errorHandler } from '@/app/core/shared/utils';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import * as yup from 'yup';
-import { exhibitorSettingsService } from '../../services';
+import { useUpdatePassword } from '../../api';
 
 const validationSchema = yup.object().shape({
   currentPassword: yup.string().required('Current password is required'),
@@ -34,7 +33,16 @@ const validationSchema = yup.object().shape({
 type IFormValues = yup.InferType<typeof validationSchema>;
 
 export const ExhibitorChangePasswordForm = () => {
-  const mutation = useCustomMutation();
+  const { updatePassword, isPending } = useUpdatePassword({
+    onSuccess: () => {
+      toast.success('Password updated successfully');
+      reset();
+    },
+    onError: (error) => {
+      const errorMessage = errorHandler(error);
+      toast.error(errorMessage);
+    }
+  });
   const {
     handleSubmit,
     formState: { errors },
@@ -56,19 +64,9 @@ export const ExhibitorChangePasswordForm = () => {
   } = errors;
 
   const onSubmit = (values: IFormValues) => {
-    const formValues = {
+    updatePassword({
       currentPassword: values.currentPassword,
       newPassword: values.newPassword
-    };
-    mutation.mutate(exhibitorSettingsService.updatePassword(formValues), {
-      onError(error) {
-        const errorMessage = errorHandler(error);
-        toast.error(errorMessage);
-      },
-      onSuccess() {
-        toast.success('Password updated successfully');
-        reset();
-      }
     });
   };
 
@@ -88,8 +86,8 @@ export const ExhibitorChangePasswordForm = () => {
               variant="tertiary"
               className="h-[35px]"
               type="submit"
-              isLoading={mutation.isPending}
-              disabled={mutation.isPending}
+              isLoading={isPending}
+              disabled={isPending}
             >
               Save changes
             </LoadingButton>
@@ -97,7 +95,7 @@ export const ExhibitorChangePasswordForm = () => {
         </div>
         <fieldset
           className="w-full px-8 flex flex-col gap-6 mt-6"
-          disabled={mutation.isPending}
+          disabled={isPending}
         >
           {/* Current Password */}
           <div className="grid md:grid-cols-[12.5rem_1fr] gap-x-8 w-full border-t  py-6">

@@ -2,14 +2,13 @@
 
 import { ErrorText, Input } from '@/app/core/shared/components/atoms';
 import { LoadingButton } from '@/app/core/shared/components/molecules';
-import { useCustomMutation } from '@/app/core/shared/hooks/use-mutate';
 import { errorHandler } from '@/app/core/shared/utils';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import * as yup from 'yup';
-import { exhibitorSettingsService } from '../../services';
-import { useExhibitorUser } from '@/app/core/shared/hooks/api/use-exhibitor-user';
+import { useUpdatePayment } from '../../api';
+import { useExhibitorUser } from '@/app/core/shared/api';
 
 const validationSchema = yup.object().shape({
   bankName: yup.string().required('Bank name is required'),
@@ -25,8 +24,17 @@ const validationSchema = yup.object().shape({
 type IFormValues = yup.InferType<typeof validationSchema>;
 
 export const ExhibitorBankInfoForm = () => {
-  const mutation = useCustomMutation();
-  const { user } = useExhibitorUser();
+  const { user, refetchUser } = useExhibitorUser();
+  const { updatePayment, isPending } = useUpdatePayment({
+    onSuccess: () => {
+      toast.success('Payment details updated successfully');
+      refetchUser();
+    },
+    onError: (error) => {
+      const errorMessage = errorHandler(error);
+      toast.error(errorMessage);
+    }
+  });
 
   const bankDetails = user?.PaymentDetails?.[0];
 
@@ -50,19 +58,10 @@ export const ExhibitorBankInfoForm = () => {
   } = errors;
 
   const onSubmit = (values: IFormValues) => {
-    const formValues = {
+    updatePayment({
       bankName: values.bankName,
       bankAccountName: values.bankAccountName,
       bankAccountNumber: values.bankAccountNumber
-    };
-    mutation.mutate(exhibitorSettingsService.updatePayment(formValues), {
-      onError(error) {
-        const errorMessage = errorHandler(error);
-        toast.error(errorMessage);
-      },
-      onSuccess() {
-        toast.success('Bank info updated successfully');
-      }
     });
   };
 
@@ -80,8 +79,8 @@ export const ExhibitorBankInfoForm = () => {
               variant="tertiary"
               className="h-[35px]"
               type="submit"
-              isLoading={mutation.isPending}
-              disabled={mutation.isPending}
+              isLoading={isPending}
+              disabled={isPending}
             >
               Save changes
             </LoadingButton>
@@ -89,7 +88,7 @@ export const ExhibitorBankInfoForm = () => {
         </div>
         <fieldset
           className="w-full px-8 flex flex-col gap-6 mt-6"
-          disabled={mutation.isPending}
+          disabled={isPending}
         >
           {/* Current Password */}
           <div className="grid md:grid-cols-[12.5rem_1fr] gap-x-8 w-full border-t  py-6">

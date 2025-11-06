@@ -8,20 +8,27 @@ import {
   OverlaySpinner
 } from '@/app/core/shared/components/molecules';
 import { ORGANIZER_APP_ROUTES } from '@/app/core/shared/constants';
-import { useCustomMutation } from '@/app/core/shared/hooks/use-mutate';
 import { Printer, Trash } from 'lucide-react';
 import { useState } from 'react';
-import { organizerAttendeesService } from '../../services';
 import { errorHandler, printElement } from '@/app/core/shared/utils';
 import toast from 'react-hot-toast';
 import { useRouter } from 'nextjs-toploader/app';
-import { getQueryClient } from '@/app/core/shared/lib';
+import { useDeleteAttendee } from '../../api';
 
 export const AttendeesDetailHeader = ({ id }: { id: string }) => {
-  const queryClient = getQueryClient();
   const router = useRouter();
-  const mutation = useCustomMutation();
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
+
+  const { deleteAttendee, isPending } = useDeleteAttendee({
+    onSuccess: () => {
+      toast.success('Attendee deleted successfully.');
+      router.push(ORGANIZER_APP_ROUTES.attendees.root());
+    },
+    onError: (error) => {
+      const errorMessage = errorHandler(error);
+      toast.error(errorMessage);
+    }
+  });
 
   const handlePrint = () => {
     printElement({
@@ -31,24 +38,12 @@ export const AttendeesDetailHeader = ({ id }: { id: string }) => {
   };
 
   const handleDelete = () => {
-    mutation.mutate(organizerAttendeesService.deleteAttendee(id), {
-      onError(error) {
-        const errorMessage = errorHandler(error);
-        toast.error(errorMessage);
-      },
-      onSuccess() {
-        toast.success('Attendee deleted successfully.');
-        queryClient.invalidateQueries({
-          queryKey: [...organizerAttendeesService.getAttendees().queryKey]
-        });
-        router.push(ORGANIZER_APP_ROUTES.attendees.root());
-      }
-    });
+    deleteAttendee({ id });
   };
 
   return (
     <>
-      {mutation.isPending && <OverlaySpinner />}
+      {isPending && <OverlaySpinner />}
       <ConfirmationModal
         isOpen={openDeleteModal}
         onClose={() => setOpenDeleteModal(false)}
@@ -79,7 +74,7 @@ export const AttendeesDetailHeader = ({ id }: { id: string }) => {
             variant="ghost"
             className="hover:bg-transparent hover:text-primary gap-1.5 px-4 py-1.5 h-auto"
             onClick={() => setOpenDeleteModal(true)}
-            isLoading={mutation.isPending}
+            isLoading={isPending}
           >
             <Trash className="stroke-tertiary" />
             <span className="font-light text-[0.81rem] text-tertiary">

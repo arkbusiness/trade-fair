@@ -1,7 +1,7 @@
 'use client';
 
 import { ContentCard } from '@/app/core/shared/components/molecules';
-import { useOrganizerExhibitorById } from '../../hooks';
+import { useOrganizerExhibitorById } from '../../api';
 import { cn } from '@/app/core/shared/utils';
 import Image from 'next/image';
 import { ImagePlaceholder } from '@/app/core/shared/components/atoms/image-placeholder';

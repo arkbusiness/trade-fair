@@ -20,7 +20,6 @@ import {
   useTable,
   useTablePagination
 } from '@/app/core/shared/hooks';
-import { useCustomMutation } from '@/app/core/shared/hooks/use-mutate';
 import { formatDate } from '@/app/core/shared/lib';
 import { cn, errorHandler } from '@/app/core/shared/utils';
 import { ColumnDef } from '@tanstack/react-table';
@@ -28,8 +27,12 @@ import { MoreHorizontal } from 'lucide-react';
 import Image from 'next/image';
 import { useState } from 'react';
 import toast from 'react-hot-toast';
-import { IExhibitor, useOrganizerExhibitors } from '../../hooks';
-import { organizerExhibitorsService } from '../../services';
+import {
+  IExhibitor,
+  useOrganizerExhibitors,
+  useDeleteExhibitor,
+  useDeactivateExhibitor
+} from '../../api';
 import { BoothMembers } from '../molecules';
 import { ORGANIZER_APP_ROUTES } from '@/app/core/shared/constants';
 import { useRouter } from 'nextjs-toploader/app';
@@ -59,12 +62,36 @@ const TABLE_TABS = [
 
 export const ExhibitorTable = () => {
   const router = useRouter();
-  const mutation = useCustomMutation();
   const { setFilterParams, filter } = useQueryFilters([
     'email',
     'status',
     'page'
   ]);
+
+  const { deleteExhibitor, isPending: isDeleting } = useDeleteExhibitor({
+    onSuccess: () => {
+      toast.success('Exhibitor deleted successfully.');
+      handleCloseModal();
+    },
+    onError: (error) => {
+      const errorMessage = errorHandler(error);
+      toast.error(errorMessage);
+    }
+  });
+
+  const { deactivateExhibitor, isPending: isDeactivating } =
+    useDeactivateExhibitor({
+      onSuccess: () => {
+        toast.success('Exhibitor deactivated successfully.');
+        handleCloseModal();
+      },
+      onError: (error) => {
+        const errorMessage = errorHandler(error);
+        toast.error(errorMessage);
+      }
+    });
+
+  const isPending = isDeleting || isDeactivating;
 
   const [selectedExhibitor, setSelectedExhibitor] = useState<IExhibitor | null>(
     null
@@ -73,7 +100,6 @@ export const ExhibitorTable = () => {
     exhibitors,
     isLoadingExhibitors,
     isRefetchingExhibitors,
-    refetchExhibitors,
     paginationMeta
   } = useOrganizerExhibitors(filter);
 
@@ -287,7 +313,7 @@ export const ExhibitorTable = () => {
   ];
 
   const handleCloseModal = () => {
-    refetchExhibitors();
+    if (isPending) return;
     setActiveModal(ModalType.NONE);
   };
 
@@ -311,38 +337,12 @@ export const ExhibitorTable = () => {
 
   const handleConfirmDeactivate = () => {
     if (!selectedExhibitor) return;
-
-    mutation.mutate(
-      organizerExhibitorsService.deactivateExhibitor(selectedExhibitor?.id),
-      {
-        onError(error) {
-          const errorMessage = errorHandler(error);
-          toast.error(errorMessage);
-        },
-        onSuccess() {
-          toast.success('Exhibitor deactivated successfully.');
-          handleCloseModal();
-        }
-      }
-    );
+    deactivateExhibitor({ id: selectedExhibitor.id });
   };
 
   const handleConfirmDelete = () => {
     if (!selectedExhibitor) return;
-
-    mutation.mutate(
-      organizerExhibitorsService.deleteExhibitor(selectedExhibitor?.id),
-      {
-        onError(error) {
-          const errorMessage = errorHandler(error);
-          toast.error(errorMessage);
-        },
-        onSuccess() {
-          toast.success('Exhibitor deleted successfully.');
-          handleCloseModal();
-        }
-      }
-    );
+    deleteExhibitor({ id: selectedExhibitor.id });
   };
 
   const handleConfirm = () => {
@@ -399,7 +399,7 @@ export const ExhibitorTable = () => {
         }
         onClose={handleCloseModal}
         onConfirm={handleConfirm}
-        isLoading={mutation.isPending}
+        isLoading={isPending}
         title={confirmModal[activeModal]?.title}
         description={confirmModal[activeModal]?.description}
       />

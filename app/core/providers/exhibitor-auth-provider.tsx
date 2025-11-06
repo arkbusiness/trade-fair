@@ -6,7 +6,7 @@ import { ReactNode, useEffect } from 'react';
 import { SplashScreen } from '../shared/components/atoms';
 import { EXHIBITOR_APP_ROUTES } from '../shared/constants';
 import { useScrollToTop } from '../shared/hooks';
-import { useExhibitorUser } from '../shared/hooks/api/use-exhibitor-user';
+import { useExhibitorUser } from '../shared/api/use-exhibitor-user';
 
 export const ExhibitorAuthProvider = ({
   children

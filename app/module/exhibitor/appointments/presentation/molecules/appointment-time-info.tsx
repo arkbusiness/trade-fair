@@ -2,7 +2,7 @@
 
 import { Calendar, Clock3 } from 'lucide-react';
 import { formatDate } from '@/app/core/shared/lib';
-import { SlotStatus } from '../../hooks';
+import { SlotStatus } from '../../api';
 
 interface AppointmentTimeInfoProps {
   startTime?: string;

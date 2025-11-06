@@ -1,4 +1,4 @@
-import { Inventory } from '@/app/module/exhibitor/inventory/hooks';
+import { Inventory } from '@/app/module/exhibitor/inventory/api/types';
 import { create } from 'zustand';
 
 export interface ICartItem extends Inventory {
