@@ -10,7 +10,7 @@ import {
 import { formatDate } from '@/app/core/shared/lib';
 import { cn } from '@/app/core/shared/utils';
 import { Edit3 } from 'lucide-react';
-import { IBooth, useBoothById } from '../../hooks';
+import { IBooth, useBoothById } from '../../api';
 
 interface BoothDetailsProps {
   isOpen: boolean;

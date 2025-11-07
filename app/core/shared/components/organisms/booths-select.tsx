@@ -1,6 +1,6 @@
 'use client';
 
-import { IBooth } from '@/app/module/organizer/booths/hooks';
+import { IBooth } from '@/app/module/organizer/booths/api/types';
 import { useQueryClient } from '@tanstack/react-query';
 import { UseFormReturn } from 'react-hook-form';
 import { clientFetcher } from '../../lib';

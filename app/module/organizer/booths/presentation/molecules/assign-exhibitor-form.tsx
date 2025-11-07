@@ -20,6 +20,7 @@ const validationSchema = yup.object().shape({
     .mixed<{
       id: string;
       name: string;
+      exhibitorId: string | null;
     }>()
     .required('Exhibitor is required')
 });
@@ -64,9 +65,17 @@ export const AssignExhibitorForm = ({
 
   const handleAssignExhibitor = (data: AssignExhibitorFormType) => {
     if (!selectedBooth) return;
+    const exhibitorId = data.exhibitorId?.exhibitorId;
+
+    if (!exhibitorId) {
+      toast.error(
+        'This exhibitor has not accepted their invitation yet. Please select an exhibitor with an active account.'
+      );
+    }
+
     assignExhibitor({
       id: selectedBooth.id,
-      exhibitorId: data.exhibitorId?.id as string
+      exhibitorId: exhibitorId as string
     });
   };
 

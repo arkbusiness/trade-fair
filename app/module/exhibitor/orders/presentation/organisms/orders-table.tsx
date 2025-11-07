@@ -340,7 +340,7 @@ export const OrdersTable = () => {
           {/* Search */}
           <div className="xs:max-w-[300px] w-full">
             <TableSearchInput
-              placeholder="Search..."
+              placeholder="Search by customer name..."
               handleSearch={handleSearch}
             />
           </div>
