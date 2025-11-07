@@ -5,7 +5,6 @@ import {
   DatePicker,
   ErrorText,
   FileUploader,
-  HelperText,
   Input,
   Separator,
   Textarea
@@ -14,7 +13,6 @@ import {
   CurrencySelector,
   IconButton,
   LoadingButton,
-  MultiSelect,
   OverlaySpinner
 } from '@/app/core/shared/components/molecules';
 import { ProductCategorySelect } from '@/app/core/shared/components/organisms';
@@ -75,46 +73,16 @@ const validationSchema = (isEdit: boolean) =>
       ),
     currency: yup.string().required('Currency is required'),
     tags: yup.array(),
-    customAttrs: yup.array().of(
-      yup
-        .object()
-        .shape({
-          key: yup.string().trim(),
-          value: yup.string().trim()
+    customAttrs: yup
+      .array()
+      .of(
+        yup.object().shape({
+          key: yup.string().trim().required('Key is required'),
+          value: yup.string().trim().required('Value is required')
         })
-        .test(
-          'both-or-neither',
-          'Both key and value are required when one is provided',
-          function (value, ctx) {
-            const { key, value: val } = value || {};
-            const hasKey = key && key.trim().length > 0;
-            const hasValue = val && val.trim().length > 0;
-
-            // Both empty is valid
-            if (!hasKey && !hasValue) return true;
-
-            // Both filled is valid
-            if (hasKey && hasValue) return true;
-
-            // One filled, one empty is invalid
-            if (hasKey && !hasValue) {
-              return ctx.createError({
-                type: 'value-error',
-                message: 'Value is required when key is provided'
-              });
-            }
-
-            if (hasValue && !hasKey) {
-              return ctx.createError({
-                type: 'key-error',
-                message: 'Key is required when value is provided'
-              });
-            }
-
-            return true;
-          }
-        )
-    ),
+      )
+      .required()
+      .min(1, 'Custom attribute is required'),
     productCategoryId: yup.mixed<{
       id: string;
       name: string;
@@ -267,12 +235,9 @@ export const InventoryForm = ({ isReadOnly, inventory }: InventoryForm) => {
     });
 
     // Add tags
-    const tags = (data.tags ?? []).map((tag) => tag.value);
-    if (tags.length > 0) {
-      (data.tags ?? []).forEach((tag) => {
-        formData.append('tags', tag.value);
-      });
-    }
+    // (data.tags ?? []).forEach((tag) => {
+    //   formData.append('tags', tag.value);
+    // });
 
     // Add custom attributes
     const validAttrs = (data.customAttrs ?? []).filter(
@@ -322,7 +287,6 @@ export const InventoryForm = ({ isReadOnly, inventory }: InventoryForm) => {
   };
 
   const watchedCurrency = watch('currency');
-  const watchedTags = watch('tags');
   const watchedImageUrls = watch('imageUrls');
   const watchedCustomAttrs = watch('customAttrs');
   const watchedAvailableFrom = watch('availableFrom');
@@ -333,7 +297,6 @@ export const InventoryForm = ({ isReadOnly, inventory }: InventoryForm) => {
     description: descriptionError,
     basePrice: basePriceError,
     currency: currencyError,
-    tags: tagsError,
     quantity: quantityError,
     customAttrs: customAttrsError,
     productCategoryId: productCategoryIdError,
@@ -445,7 +408,7 @@ export const InventoryForm = ({ isReadOnly, inventory }: InventoryForm) => {
             {/* Tags & Category */}
             <div className="grid xl:grid-cols-2 gap-6">
               {/* Tags */}
-              <div>
+              {/* <div>
                 <MultiSelect
                   label="Tags (Optional)"
                   placeholder="e.g Shirts, T-Shirts, Pants"
@@ -467,7 +430,20 @@ export const InventoryForm = ({ isReadOnly, inventory }: InventoryForm) => {
                   hasError={!!tagsError?.message?.length}
                 />
                 <HelperText text="You can create new tag by typing and pressing enter" />
+              </div> */}
+
+              {/* SKU */}
+              <div>
+                <Input
+                  label="SKU"
+                  placeholder="e.g Enter SKU"
+                  hasError={!!skuError?.message?.length}
+                  readOnly={isReadOnly}
+                  {...register('sku')}
+                />
+                <ErrorText message={skuError?.message} />
               </div>
+
               {/* Category */}
               <div>
                 <ProductCategorySelect
@@ -486,18 +462,6 @@ export const InventoryForm = ({ isReadOnly, inventory }: InventoryForm) => {
                 />
                 <ErrorText message={productCategoryIdError?.message} />
               </div>
-            </div>
-
-            {/* SKU */}
-            <div className="w-full">
-              <Input
-                label="SKU"
-                placeholder="e.g Enter SKU"
-                hasError={!!skuError?.message?.length}
-                readOnly={isReadOnly}
-                {...register('sku')}
-              />
-              <ErrorText message={skuError?.message} />
             </div>
 
             {/* Description */}
@@ -521,20 +485,13 @@ export const InventoryForm = ({ isReadOnly, inventory }: InventoryForm) => {
                     : 'text-foreground font-bold'
                 }
               >
-                Custom Attributes(Optional)
+                Custom Attributes
               </p>
               <div className="grid gap-x-4 gap-y-[1.86rem]">
                 {fields.map((field, index) => {
                   const itemError = customAttrsError?.[index];
-
-                  const keyErrorError =
-                    itemError?.type === 'key-error'
-                      ? itemError?.message
-                      : undefined;
-                  const valueErrorError =
-                    itemError?.type === 'value-error'
-                      ? itemError?.message
-                      : undefined;
+                  const keyErrorError = itemError?.key;
+                  const valueErrorError = itemError?.value;
 
                   return (
                     <div
@@ -568,11 +525,12 @@ export const InventoryForm = ({ isReadOnly, inventory }: InventoryForm) => {
                               type="text"
                               label="Key"
                               placeholder="e.g. Color"
-                              hasError={!!keyErrorError?.length}
+                              autoComplete="off"
+                              hasError={!!keyErrorError?.message?.length}
                               readOnly={isReadOnly}
                               {...register(`customAttrs.${index}.key`)}
                             />
-                            <ErrorText message={keyErrorError} />
+                            <ErrorText message={keyErrorError?.message} />
                           </div>
 
                           {/* Value */}
@@ -581,11 +539,12 @@ export const InventoryForm = ({ isReadOnly, inventory }: InventoryForm) => {
                               type="text"
                               label="Value"
                               placeholder="e.g. Red"
+                              autoComplete="off"
                               readOnly={isReadOnly}
-                              hasError={!!valueErrorError?.length}
+                              hasError={!!valueErrorError?.message?.length}
                               {...register(`customAttrs.${index}.value`)}
                             />
-                            <ErrorText message={valueErrorError} />
+                            <ErrorText message={valueErrorError?.message} />
                           </div>
                         </div>
                       </div>
