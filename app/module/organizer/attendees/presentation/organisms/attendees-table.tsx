@@ -73,14 +73,14 @@ export const AttendeesTable = () => {
                 {hasLogo ? (
                   <Image
                     src={original?.logoUrl}
-                    alt={original?.username || 'logo'}
+                    alt={original?.username || 'Image'}
                     width={45}
                     height={45}
                     className="border-input rounded object-contain h-full w-full"
                   />
                 ) : (
                   <ImagePlaceholder
-                    label="Logo"
+                    label="Image"
                     className="border-input rounded object-contain h-full w-full text-xs"
                   />
                 )}
