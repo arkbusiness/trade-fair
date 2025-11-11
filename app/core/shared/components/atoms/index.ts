@@ -46,3 +46,4 @@ export * from './expanded-text';
 export * from './no-message';
 export * from './chat-header';
 export * from './chat-bubble';
+export * from './alert';

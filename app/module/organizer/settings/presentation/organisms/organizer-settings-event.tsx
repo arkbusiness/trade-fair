@@ -102,6 +102,11 @@ export const OrganizerSettingsEvent = () => {
     });
   };
 
+  console.log({
+    watchedStartDate,
+    watchedEndDate
+  });
+
   return (
     <>
       {isPending && <OverlaySpinner />}
@@ -168,6 +173,7 @@ export const OrganizerSettingsEvent = () => {
                   labelClassName="md:hidden"
                   placeholderText="mm/dd/yyyy"
                   showTimeSelect={true}
+                  timeIntervals={10}
                   max={watchedEndDate}
                   handleChange={({ value }) => {
                     setValue('eventStartDate', value as Date, {
@@ -193,6 +199,7 @@ export const OrganizerSettingsEvent = () => {
                   label="End date"
                   showTimeSelect={true}
                   placeholderText="mm/dd/yyyy"
+                  timeIntervals={10}
                   min={watchedStartDate}
                   handleChange={({ value }) => {
                     setValue('eventEndDate', value as Date, {

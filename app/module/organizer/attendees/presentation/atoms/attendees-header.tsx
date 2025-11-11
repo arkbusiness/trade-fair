@@ -1,13 +1,17 @@
 'use client';
 
 import { Button } from '@/app/core/shared/components/atoms';
-import { DashboardToolbar } from '@/app/core/shared/components/molecules';
+import {
+  DashboardToolbar,
+  EventInviteAlert
+} from '@/app/core/shared/components/molecules';
 import { ExportButton } from '@/app/core/shared/components/organisms/export-button';
 import { getQueryClient } from '@/app/core/shared/lib';
 import { Plus } from 'lucide-react';
 import { useState } from 'react';
 import { InviteAttendeeForm } from '../molecules';
 import { attendeesQueryKeys } from '../../api/attendees-query-options';
+import { useEventStatus } from '@/app/core/shared/hooks';
 
 enum ModalType {
   NONE = 'NONE',
@@ -18,6 +22,8 @@ export const OrganizerAttendeesHeader = () => {
   const queryClient = getQueryClient();
   const [activeModal, setActiveModal] = useState<ModalType>(ModalType.NONE);
 
+  const { isEventConcluded } = useEventStatus();
+
   const handleCloseModal = () => {
     queryClient.invalidateQueries({
       queryKey: [attendeesQueryKeys.base]
@@ -27,6 +33,7 @@ export const OrganizerAttendeesHeader = () => {
 
   return (
     <>
+      <EventInviteAlert type="attendee" />
       <InviteAttendeeForm
         isOpen={activeModal === ModalType.INVITE_ATTENDEE}
         onClose={handleCloseModal}
@@ -40,7 +47,11 @@ export const OrganizerAttendeesHeader = () => {
           <Button
             variant="tertiary"
             className="flex gap-x-[0.63rem]"
-            onClick={() => setActiveModal(ModalType.INVITE_ATTENDEE)}
+            disabled={isEventConcluded}
+            onClick={() => {
+              if (isEventConcluded) return;
+              setActiveModal(ModalType.INVITE_ATTENDEE);
+            }}
           >
             <Plus size={16} />
             <span>Invite Attendee</span>
