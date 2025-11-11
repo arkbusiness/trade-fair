@@ -46,3 +46,4 @@ export * from './attendee-header';
 export * from './chat-tabs';
 export * from './chat-preview-item';
 export * from './chat-input';
+export * from './event-invite-alert';
