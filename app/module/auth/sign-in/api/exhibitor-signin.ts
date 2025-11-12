@@ -8,6 +8,10 @@ export type ExhibitorSigninPayload = {
 
 export type SigninResponse = {
   accessToken: string;
+  firstTimeLogin: boolean;
+  user: {
+    id: string;
+  };
 };
 
 export const useExhibitorSignin = ({

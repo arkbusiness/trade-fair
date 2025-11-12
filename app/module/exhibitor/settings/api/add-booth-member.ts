@@ -5,7 +5,6 @@ import { settingsQueryKeys } from './settings-query-options';
 
 export type AddBoothMemberPayload = {
   email: string;
-  password: string;
 };
 
 export type AddBoothMemberResponse = {

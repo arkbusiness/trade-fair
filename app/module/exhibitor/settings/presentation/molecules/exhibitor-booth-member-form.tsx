@@ -2,11 +2,7 @@
 
 import { ErrorText, Input } from '@/app/core/shared/components/atoms';
 import { Button } from '@/app/core/shared/components/atoms/button';
-import {
-  LoadingButton,
-  Modal,
-  PasswordInput
-} from '@/app/core/shared/components/molecules';
+import { LoadingButton, Modal } from '@/app/core/shared/components/molecules';
 import { errorHandler } from '@/app/core/shared/utils';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useForm } from 'react-hook-form';
@@ -20,12 +16,7 @@ interface ExhibitorBoothMemberFormProps {
 }
 
 const validationSchema = yup.object().shape({
-  email: yup.string().required('Email is required'),
-  password: yup.string().required('Password is required'),
-  confirmPassword: yup
-    .string()
-    .oneOf([yup.ref('password'), undefined], 'Passwords must match')
-    .required('Confirm your password.')
+  email: yup.string().required('Email is required')
 });
 
 type ExhibitorBoothMemberFormValues = yup.InferType<typeof validationSchema>;
@@ -47,9 +38,7 @@ export const ExhibitorBoothMemberForm = ({
   });
   const form = useForm<ExhibitorBoothMemberFormValues>({
     defaultValues: {
-      email: '',
-      password: '',
-      confirmPassword: ''
+      email: ''
     },
     resolver: yupResolver(validationSchema)
   });
@@ -67,16 +56,11 @@ export const ExhibitorBoothMemberForm = ({
 
   const onSubmit = (values: ExhibitorBoothMemberFormValues) => {
     addBoothMember({
-      email: values.email,
-      password: values.password
+      email: values.email
     });
   };
 
-  const {
-    email: emailError,
-    password: passwordError,
-    confirmPassword: confirmPasswordError
-  } = errors ?? {};
+  const { email: emailError } = errors ?? {};
 
   return (
     <Modal
@@ -95,38 +79,17 @@ export const ExhibitorBoothMemberForm = ({
         {/* To focus on the first input */}
         <input type="text" className="absolute top-0 left-0 w-0 h-0" />
 
-        <div className="flex flex-col gap-x-[1.86rem] gap-y-3 w-full text-left px-6 mt-3 overflow-y-auto h-[400px] py-4">
+        <div className="flex flex-col gap-x-[1.86rem] gap-y-3 w-full text-left px-6 mt-3 overflow-y-auto h-[150px] py-4">
           {/* Email */}
           <div>
             <Input
               label="Email"
+              placeholder="e.g. example@example.com"
               hasError={!!emailError?.message?.length}
               disabled={isPending}
               {...form.register('email')}
             />
             <ErrorText message={emailError?.message} />
-          </div>
-
-          {/* Password */}
-          <div>
-            <PasswordInput
-              label="Password"
-              hasError={!!passwordError?.message?.length}
-              disabled={isPending}
-              {...form.register('password')}
-            />
-            <ErrorText message={passwordError?.message} />
-          </div>
-
-          {/* Confirm Password */}
-          <div>
-            <PasswordInput
-              label="Confirm Password"
-              hasError={!!confirmPasswordError?.message?.length}
-              disabled={isPending}
-              {...form.register('confirmPassword')}
-            />
-            <ErrorText message={confirmPasswordError?.message} />
           </div>
         </div>
 

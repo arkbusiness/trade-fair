@@ -36,11 +36,15 @@ export interface IExhibitorAuthUser {
       }[]
     | null;
 }
-interface IAuthState {
+interface AuthState {
   accessToken: string;
+  tempAccessToken: string;
   inviteToken: string;
   hasCheckedToken: boolean;
+  userId: string;
   handleSaveToken({ accessToken }: { accessToken?: string }): void;
+  handleSaveTempToken({ accessToken }: { accessToken?: string }): void;
+  handleSaveUserId({ userId }: { userId?: string }): void;
   handleLoadToken(): void;
   handleLogOut(): void;
   handleRemoveToken(key: string): void;
@@ -48,10 +52,12 @@ interface IAuthState {
 
 const INITIAL_STATE = {
   accessToken: '',
-  inviteToken: ''
+  tempAccessToken: '',
+  inviteToken: '',
+  userId: ''
 };
 
-export const useExhibitorAuthStore = create<IAuthState>()((set) => ({
+export const useExhibitorAuthStore = create<AuthState>()((set, get) => ({
   ...INITIAL_STATE,
   hasCheckedToken: false,
   handleLoadToken: async () => {
@@ -59,17 +65,17 @@ export const useExhibitorAuthStore = create<IAuthState>()((set) => ({
       const accessToken = (await getCookie(COOKIE_KEYS.auth.token)) || '';
 
       if (!accessToken) {
-        useExhibitorAuthStore.getState().handleLogOut();
+        get().handleLogOut();
         return;
       }
 
       if (accessToken) {
-        useExhibitorAuthStore.getState().handleSaveToken({ accessToken });
+        get().handleSaveToken({ accessToken });
       }
 
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (_error) {
-      useExhibitorAuthStore.getState().handleLogOut();
+      get().handleLogOut();
     } finally {
       set((state) => ({
         ...state,
@@ -101,6 +107,20 @@ export const useExhibitorAuthStore = create<IAuthState>()((set) => ({
         return {
           accessToken: accessToken ?? state.accessToken
         };
+      });
+    }
+  },
+  handleSaveTempToken({ accessToken }) {
+    if (accessToken) {
+      set({
+        tempAccessToken: accessToken
+      });
+    }
+  },
+  handleSaveUserId({ userId }) {
+    if (userId) {
+      set({
+        userId: userId
       });
     }
   }
