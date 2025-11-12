@@ -54,7 +54,11 @@ export const SigninPage = () => {
   const [selectedTab, setSelectedTab] = useState(queryTab);
   const router = useRouter();
   const { handleSaveToken: handleOrganizerSaveToken } = useOrganizerAuthStore();
-  const { handleSaveToken: handleExhibitorSaveToken } = useExhibitorAuthStore();
+  const {
+    handleSaveToken: handleExhibitorSaveToken,
+    handleSaveTempToken: handleExhibitorSaveTempToken,
+    handleSaveUserId: handleExhibitorSaveUserId
+  } = useExhibitorAuthStore();
 
   const {
     signinMutation: organizerSigninMutation,
@@ -81,9 +85,18 @@ export const SigninPage = () => {
   } = useExhibitorSignin({
     onSuccess: (data) => {
       const token = data?.accessToken;
+      const firstTimeLogin = data?.firstTimeLogin;
+
       if (token) {
-        handleExhibitorSaveToken({ accessToken: token });
-        router.push(EXHIBITOR_APP_ROUTES.root());
+        if (!firstTimeLogin) {
+          handleExhibitorSaveToken({ accessToken: token });
+          router.push(EXHIBITOR_APP_ROUTES.root());
+        } else {
+          toast.success('Please activate your account to continue.');
+          handleExhibitorSaveTempToken({ accessToken: token });
+          handleExhibitorSaveUserId({ userId: data?.user.id });
+          router.push(EXHIBITOR_APP_ROUTES.activate());
+        }
       } else {
         toast.error('Something went wrong');
       }

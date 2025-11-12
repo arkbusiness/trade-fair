@@ -24,7 +24,8 @@ export const ORGANIZER_APP_ROUTES = {
 export const EXHIBITOR_APP_ROUTES = {
   root: () => '/exhibitor',
   auth: {
-    login: () => '/?tab=exhibitor'
+    login: () => '/?tab=exhibitor',
+    setPassword: (token: string) => `/exhibitor/set-password/${token}`
   },
   settings: (tab?: string) => `/exhibitor/settings${tab ? `?tab=${tab}` : ''}`,
   inventory: {
@@ -44,7 +45,8 @@ export const EXHIBITOR_APP_ROUTES = {
     messaging: {
       root: () => '/exhibitor/attendees/messaging'
     }
-  }
+  },
+  activate: () => '/exhibitor/activate'
 };
 
 export const ATTENDEE_APP_ROUTES = {
